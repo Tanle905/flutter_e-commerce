@@ -1,6 +1,6 @@
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
+import 'package:tmdt/ui/constants.dart';
 import 'package:tmdt/ui/products/products_manager.dart';
 import 'package:tmdt/ui/products/user_products_list_tile.dart';
 
@@ -10,11 +10,25 @@ class UserProductsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final productsManager = ProductManager();
+    final textTheme = Theme.of(context).textTheme;
+    final IconThemeData iconThemeData = Theme.of(context).iconTheme;
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Your products'),
-        actions: <Widget>[buildAddButton()],
+        leading: IconButton(
+          icon: const Icon(
+            FluentIcons.arrow_left_28_regular,
+          ),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+        title: Text(
+          'Your products',
+          style: textTheme.titleLarge,
+        ),
+        actions: <Widget>[buildAddButton(iconThemeData)],
+        iconTheme: iconThemeData,
       ),
       body: RefreshIndicator(
         onRefresh: () async => print('Refresh Product'),
@@ -34,11 +48,13 @@ class UserProductsScreen extends StatelessWidget {
             ));
   }
 
-  Widget buildAddButton() {
+  Widget buildAddButton(IconThemeData iconThemeData) {
     return IconButton(
         onPressed: () {
           print('Go to edit product screen');
         },
-        icon: const Icon(Icons.add));
+        icon: const Icon(
+          Icons.add,
+        ));
   }
 }

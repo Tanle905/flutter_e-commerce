@@ -34,6 +34,8 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
+  flutter_staggered_grid_view: ^0.6.2
+  fluentui_system_icons: ^1.1.181
 
 dev_dependencies:
   flutter_test:
@@ -59,12 +61,12 @@ flutter:
   fonts:
     - family: Lato
       fonts:
-        - asset: assets/fonts/Lato-Regular.ttf
-        - asset: assets/fonts/Lato-Bold.ttf
+        - asset: assets\fonts\Lato-Regular.ttf
+        - asset: assets\fonts\Lato-Bold.ttf
         - weight: 700
     - family: 
       fonts:
-      - asset: assets/fonts/Anton-Regular.ttf
+      - asset: assets\fonts\Anton-Regular.ttf
 
   # To add assets to your application, add an assets section, like this:
   # assets:

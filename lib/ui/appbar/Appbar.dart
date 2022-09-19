@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-AppBar myAppbar() {
+PreferredSizeWidget myAppbar() {
   return AppBar(
     actions: <Widget>[
       TextButton(

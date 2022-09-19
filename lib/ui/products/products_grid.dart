@@ -1,12 +1,9 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:tmdt/ui/products/products_grid_tile.dart';
 import 'package:tmdt/ui/products/products_manager.dart';
 
 class ProductsGrid extends StatelessWidget {
   final bool showFavorites;
-
   const ProductsGrid(this.showFavorites, {Key? key}) : super(key: key);
 
   @override
@@ -17,12 +14,27 @@ class ProductsGrid extends StatelessWidget {
     return GridView.builder(
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
-          childAspectRatio: 3 / 2,
-          crossAxisSpacing: 10,
-          mainAxisSpacing: 10),
-      itemBuilder: (ctx, i) => ProductGridTile(products[i]),
+          childAspectRatio: 2 / 3,
+          crossAxisSpacing: 20,
+          mainAxisSpacing: 20),
+      itemBuilder: (ctx, i) {
+        if (i == 0) {
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: const [
+              Text(
+                'Find Your Styles.',
+                style: TextStyle(fontSize: 60, fontWeight: FontWeight.w900),
+                textAlign: TextAlign.end,
+              )
+            ],
+          );
+        } else {
+          return ProductGridTile(products[i - 1]);
+        }
+      },
       padding: const EdgeInsets.all(10),
-      itemCount: products.length,
+      itemCount: products.length + 1,
     );
   }
 }
