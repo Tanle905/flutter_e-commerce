@@ -1,0 +1,77 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/src/foundation/key.dart';
+import 'package:flutter/src/widgets/framework.dart';
+import 'package:tmdt/models/cart_items.dart';
+import 'package:tmdt/ui/cart/cart_item_card.dart';
+import 'package:tmdt/ui/cart/cart_manager.dart';
+import 'package:tmdt/ui/shared/ui/icons.dart';
+
+class CartScreen extends StatelessWidget {
+  static const routeName = '/cart';
+
+  const CartScreen({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final cart = CartManager();
+    final TextTheme textTheme = Theme.of(context).textTheme;
+    final IconThemeData iconTheme = Theme.of(context).iconTheme;
+
+    return Scaffold(
+      appBar: AppBar(
+          iconTheme: iconTheme,
+          leading: Builder(builder: (context) => backIcon(context)),
+          title: Text(
+            'Your cart',
+            style: textTheme.titleLarge,
+          )),
+      body: Column(
+        children: <Widget>[
+          Expanded(
+              child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 15),
+            child: buildCartDetails(cart),
+          )),
+          const SizedBox(height: 10),
+          buildCartSummary(textTheme, cart, context),
+        ],
+      ),
+    );
+  }
+
+  Widget buildCartSummary(
+      TextTheme textTheme, CartManager cart, BuildContext context) {
+    return Card(
+      margin: const EdgeInsets.all(15),
+      child: Padding(
+        padding: const EdgeInsets.all(8),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            const Text('Total', style: TextStyle(fontSize: 20)),
+            const Spacer(),
+            Chip(
+              label: Text('\$${cart.totalAmount.toStringAsFixed(2)}',
+                  style: textTheme.titleMedium),
+            ),
+            TextButton(
+              onPressed: () {
+                print('Order has been added');
+              },
+              style: TextButton.styleFrom(textStyle: textTheme.titleSmall),
+              child: const Text('ORDER NOW'),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget buildCartDetails(CartManager cart) {
+    return ListView(
+      children: cart.productEntries
+          .map((e) => CartItemCard(productId: e.key, cartItem: e.value))
+          .toList(),
+    );
+  }
+}

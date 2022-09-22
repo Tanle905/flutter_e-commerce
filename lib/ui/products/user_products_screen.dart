@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:tmdt/ui/constants.dart';
 import 'package:tmdt/ui/products/products_manager.dart';
 import 'package:tmdt/ui/products/user_products_list_tile.dart';
+import 'package:tmdt/ui/shared/ui/icons.dart';
 
 class UserProductsScreen extends StatelessWidget {
   const UserProductsScreen({Key? key}) : super(key: key);
@@ -15,14 +16,7 @@ class UserProductsScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(
-            FluentIcons.arrow_left_28_regular,
-          ),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        ),
+        leading: Builder(builder: ((context) => backIcon(context))),
         title: Text(
           'Your products',
           style: textTheme.titleLarge,

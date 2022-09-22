@@ -1,5 +1,6 @@
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:tmdt/ui/cart/cart_screen.dart';
 import 'package:tmdt/ui/drawer/drawer.dart';
 import 'package:tmdt/ui/products/products_grid.dart';
 import 'package:tmdt/ui/products/user_products_screen.dart';
@@ -59,6 +60,9 @@ class _OverviewScreenState extends State<OverviewScreen> {
   // }
 
   Widget buildSearchBar() {
+    final InputDecorationTheme inputDecorationTheme =
+        Theme.of(context).inputDecorationTheme;
+
     return Container(
       height: 40,
       decoration: BoxDecoration(boxShadow: [
@@ -71,7 +75,7 @@ class _OverviewScreenState extends State<OverviewScreen> {
       child: TextField(
         decoration: InputDecoration(
             filled: true,
-            fillColor: Colors.grey.shade300,
+            fillColor: inputDecorationTheme.fillColor,
             prefixIcon: const Icon(FluentIcons.search_32_regular),
             border: InputBorder.none,
             hintText: 'Search'),
@@ -94,7 +98,7 @@ class _OverviewScreenState extends State<OverviewScreen> {
     return IconButton(
       onPressed: () {
         Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => const UserProductsScreen(),
+          builder: (context) => const CartScreen(),
         ));
       },
       icon: Icon(
