@@ -4,6 +4,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:tmdt/models/cart_items.dart';
 import 'package:tmdt/ui/cart/cart_item_card.dart';
 import 'package:tmdt/ui/cart/cart_manager.dart';
+import 'package:tmdt/ui/order/orders_screen.dart';
 import 'package:tmdt/ui/shared/ui/icons.dart';
 
 class CartScreen extends StatelessWidget {
@@ -20,7 +21,7 @@ class CartScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
           iconTheme: iconTheme,
-          leading: Builder(builder: (context) => backIcon(context)),
+          leading: Builder(builder: (context) => buildBackIcon(context)),
           title: Text(
             'Your cart',
             style: textTheme.titleLarge,
@@ -56,7 +57,8 @@ class CartScreen extends StatelessWidget {
             ),
             TextButton(
               onPressed: () {
-                print('Order has been added');
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => const OrdersScreen()));
               },
               style: TextButton.styleFrom(textStyle: textTheme.titleSmall),
               child: const Text('ORDER NOW'),

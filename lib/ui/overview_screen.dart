@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:tmdt/ui/cart/cart_screen.dart';
 import 'package:tmdt/ui/drawer/drawer.dart';
 import 'package:tmdt/ui/products/products_grid.dart';
-import 'package:tmdt/ui/products/user_products_screen.dart';
+import 'package:tmdt/ui/screens.dart';
+import 'package:tmdt/ui/shared/ui/badges.dart';
+import 'package:tmdt/ui/shared/ui/icons.dart';
 
 enum FilterOptions { favorite, all }
 
@@ -23,8 +25,7 @@ class _OverviewScreenState extends State<OverviewScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        leading: Builder(
-            builder: ((context) => buildDrawerIcon(iconThemeData, context))),
+        leading: Builder(builder: ((context) => buildDrawerIcon(context))),
         centerTitle: true,
         title: buildSearchBar(),
         actions: <Widget>[buildShoppingCartIcon(iconThemeData)],
@@ -83,28 +84,18 @@ class _OverviewScreenState extends State<OverviewScreen> {
     );
   }
 
-  Widget buildDrawerIcon(IconThemeData iconThemeData, BuildContext context) {
-    return IconButton(
-      onPressed: (() => Scaffold.of(context).openDrawer()),
-      icon: Icon(
-        FluentIcons.list_28_regular,
-        color: iconThemeData.color,
-        size: iconThemeData.size,
-      ),
-    );
-  }
-
   Widget buildShoppingCartIcon(IconThemeData iconThemeData) {
-    return IconButton(
-      onPressed: () {
-        Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => const CartScreen(),
-        ));
-      },
-      icon: Icon(
-        FluentIcons.cart_16_regular,
-        color: iconThemeData.color,
-        size: iconThemeData.size,
+    return TopRightBadge(
+      data: CartManager().productCount,
+      child: IconButton(
+        onPressed: () {
+          Navigator.of(context).pushNamed(CartScreen.routeName);
+        },
+        icon: Icon(
+          FluentIcons.cart_16_regular,
+          color: iconThemeData.color,
+          size: iconThemeData.size,
+        ),
       ),
     );
   }

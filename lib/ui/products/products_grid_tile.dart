@@ -3,7 +3,7 @@ import 'dart:ui';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:tmdt/models/products.dart';
-import 'package:tmdt/ui/products/products_detail_screen.dart';
+import 'package:tmdt/ui/screens.dart';
 
 class ProductGridTile extends StatelessWidget {
   const ProductGridTile(this.product, {super.key});
@@ -29,8 +29,8 @@ class ProductGridTile extends StatelessWidget {
             footer: buildGridFooterBar(context),
             child: GestureDetector(
               onTap: (() {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => ProductDetailScreen(product)));
+                Navigator.of(context).pushNamed(ProductDetailScreen.routeName,
+                    arguments: product.id);
               }),
               child: Container(
                 padding: const EdgeInsets.all(0.5),

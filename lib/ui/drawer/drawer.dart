@@ -1,4 +1,6 @@
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:tmdt/ui/screens.dart';
 
 class NavigationDrawer extends StatelessWidget {
   const NavigationDrawer({Key? key}) : super(key: key);
@@ -12,16 +14,39 @@ class NavigationDrawer extends StatelessWidget {
         child: SingleChildScrollView(
             child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[buildProductDetailsIcon()],
+          children: <Widget>[
+            ListTile(
+              leading: const Icon(
+                FluentIcons.shopping_bag_16_regular,
+              ),
+              title: const Text('Shop'),
+              onTap: () {
+                Navigator.of(context).pushReplacementNamed('/');
+              },
+            ),
+            ListTile(
+              leading: const Icon(
+                FluentIcons.payment_16_regular,
+              ),
+              title: const Text('Orders'),
+              onTap: () {
+                Navigator.of(context)
+                    .pushReplacementNamed(OrdersScreen.routeName);
+              },
+            ),
+            ListTile(
+              leading: const Icon(
+                FluentIcons.edit_16_regular,
+              ),
+              title: const Text('Manage Products'),
+              onTap: () {
+                Navigator.of(context)
+                    .pushReplacementNamed(UserProductsScreen.routeName);
+              },
+            )
+          ],
         )),
       ),
-    );
-  }
-
-  buildProductDetailsIcon() {
-    return const ListTile(
-      leading: Icon(Icons.home),
-      title: Text('Home'),
     );
   }
 }
