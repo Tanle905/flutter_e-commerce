@@ -30,7 +30,7 @@ class ProductGridTile extends StatelessWidget {
             child: GestureDetector(
               onTap: (() {
                 Navigator.of(context).pushNamed(ProductDetailScreen.routeName,
-                    arguments: product.id);
+                    arguments: product.productId);
               }),
               child: Container(
                 padding: const EdgeInsets.all(0.5),

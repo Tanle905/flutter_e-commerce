@@ -1,6 +1,5 @@
-import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
-import 'package:tmdt/ui/constants.dart';
+import 'package:tmdt/models/products.dart';
 import 'package:tmdt/ui/drawer/drawer.dart';
 import 'package:tmdt/ui/products/products_manager.dart';
 import 'package:tmdt/ui/products/user_products_list_tile.dart';
@@ -8,11 +7,13 @@ import 'package:tmdt/ui/shared/ui/icons.dart';
 
 class UserProductsScreen extends StatelessWidget {
   static const routeName = '/user-products';
-  const UserProductsScreen({Key? key}) : super(key: key);
+  final productsData;
+
+  const UserProductsScreen(this.productsData, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final productsManager = ProductManager();
+    final productsManager = ProductManager(productsData);
     final textTheme = Theme.of(context).textTheme;
     final IconThemeData iconThemeData = Theme.of(context).iconTheme;
 

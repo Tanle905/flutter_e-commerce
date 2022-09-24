@@ -1,14 +1,17 @@
 import 'package:flutter/cupertino.dart';
+import 'package:tmdt/models/products.dart';
 import 'package:tmdt/ui/products/products_grid_tile.dart';
 import 'package:tmdt/ui/products/products_manager.dart';
 
 class ProductsGrid extends StatelessWidget {
   final bool showFavorites;
-  const ProductsGrid(this.showFavorites, {Key? key}) : super(key: key);
+  final productsData;
+  const ProductsGrid(this.showFavorites, this.productsData, {Key? key})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final productsManager = ProductManager();
+    final productsManager = ProductManager(productsData);
     final products =
         showFavorites ? productsManager.favoriteItems : productsManager.items;
     return GridView.builder(

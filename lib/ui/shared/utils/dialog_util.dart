@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tmdt/ui/constants.dart';
+import 'package:tmdt/constants/constants.dart';
 
 Future<bool?> showConfirmDialog(
     BuildContext context, String title, String message) {

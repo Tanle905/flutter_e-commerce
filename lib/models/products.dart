@@ -1,12 +1,12 @@
 class Product {
-  final String? id;
+  final String? productId;
   final String title;
   final String description;
   final double price;
   final String imageUrl;
   final bool isFavorite;
   Product(
-      {this.id,
+      {required this.productId,
       required this.title,
       required this.description,
       required this.price,
@@ -20,11 +20,21 @@ class Product {
       String? imageUrl,
       bool? isFavorite}) {
     return Product(
-        id: id ?? this.id,
+        productId: id ?? this.productId,
         title: id ?? this.title,
         description: description ?? this.description,
         price: price ?? this.price,
         imageUrl: imageUrl ?? this.imageUrl,
         isFavorite: isFavorite ?? this.isFavorite);
+  }
+
+  factory Product.fromJson(Map<String, dynamic> json) {
+    return Product(
+        productId: json['productId'] ?? '',
+        title: json['title'] ?? 'No Data',
+        description: json['description'] ?? 'No Data',
+        imageUrl: json['imageUrl'] ?? 'No Data',
+        price: json['price'] == null ? 0 : double.parse(json['price']),
+        isFavorite: json['isFavorite'] ?? false);
   }
 }

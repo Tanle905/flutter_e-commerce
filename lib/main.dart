@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tmdt/services/products.dart';
 import 'package:tmdt/ui/appbar/Appbar.dart';
 import 'package:tmdt/ui/products/products_detail_screen.dart';
 import 'package:tmdt/ui/products/products_manager.dart';
@@ -21,28 +22,47 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  late Future<List<dynamic>> futureProduct;
+
+  @override
+  void initState() {
+    super.initState();
+    futureProduct = fetchProducts();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'My Shop',
-      debugShowCheckedModeBanner: false,
-      theme: lightTheme(),
-      darkTheme: darkTheme(),
-      themeMode: themeMode(),
-      home: const OverviewScreen(),
-      routes: {
-        CartScreen.routeName: (context) => const CartScreen(),
-        OrdersScreen.routeName: (context) => const OrdersScreen(),
-        UserProductsScreen.routeName: (context) => const UserProductsScreen()
-      },
-      onGenerateRoute: (settings) {
-        if (settings.name == ProductDetailScreen.routeName) {
-          final productId = settings.arguments as String;
-          return MaterialPageRoute(builder: (context) {
-            return ProductDetailScreen(ProductManager().findById(productId));
-          });
-        }
-        return null;
+    return FutureBuilder(
+      future: futureProduct,
+      builder: (context, snapshot) {
+        return snapshot.hasData
+            ? MaterialApp(
+                title: 'My Shop',
+                debugShowCheckedModeBanner: false,
+                theme: lightTheme(),
+                darkTheme: darkTheme(),
+                themeMode: themeMode(),
+                home: const OverviewScreen(),
+                routes: {
+                  CartScreen.routeName: (context) => const CartScreen(),
+                  OrdersScreen.routeName: (context) => const OrdersScreen(),
+                  UserProductsScreen.routeName: (context) =>
+                      UserProductsScreen(snapshot.data)
+                },
+                onGenerateRoute: (settings) {
+                  if (settings.name == ProductDetailScreen.routeName) {
+                    final productId = settings.arguments as String;
+                    return MaterialPageRoute(builder: (context) {
+                      return ProductDetailScreen(
+                          ProductManager(snapshot.data).findById(productId));
+                    });
+                  }
+                  return null;
+                },
+              )
+            : const Center(
+                child: CircularProgressIndicator(),
+              );
       },
     );
   }

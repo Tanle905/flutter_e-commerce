@@ -1,16 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:tmdt/models/cart_items.dart';
+import 'package:tmdt/services/cart.dart';
 import 'package:tmdt/ui/cart/cart_item_card.dart';
 import 'package:tmdt/ui/cart/cart_manager.dart';
 import 'package:tmdt/ui/order/orders_screen.dart';
 import 'package:tmdt/ui/shared/ui/icons.dart';
 
-class CartScreen extends StatelessWidget {
+class CartScreen extends StatefulWidget {
   static const routeName = '/cart';
 
   const CartScreen({Key? key}) : super(key: key);
+
+  @override
+  State<CartScreen> createState() => _CartScreenState();
+}
+
+class _CartScreenState extends State<CartScreen> {
+  late Future<List<dynamic>> futureCart;
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

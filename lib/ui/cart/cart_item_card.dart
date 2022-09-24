@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:tmdt/models/cart_items.dart';
-import 'package:tmdt/ui/constants.dart';
+import 'package:tmdt/constants/constants.dart';
 import 'package:tmdt/ui/shared/utils/dialog_util.dart';
 
 class CartItemCard extends StatelessWidget {

@@ -1,5 +1,9 @@
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:tmdt/models/cart_items.dart';
+import 'package:tmdt/models/products.dart';
+import 'package:tmdt/services/cart.dart';
+import 'package:tmdt/services/products.dart';
 import 'package:tmdt/ui/cart/cart_screen.dart';
 import 'package:tmdt/ui/drawer/drawer.dart';
 import 'package:tmdt/ui/products/products_grid.dart';
@@ -18,22 +22,39 @@ class OverviewScreen extends StatefulWidget {
 
 class _OverviewScreenState extends State<OverviewScreen> {
   final _showOnlyFavorites = false;
+  late Future<List<dynamic>> futureProduct;
+  late Future<Map<String, CartItem>> futureCart;
+
+  @override
+  void initState() {
+    super.initState();
+    futureProduct = fetchProducts();
+    futureCart = fetchCart();
+  }
+
   @override
   Widget build(BuildContext context) {
     final IconThemeData iconThemeData = Theme.of(context).iconTheme;
     final ThemeData themeData = Theme.of(context);
 
-    return Scaffold(
-      appBar: AppBar(
-        leading: Builder(builder: ((context) => buildDrawerIcon(context))),
-        centerTitle: true,
-        title: buildSearchBar(),
-        actions: <Widget>[buildShoppingCartIcon(iconThemeData)],
-      ),
-      body: ProductsGrid(_showOnlyFavorites),
-      drawer: const NavigationDrawer(),
-      backgroundColor: themeData.backgroundColor,
-    );
+    return FutureBuilder(
+        future: futureProduct,
+        builder: ((context, snapshot) {
+          return Scaffold(
+            appBar: AppBar(
+              leading:
+                  Builder(builder: ((context) => buildDrawerIcon(context))),
+              centerTitle: true,
+              title: buildSearchBar(),
+              actions: <Widget>[buildShoppingCartIcon(iconThemeData)],
+            ),
+            body: snapshot.hasData
+                ? ProductsGrid(_showOnlyFavorites, snapshot.data)
+                : const Center(child: CircularProgressIndicator()),
+            drawer: const NavigationDrawer(),
+            backgroundColor: themeData.backgroundColor,
+          );
+        }));
   }
 
   // Widget buildProductFilterMenu() {
@@ -85,18 +106,22 @@ class _OverviewScreenState extends State<OverviewScreen> {
   }
 
   Widget buildShoppingCartIcon(IconThemeData iconThemeData) {
-    return TopRightBadge(
-      data: CartManager().productCount,
-      child: IconButton(
-        onPressed: () {
-          Navigator.of(context).pushNamed(CartScreen.routeName);
-        },
-        icon: Icon(
-          FluentIcons.cart_16_regular,
-          color: iconThemeData.color,
-          size: iconThemeData.size,
-        ),
-      ),
+    return FutureBuilder(
+      builder: (context, snapshot) {
+        return TopRightBadge(
+          data: CartManager().productCount,
+          child: IconButton(
+            onPressed: () {
+              Navigator.of(context).pushNamed(CartScreen.routeName);
+            },
+            icon: Icon(
+              FluentIcons.cart_16_regular,
+              color: iconThemeData.color,
+              size: iconThemeData.size,
+            ),
+          ),
+        );
+      },
     );
   }
 }

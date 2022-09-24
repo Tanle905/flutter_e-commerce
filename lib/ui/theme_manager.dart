@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tmdt/ui/constants.dart';
+import 'package:tmdt/constants/constants.dart';
 
 ThemeData lightTheme() {
   return ThemeData(
@@ -49,5 +49,5 @@ ThemeData darkTheme() {
 }
 
 ThemeMode themeMode() {
-  return ThemeMode.dark;
+  return ThemeMode.light;
 }
