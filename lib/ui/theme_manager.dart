@@ -49,5 +49,5 @@ ThemeData darkTheme() {
 }
 
 ThemeMode themeMode() {
-  return ThemeMode.light;
+  return ThemeMode.system;
 }

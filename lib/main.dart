@@ -35,34 +35,34 @@ class _MyAppState extends State<MyApp> {
     return FutureBuilder(
       future: futureProduct,
       builder: (context, snapshot) {
-        return snapshot.hasData
-            ? MaterialApp(
-                title: 'My Shop',
-                debugShowCheckedModeBanner: false,
-                theme: lightTheme(),
-                darkTheme: darkTheme(),
-                themeMode: themeMode(),
-                home: const OverviewScreen(),
-                routes: {
-                  CartScreen.routeName: (context) => const CartScreen(),
-                  OrdersScreen.routeName: (context) => const OrdersScreen(),
-                  UserProductsScreen.routeName: (context) =>
-                      UserProductsScreen(snapshot.data)
-                },
-                onGenerateRoute: (settings) {
-                  if (settings.name == ProductDetailScreen.routeName) {
-                    final productId = settings.arguments as String;
-                    return MaterialPageRoute(builder: (context) {
-                      return ProductDetailScreen(
-                          ProductManager(snapshot.data).findById(productId));
-                    });
-                  }
-                  return null;
-                },
-              )
-            : const Center(
-                child: CircularProgressIndicator(),
-              );
+        return MaterialApp(
+          title: 'My Shop',
+          debugShowCheckedModeBanner: false,
+          theme: lightTheme(),
+          darkTheme: darkTheme(),
+          themeMode: themeMode(),
+          home: snapshot.hasData
+              ? const OverviewScreen()
+              : const Scaffold(
+                  body: Center(child: CircularProgressIndicator()),
+                ),
+          routes: {
+            CartScreen.routeName: (context) => const CartScreen(),
+            OrdersScreen.routeName: (context) => const OrdersScreen(),
+            UserProductsScreen.routeName: (context) =>
+                UserProductsScreen(snapshot.data)
+          },
+          onGenerateRoute: (settings) {
+            if (settings.name == ProductDetailScreen.routeName) {
+              final productId = settings.arguments as String;
+              return MaterialPageRoute(builder: (context) {
+                return ProductDetailScreen(
+                    ProductManager(snapshot.data).findById(productId));
+              });
+            }
+            return null;
+          },
+        );
       },
     );
   }
