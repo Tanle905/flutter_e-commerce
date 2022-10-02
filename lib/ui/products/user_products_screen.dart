@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:tmdt/models/products.dart';
+import 'package:tmdt/ui/cart/cart_screen.dart';
 import 'package:tmdt/ui/drawer/drawer.dart';
 import 'package:tmdt/ui/products/products_manager.dart';
 import 'package:tmdt/ui/products/user_products_list_tile.dart';
+import 'package:tmdt/ui/screens.dart';
 import 'package:tmdt/ui/shared/ui/icons.dart';
 
 class UserProductsScreen extends StatelessWidget {
   static const routeName = '/user-products';
-  final productsData;
+  final List productsData;
 
   const UserProductsScreen(this.productsData, {Key? key}) : super(key: key);
 
@@ -25,7 +26,7 @@ class UserProductsScreen extends StatelessWidget {
           'Your products',
           style: textTheme.titleLarge,
         ),
-        actions: <Widget>[buildAddButton(iconThemeData)],
+        actions: <Widget>[buildAddButton(iconThemeData, context)],
         iconTheme: iconThemeData,
       ),
       body: RefreshIndicator(
@@ -46,10 +47,10 @@ class UserProductsScreen extends StatelessWidget {
             ));
   }
 
-  Widget buildAddButton(IconThemeData iconThemeData) {
+  Widget buildAddButton(IconThemeData iconThemeData, BuildContext context) {
     return IconButton(
         onPressed: () {
-          print('Go to edit product screen');
+          Navigator.of(context).pushNamed(UserProductsAddScreen.routeName);
         },
         icon: const Icon(
           Icons.add,

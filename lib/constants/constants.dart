@@ -16,3 +16,5 @@ final COLOR_SHADOW_DARK = Colors.grey.shade800;
 final COLOR_TEXT_AND_ICON = Colors.grey.shade800;
 final COLOR_TEXT_AND_ICON_DARK = Colors.grey.shade200;
 const MEDIUM_GREY = Color(0xFF9ca3af);
+//placeholder
+const USER_PRODUCT_ADD_FORM_TITLE = 'sdf';

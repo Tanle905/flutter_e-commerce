@@ -2,14 +2,23 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 import 'package:tmdt/constants/endpoints.dart';
-import 'package:tmdt/models/products.dart';
 
-Future<List<dynamic>> fetchProducts() async {
+Future<dynamic> fetchProducts() async {
   try {
     final products =
         await http.get(Uri.parse(baseUrl + PRODUCTS_ENDPOINT_BASE));
     final productsBody = jsonDecode(products.body);
-    return productsBody.map((product) => Product.fromJson(product)).toList();
+    return productsBody;
+  } catch (error, stackTrace) {
+    throw ('$error\n$stackTrace');
+  }
+}
+
+Future<dynamic> postProduct(dynamic payload) async {
+  try {
+    return await http.post(Uri.parse(baseUrl + PRODUCTS_ENDPOINT_BASE),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode(payload));
   } catch (error, stackTrace) {
     throw ('$error\n$stackTrace');
   }

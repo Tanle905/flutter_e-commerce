@@ -1,3 +1,5 @@
+import 'package:tmdt/constants/endpoints.dart';
+
 class Product {
   final String? productId;
   final String title;
@@ -33,8 +35,9 @@ class Product {
         productId: json['productId'] ?? '',
         title: json['title'] ?? 'No Data',
         description: json['description'] ?? 'No Data',
-        imageUrl: json['imageUrl'] ?? 'No Data',
-        price: json['price'] == null ? 0 : double.parse(json['price']),
+        imageUrl: json['imageUrl'] ?? placeholderImage,
+        price:
+            json['price'] == null ? 0 : double.parse(json['price'].toString()),
         isFavorite: json['isFavorite'] ?? false);
   }
 }

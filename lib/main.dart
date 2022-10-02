@@ -1,14 +1,17 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:tmdt/models/products.dart';
 import 'package:tmdt/services/products.dart';
-import 'package:tmdt/ui/appbar/Appbar.dart';
-import 'package:tmdt/ui/products/products_detail_screen.dart';
-import 'package:tmdt/ui/products/products_manager.dart';
-import 'package:tmdt/ui/overview_screen.dart';
-import 'package:tmdt/ui/products/user_products_screen.dart';
 import 'package:tmdt/ui/screens.dart';
 import 'package:tmdt/ui/theme_manager.dart';
 
-void main() {
+import 'firebase_options.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const MyApp());
 }
 
@@ -22,19 +25,28 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  late Future<List<dynamic>> futureProduct;
+  late Future<dynamic> futureProductResponse;
+  late Future<List<dynamic>> futureProductData;
 
   @override
   void initState() {
     super.initState();
-    futureProduct = fetchProducts();
+    futureProductResponse = fetchProducts();
   }
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: futureProduct,
+      future: futureProductResponse,
       builder: (context, snapshot) {
+        List productData = List.empty();
+
+        if (snapshot.hasData) {
+          productData = (snapshot.data as dynamic)['data']
+              .map((product) => Product.fromJson(product))
+              .toList();
+        }
+
         return MaterialApp(
           title: 'My Shop',
           debugShowCheckedModeBanner: false,
@@ -42,22 +54,28 @@ class _MyAppState extends State<MyApp> {
           darkTheme: darkTheme(),
           themeMode: themeMode(),
           home: snapshot.hasData
-              ? const OverviewScreen()
+              ? OverviewScreen(
+                  productData: productData,
+                )
               : const Scaffold(
                   body: Center(child: CircularProgressIndicator()),
                 ),
           routes: {
             CartScreen.routeName: (context) => const CartScreen(),
             OrdersScreen.routeName: (context) => const OrdersScreen(),
-            UserProductsScreen.routeName: (context) =>
-                UserProductsScreen(snapshot.data)
+            UserProductsScreen.routeName: (context) => UserProductsScreen(
+                (snapshot.data as dynamic)['data']
+                    .map((product) => Product.fromJson(product))
+                    .toList()),
+            UserProductsAddScreen.routeName: ((context) =>
+                const UserProductsAddScreen())
           },
           onGenerateRoute: (settings) {
             if (settings.name == ProductDetailScreen.routeName) {
               final productId = settings.arguments as String;
               return MaterialPageRoute(builder: (context) {
                 return ProductDetailScreen(
-                    ProductManager(snapshot.data).findById(productId));
+                    ProductManager(productData).findById(productId));
               });
             }
             return null;

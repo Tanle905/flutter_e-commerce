@@ -4,7 +4,6 @@ import 'package:tmdt/models/cart_items.dart';
 import 'package:tmdt/models/products.dart';
 import 'package:tmdt/services/cart.dart';
 import 'package:tmdt/services/products.dart';
-import 'package:tmdt/ui/cart/cart_screen.dart';
 import 'package:tmdt/ui/drawer/drawer.dart';
 import 'package:tmdt/ui/products/products_grid.dart';
 import 'package:tmdt/ui/screens.dart';
@@ -14,7 +13,8 @@ import 'package:tmdt/ui/shared/ui/icons.dart';
 enum FilterOptions { favorite, all }
 
 class OverviewScreen extends StatefulWidget {
-  const OverviewScreen({Key? key}) : super(key: key);
+  final List productData;
+  const OverviewScreen({required this.productData, Key? key}) : super(key: key);
 
   @override
   State<OverviewScreen> createState() => _OverviewScreenState();
@@ -22,14 +22,12 @@ class OverviewScreen extends StatefulWidget {
 
 class _OverviewScreenState extends State<OverviewScreen> {
   final _showOnlyFavorites = false;
-  late Future<List<dynamic>> futureProduct;
-  late Future<Map<String, CartItem>> futureCart;
+  late Future<dynamic> futureProductResponse;
 
   @override
   void initState() {
     super.initState();
-    futureProduct = fetchProducts();
-    futureCart = fetchCart();
+    futureProductResponse = fetchProducts();
   }
 
   @override
@@ -37,24 +35,19 @@ class _OverviewScreenState extends State<OverviewScreen> {
     final IconThemeData iconThemeData = Theme.of(context).iconTheme;
     final ThemeData themeData = Theme.of(context);
 
-    return FutureBuilder(
-        future: futureProduct,
-        builder: ((context, snapshot) {
-          return Scaffold(
-            appBar: AppBar(
-              leading:
-                  Builder(builder: ((context) => buildDrawerIcon(context))),
-              centerTitle: true,
-              title: buildSearchBar(),
-              actions: <Widget>[buildShoppingCartIcon(iconThemeData)],
-            ),
-            body: snapshot.hasData
-                ? ProductsGrid(_showOnlyFavorites, snapshot.data)
-                : const Center(child: CircularProgressIndicator()),
-            drawer: const NavigationDrawer(),
-            backgroundColor: themeData.backgroundColor,
-          );
-        }));
+    return Scaffold(
+      appBar: AppBar(
+        leading: Builder(builder: ((context) => buildDrawerIcon(context))),
+        centerTitle: true,
+        title: buildSearchBar(),
+        actions: <Widget>[buildShoppingCartIcon(iconThemeData)],
+      ),
+      body: widget.productData.isNotEmpty
+          ? ProductsGrid(_showOnlyFavorites, widget.productData)
+          : const Center(child: CircularProgressIndicator()),
+      drawer: const NavigationDrawer(),
+      backgroundColor: themeData.backgroundColor,
+    );
   }
 
   // Widget buildProductFilterMenu() {
