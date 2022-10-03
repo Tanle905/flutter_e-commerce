@@ -64,19 +64,29 @@ class _OverviewScreenState extends State<OverviewScreen> {
                             .map((item) => Padding(
                                   padding:
                                       const EdgeInsets.symmetric(vertical: 5),
-                                  child: ElevatedButton(
-                                      onPressed: null,
+                                  child: OutlinedButton(
+                                      style: OutlinedButton.styleFrom(
+                                          side: BorderSide.none),
+                                      onPressed: () {
+                                        Navigator.of(context).pushNamed(
+                                            ProductDetailScreen.routeName,
+                                            arguments: item.productId);
+                                      },
                                       child: Row(
                                         children: [
-                                          ClipRRect(
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                            child: SizedBox(
-                                              height: 80,
-                                              width: 100,
-                                              child: Image.network(
-                                                item.imageUrl,
-                                                fit: BoxFit.cover,
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 5, vertical: 10),
+                                            child: ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                              child: SizedBox(
+                                                height: 80,
+                                                width: 100,
+                                                child: Image.network(
+                                                  item.imageUrl,
+                                                  fit: BoxFit.cover,
+                                                ),
                                               ),
                                             ),
                                           ),
