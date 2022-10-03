@@ -26,7 +26,6 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   late Future<dynamic> futureProductResponse;
-  late Future<List<dynamic>> futureProductData;
 
   @override
   void initState() {

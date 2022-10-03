@@ -1,14 +1,13 @@
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
-import 'package:tmdt/models/cart_items.dart';
 import 'package:tmdt/models/products.dart';
-import 'package:tmdt/services/cart.dart';
 import 'package:tmdt/services/products.dart';
 import 'package:tmdt/ui/drawer/drawer.dart';
 import 'package:tmdt/ui/products/products_grid.dart';
 import 'package:tmdt/ui/screens.dart';
 import 'package:tmdt/ui/shared/ui/badges.dart';
 import 'package:tmdt/ui/shared/ui/icons.dart';
+import 'package:tmdt/ui/shared/utils/debouncer.util.dart';
 
 enum FilterOptions { favorite, all }
 
@@ -22,13 +21,11 @@ class OverviewScreen extends StatefulWidget {
 
 class _OverviewScreenState extends State<OverviewScreen> {
   final _showOnlyFavorites = false;
-  late Future<dynamic> futureProductResponse;
-
-  @override
-  void initState() {
-    super.initState();
-    futureProductResponse = fetchProducts();
-  }
+  late Future<dynamic> futureSearchResponse;
+  late Future<List<dynamic>> futureProductData;
+  bool isSearching = false;
+  Debouncer handleSeachDebounce =
+      Debouncer(delay: const Duration(milliseconds: 800));
 
   @override
   Widget build(BuildContext context) {
@@ -39,12 +36,71 @@ class _OverviewScreenState extends State<OverviewScreen> {
       appBar: AppBar(
         leading: Builder(builder: ((context) => buildDrawerIcon(context))),
         centerTitle: true,
-        title: buildSearchBar(),
+        title: buildSearchBar(
+          onSearch: (value) => handleSeachDebounce(() {
+            setState(() {
+              isSearching = value.isNotEmpty;
+              futureSearchResponse =
+                  fetchProducts(initalQuery: '?title=$value');
+            });
+          }),
+        ),
         actions: <Widget>[buildShoppingCartIcon(iconThemeData)],
       ),
-      body: widget.productData.isNotEmpty
-          ? ProductsGrid(_showOnlyFavorites, widget.productData)
-          : const Center(child: CircularProgressIndicator()),
+      body: isSearching
+          ? FutureBuilder(
+              future: futureSearchResponse,
+              builder: (context, snapshot) {
+                List productData = List.empty();
+                if (snapshot.hasData) {
+                  productData = (snapshot.data as dynamic)['data']
+                      .map((product) => Product.fromJson(product))
+                      .toList();
+                }
+                return snapshot.hasData
+                    ? ListView(
+                        padding: const EdgeInsets.all(10),
+                        children: productData
+                            .map((item) => Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 5),
+                                  child: ElevatedButton(
+                                      onPressed: null,
+                                      child: Row(
+                                        children: [
+                                          ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                            child: SizedBox(
+                                              height: 80,
+                                              width: 100,
+                                              child: Image.network(
+                                                item.imageUrl,
+                                                fit: BoxFit.cover,
+                                              ),
+                                            ),
+                                          ),
+                                          const Padding(
+                                              padding: EdgeInsets.all(5)),
+                                          Text(
+                                            item.title,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .titleLarge,
+                                          )
+                                        ],
+                                      )),
+                                ))
+                            .toList(),
+                      )
+                    : const Center(
+                        child: CircularProgressIndicator(),
+                      );
+              },
+            )
+          : widget.productData.isNotEmpty
+              ? ProductsGrid(_showOnlyFavorites, widget.productData)
+              : const Center(child: CircularProgressIndicator()),
       drawer: const NavigationDrawer(),
       backgroundColor: themeData.backgroundColor,
     );
@@ -74,7 +130,7 @@ class _OverviewScreenState extends State<OverviewScreen> {
   //   );
   // }
 
-  Widget buildSearchBar() {
+  Widget buildSearchBar({Function(String)? onSearch}) {
     final InputDecorationTheme inputDecorationTheme =
         Theme.of(context).inputDecorationTheme;
 
@@ -88,6 +144,7 @@ class _OverviewScreenState extends State<OverviewScreen> {
             offset: const Offset(1, 1))
       ]),
       child: TextField(
+        onChanged: onSearch,
         decoration: InputDecoration(
             filled: true,
             fillColor: inputDecorationTheme.fillColor,

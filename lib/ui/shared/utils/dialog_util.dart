@@ -22,3 +22,20 @@ Future<bool?> showConfirmDialog(
             ],
           ));
 }
+
+Future<bool?> showAlertDialog(
+    BuildContext context, String title, String message) {
+  return showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+            title: Text(title),
+            content: Text(message),
+            actions: <Widget>[
+              TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('Ok')),
+            ],
+          ));
+}

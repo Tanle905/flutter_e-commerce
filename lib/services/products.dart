@@ -3,10 +3,11 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:tmdt/constants/endpoints.dart';
 
-Future<dynamic> fetchProducts() async {
+Future<dynamic> fetchProducts({String? initalQuery}) async {
+  String query = initalQuery ?? '?Page=1&pageSize=1000';
   try {
     final products =
-        await http.get(Uri.parse(baseUrl + PRODUCTS_ENDPOINT_BASE));
+        await http.get(Uri.parse('$baseUrl$PRODUCTS_ENDPOINT_BASE$query'));
     final productsBody = jsonDecode(products.body);
     return productsBody;
   } catch (error, stackTrace) {
