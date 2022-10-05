@@ -15,15 +15,15 @@ class Product {
       required this.imageUrl,
       this.isFavorite = false});
   Product copyWith(
-      {String? id,
+      {String? productId,
       String? title,
       String? description,
       double? price,
       String? imageUrl,
       bool? isFavorite}) {
     return Product(
-        productId: id ?? this.productId,
-        title: id ?? this.title,
+        productId: productId ?? this.productId,
+        title: title ?? this.title,
         description: description ?? this.description,
         price: price ?? this.price,
         imageUrl: imageUrl ?? this.imageUrl,
@@ -40,4 +40,11 @@ class Product {
             json['price'] == null ? 0 : double.parse(json['price'].toString()),
         isFavorite: json['isFavorite'] ?? false);
   }
+
+  Map<String, dynamic> toJson() => {
+        'title': title,
+        'description': description,
+        'price': price,
+        'imageUrl': imageUrl
+      };
 }

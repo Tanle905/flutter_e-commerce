@@ -67,7 +67,8 @@ class _MyAppState extends State<MyApp> {
                     .map((product) => Product.fromJson(product))
                     .toList()),
             UserProductsAddScreen.routeName: ((context) =>
-                const UserProductsAddScreen())
+                const UserProductsAddScreen()),
+            UserLoginScreen.routeName: (context) => UserLoginScreen()
           },
           onGenerateRoute: (settings) {
             if (settings.name == ProductDetailScreen.routeName) {

@@ -4,8 +4,8 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:tmdt/constants/endpoints.dart';
 import 'package:tmdt/services/products.dart';
+import 'package:tmdt/ui/shared/styles/input_styles.dart';
 import 'package:tmdt/ui/shared/ui/scaffold_snackbar.dart';
 import 'package:tmdt/utils/validator.util.dart';
 
@@ -107,16 +107,6 @@ class _UserProductAddFormState extends State<UserProductAddForm> {
       // )
       ElevatedButton(onPressed: selectImage, child: const Text('Upload Image'))
     ];
-  }
-
-  InputDecoration inputStyle({String? label}) {
-    return InputDecoration(
-        labelText: label,
-        enabledBorder:
-            OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-        focusedBorder:
-            OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-        fillColor: Colors.grey.shade300);
   }
 
   void selectImage() async {

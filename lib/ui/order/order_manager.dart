@@ -9,7 +9,7 @@ class OrderManager with ChangeNotifier {
         amount: 59.98,
         products: [
           CartItem(
-              id: 'c1',
+              productId: 'c1',
               title: 'Red shirt',
               price: 29.99,
               quantity: 2,

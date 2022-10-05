@@ -17,6 +17,15 @@ class NavigationDrawer extends StatelessWidget {
           children: <Widget>[
             ListTile(
               leading: const Icon(
+                FluentIcons.door_16_regular,
+              ),
+              title: const Text('Login'),
+              onTap: () {
+                Navigator.of(context).pushNamed(UserLoginScreen.routeName);
+              },
+            ),
+            ListTile(
+              leading: const Icon(
                 FluentIcons.shopping_bag_16_regular,
               ),
               title: const Text('Shop'),

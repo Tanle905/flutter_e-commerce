@@ -8,6 +8,10 @@ ThemeData lightTheme() {
       backgroundColor: COLOR_BACKGROUND,
       // drawerTheme: DrawerThemeData(backgroundColor: Colors.grey.shade700),
       textTheme: TextTheme(
+          headlineLarge: TextStyle(
+              color: COLOR_TEXT_AND_ICON,
+              fontWeight: FontWeight.bold,
+              fontSize: 50),
           titleSmall: TextStyle(color: COLOR_TEXT_AND_ICON),
           titleLarge: TextStyle(
               color: COLOR_TEXT_AND_ICON, fontWeight: FontWeight.bold),
@@ -31,6 +35,10 @@ ThemeData darkTheme() {
       backgroundColor: COLOR_BACKGROUND_DARK,
       // drawerTheme: DrawerThemeData(backgroundColor: Colors.grey.shade700),
       textTheme: TextTheme(
+          headlineLarge: TextStyle(
+              color: COLOR_TEXT_AND_ICON_DARK,
+              fontWeight: FontWeight.bold,
+              fontSize: 50),
           titleSmall: TextStyle(color: COLOR_TEXT_AND_ICON_DARK),
           titleLarge: TextStyle(
               color: COLOR_TEXT_AND_ICON_DARK, fontWeight: FontWeight.bold),
