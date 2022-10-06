@@ -1,5 +1,6 @@
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:tmdt/models/products.dart';
 import 'package:tmdt/services/products.dart';
 import 'package:tmdt/ui/drawer/drawer.dart';
@@ -13,7 +14,10 @@ enum FilterOptions { favorite, all }
 
 class OverviewScreen extends StatefulWidget {
   final List productData;
-  const OverviewScreen({required this.productData, Key? key}) : super(key: key);
+  final Future<void> Function() reloadProducts;
+  const OverviewScreen(
+      {required this.productData, required this.reloadProducts, Key? key})
+      : super(key: key);
 
   @override
   State<OverviewScreen> createState() => _OverviewScreenState();
@@ -21,11 +25,24 @@ class OverviewScreen extends StatefulWidget {
 
 class _OverviewScreenState extends State<OverviewScreen> {
   final _showOnlyFavorites = false;
-  late Future<dynamic> futureSearchResponse;
+  late Future<dynamic> futureSearchResponse = Future.value();
   late Future<List<dynamic>> futureProductData;
+  final FocusNode _searchFocusNode = FocusNode();
   bool isSearching = false;
   Debouncer handleSeachDebounce =
       Debouncer(delay: const Duration(milliseconds: 800));
+
+  @override
+  void initState() {
+    super.initState();
+    _searchFocusNode.addListener(handleChangeFocus);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _searchFocusNode.removeListener(handleChangeFocus);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,14 +54,13 @@ class _OverviewScreenState extends State<OverviewScreen> {
         leading: Builder(builder: ((context) => buildDrawerIcon(context))),
         centerTitle: true,
         title: buildSearchBar(
-          onSearch: (value) => handleSeachDebounce(() {
-            setState(() {
-              isSearching = value.isNotEmpty;
-              futureSearchResponse =
-                  fetchProducts(initalQuery: '?title=$value');
-            });
-          }),
-        ),
+            onSearch: (value) => handleSeachDebounce(() {
+                  setState(() {
+                    futureSearchResponse =
+                        fetchProducts(initalQuery: '?title=$value');
+                  });
+                }),
+            focusNode: _searchFocusNode),
         actions: <Widget>[buildShoppingCartIcon(iconThemeData)],
       ),
       body: isSearching
@@ -72,33 +88,40 @@ class _OverviewScreenState extends State<OverviewScreen> {
                                             ProductDetailScreen.routeName,
                                             arguments: item.productId);
                                       },
-                                      child: Row(
-                                        children: [
-                                          Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 5, vertical: 10),
-                                            child: ClipRRect(
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                              child: SizedBox(
-                                                height: 80,
-                                                width: 100,
-                                                child: Image.network(
-                                                  item.imageUrl,
-                                                  fit: BoxFit.cover,
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          _searchFocusNode.unfocus();
+                                        },
+                                        child: Row(
+                                          children: [
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 5,
+                                                      vertical: 10),
+                                              child: ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                                child: SizedBox(
+                                                  height: 80,
+                                                  width: 100,
+                                                  child: Image.network(
+                                                    item.imageUrl,
+                                                    fit: BoxFit.cover,
+                                                  ),
                                                 ),
                                               ),
                                             ),
-                                          ),
-                                          const Padding(
-                                              padding: EdgeInsets.all(5)),
-                                          Text(
-                                            item.title,
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .titleLarge,
-                                          )
-                                        ],
+                                            const Padding(
+                                                padding: EdgeInsets.all(5)),
+                                            Text(
+                                              item.title,
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .titleLarge,
+                                            )
+                                          ],
+                                        ),
                                       )),
                                 ))
                             .toList(),
@@ -109,7 +132,9 @@ class _OverviewScreenState extends State<OverviewScreen> {
               },
             )
           : widget.productData.isNotEmpty
-              ? ProductsGrid(_showOnlyFavorites, widget.productData)
+              ? RefreshIndicator(
+                  onRefresh: widget.reloadProducts,
+                  child: ProductsGrid(_showOnlyFavorites, widget.productData))
               : const Center(child: CircularProgressIndicator()),
       drawer: const NavigationDrawer(),
       backgroundColor: themeData.backgroundColor,
@@ -140,7 +165,8 @@ class _OverviewScreenState extends State<OverviewScreen> {
   //   );
   // }
 
-  Widget buildSearchBar({Function(String)? onSearch}) {
+  Widget buildSearchBar(
+      {Function(String)? onSearch, required FocusNode focusNode}) {
     final InputDecorationTheme inputDecorationTheme =
         Theme.of(context).inputDecorationTheme;
 
@@ -154,6 +180,7 @@ class _OverviewScreenState extends State<OverviewScreen> {
             offset: const Offset(1, 1))
       ]),
       child: TextField(
+        focusNode: focusNode,
         onChanged: onSearch,
         decoration: InputDecoration(
             filled: true,
@@ -183,5 +210,12 @@ class _OverviewScreenState extends State<OverviewScreen> {
         );
       },
     );
+  }
+
+  void handleChangeFocus() {
+    setState(() {
+      isSearching = _searchFocusNode.hasFocus;
+    });
+    print(isSearching);
   }
 }

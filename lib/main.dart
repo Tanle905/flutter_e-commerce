@@ -55,6 +55,7 @@ class _MyAppState extends State<MyApp> {
           home: snapshot.hasData
               ? OverviewScreen(
                   productData: productData,
+                  reloadProducts: reloadProducts,
                 )
               : const Scaffold(
                   body: Center(child: CircularProgressIndicator()),
@@ -84,4 +85,8 @@ class _MyAppState extends State<MyApp> {
       },
     );
   }
+
+  Future<void> reloadProducts() async => setState(() {
+        futureProductResponse = fetchProducts();
+      });
 }
