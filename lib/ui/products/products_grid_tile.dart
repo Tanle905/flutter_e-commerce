@@ -2,8 +2,12 @@ import 'dart:ui';
 
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:tmdt/models/cart.dart';
 import 'package:tmdt/models/products.dart';
+import 'package:tmdt/services/cart.dart';
 import 'package:tmdt/ui/screens.dart';
+import 'package:tmdt/ui/shared/ui/scaffold_snackbar.dart';
 
 class ProductGridTile extends StatelessWidget {
   const ProductGridTile(this.product, {super.key});
@@ -95,8 +99,13 @@ class ProductGridTile extends StatelessWidget {
                       style: const TextStyle(
                           fontSize: 15, fontWeight: FontWeight.w700)),
                   ElevatedButton(
-                    onPressed: (() {
-                      print('Add item to cart');
+                    onPressed: (() async {
+                      await addToCart(product: product, quantity: 1);
+                      await fetchCart().then((itemsList) =>
+                          Provider.of<CartList>(context, listen: false)
+                              .setCartList = itemsList);
+                      showSnackbar(
+                          context: context, message: 'Product added to cart!');
                     }),
                     style:
                         ElevatedButton.styleFrom(shape: const CircleBorder()),

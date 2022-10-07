@@ -1,4 +1,4 @@
-import 'package:tmdt/models/cart_items.dart';
+import 'package:tmdt/models/cart.dart';
 
 class OrderItem {
   final String? id;

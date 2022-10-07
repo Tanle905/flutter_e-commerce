@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:provider/provider.dart';
 import 'package:tmdt/constants/constants.dart';
+import 'package:tmdt/models/cart.dart';
 import 'package:tmdt/models/products.dart';
 import 'package:tmdt/models/user.dart';
 import 'package:tmdt/services/products.dart';
@@ -32,6 +33,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   final UserModel user = UserModel();
+  final CartList cartList = CartList(List.empty());
   final storage = const FlutterSecureStorage();
   late Future<dynamic> futureProductResponse;
 
@@ -50,8 +52,11 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<UserModel>.value(
-      value: user,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<UserModel>.value(value: user),
+        ChangeNotifierProvider<CartList>.value(value: cartList)
+      ],
       child: FutureBuilder(
         future: futureProductResponse,
         builder: (context, snapshot) {

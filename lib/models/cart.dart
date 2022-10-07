@@ -40,14 +40,19 @@ class CartItem {
 }
 
 class CartList extends ChangeNotifier {
-  List<CartItem> cartItem = [];
+  List<CartItem> _cartItem;
 
-  CartList(this.cartItem);
+  CartList(this._cartItem);
 
-  List<CartItem> get getCartList => cartItem;
+  List<CartItem> get getCartList => _cartItem;
+
+  set setCartList(List<CartItem> itemsList) {
+    _cartItem = itemsList;
+    notifyListeners();
+  }
 
   void add(CartItem item) {
-    cartItem.add(item);
+    _cartItem.add(item);
     notifyListeners();
   }
 }

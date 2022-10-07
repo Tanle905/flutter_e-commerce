@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tmdt/models/cart_items.dart';
+import 'package:tmdt/models/cart.dart';
 import 'package:tmdt/models/order_item.dart';
 
 class OrderManager with ChangeNotifier {

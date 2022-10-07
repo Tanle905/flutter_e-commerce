@@ -2,8 +2,10 @@ import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:tmdt/models/cart.dart';
 import 'package:tmdt/models/products.dart';
 import 'package:tmdt/models/user.dart';
+import 'package:tmdt/services/cart.dart';
 import 'package:tmdt/services/products.dart';
 import 'package:tmdt/ui/drawer/drawer.dart';
 import 'package:tmdt/ui/products/products_grid.dart';
@@ -29,7 +31,6 @@ class OverviewScreen extends StatefulWidget {
 class _OverviewScreenState extends State<OverviewScreen> {
   final _showOnlyFavorites = false;
   late Future<dynamic> futureSearchResponse = Future.value();
-  late Future<List<dynamic>> futureProductData;
   final FocusNode _searchFocusNode = FocusNode();
   bool isSearching = false;
   Debouncer handleSeachDebounce =
@@ -39,6 +40,8 @@ class _OverviewScreenState extends State<OverviewScreen> {
   void initState() {
     super.initState();
     _searchFocusNode.addListener(handleChangeFocus);
+    fetchCart().then((itemsList) =>
+        Provider.of<CartList>(context, listen: false).setCartList = itemsList);
   }
 
   @override
@@ -197,7 +200,7 @@ class _OverviewScreenState extends State<OverviewScreen> {
     return FutureBuilder(
       builder: (context, snapshot) {
         return TopRightBadge(
-          data: 34,
+          data: CartManager(Provider.of<CartList>(context)).productCount,
           child: IconButton(
             onPressed: () {
               Navigator.of(context).pushNamed(CartScreen.routeName);

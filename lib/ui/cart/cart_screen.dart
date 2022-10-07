@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:tmdt/models/cart_items.dart';
+import 'package:provider/provider.dart';
+import 'package:tmdt/models/cart.dart';
 import 'package:tmdt/services/cart.dart';
 import 'package:tmdt/ui/cart/cart_item_card.dart';
 import 'package:tmdt/ui/cart/cart_manager.dart';
@@ -32,6 +33,11 @@ class _CartScreenState extends State<CartScreen> {
     return FutureBuilder(
       future: futureCart,
       builder: (context, snapshot) {
+        List<CartItem> itemsList = List.empty();
+        if (snapshot.hasData) {
+          itemsList =
+              List.castFrom<dynamic, CartItem>(snapshot.data as List<dynamic>);
+        }
         return Scaffold(
           appBar: AppBar(
               iconTheme: iconTheme,
@@ -46,16 +52,11 @@ class _CartScreenState extends State<CartScreen> {
                     Expanded(
                         child: Padding(
                       padding: const EdgeInsets.symmetric(vertical: 15),
-                      child: buildCartDetails(CartManager(CartList(
-                          List.castFrom<dynamic, CartItem>(
-                              snapshot.data as List<dynamic>)))),
+                      child: buildCartDetails(CartManager(CartList(itemsList))),
                     )),
                     const SizedBox(height: 10),
                     buildCartSummary(
-                        textTheme,
-                        CartManager(CartList(List.castFrom<dynamic, CartItem>(
-                            snapshot.data as List<dynamic>))),
-                        context),
+                        textTheme, CartManager(CartList(itemsList)), context),
                   ],
                 )
               : const Center(

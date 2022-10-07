@@ -1,11 +1,15 @@
-import 'package:tmdt/models/cart_items.dart';
+import 'package:tmdt/models/cart.dart';
 
 class CartManager {
   final CartList _items;
   CartManager(this._items);
 
   int get productCount {
-    return _items.getCartList.length;
+    int totalQuantity = 0;
+    for (var item in _items.getCartList) {
+      totalQuantity += item.quantity;
+    }
+    return totalQuantity;
   }
 
   CartList get items {
