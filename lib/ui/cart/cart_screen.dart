@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tmdt/models/cart_items.dart';
 import 'package:tmdt/services/cart.dart';
 import 'package:tmdt/ui/cart/cart_item_card.dart';
 import 'package:tmdt/ui/cart/cart_manager.dart';
@@ -15,38 +16,53 @@ class CartScreen extends StatefulWidget {
 }
 
 class _CartScreenState extends State<CartScreen> {
-  late Future<List<dynamic>> futureCart;
+  late Future<List<CartItem>> futureCart;
 
   @override
   void initState() {
     super.initState();
+    futureCart = fetchCart();
   }
 
   @override
   Widget build(BuildContext context) {
-    final cart = CartManager();
     final TextTheme textTheme = Theme.of(context).textTheme;
     final IconThemeData iconTheme = Theme.of(context).iconTheme;
 
-    return Scaffold(
-      appBar: AppBar(
-          iconTheme: iconTheme,
-          leading: Builder(builder: (context) => buildBackIcon(context)),
-          title: Text(
-            'Your cart',
-            style: textTheme.titleLarge,
-          )),
-      body: Column(
-        children: <Widget>[
-          Expanded(
-              child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 15),
-            child: buildCartDetails(cart),
-          )),
-          const SizedBox(height: 10),
-          buildCartSummary(textTheme, cart, context),
-        ],
-      ),
+    return FutureBuilder(
+      future: futureCart,
+      builder: (context, snapshot) {
+        return Scaffold(
+          appBar: AppBar(
+              iconTheme: iconTheme,
+              leading: Builder(builder: (context) => buildBackIcon(context)),
+              title: Text(
+                'Your cart',
+                style: textTheme.titleLarge,
+              )),
+          body: snapshot.hasData
+              ? Column(
+                  children: <Widget>[
+                    Expanded(
+                        child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 15),
+                      child: buildCartDetails(CartManager(CartList(
+                          List.castFrom<dynamic, CartItem>(
+                              snapshot.data as List<dynamic>)))),
+                    )),
+                    const SizedBox(height: 10),
+                    buildCartSummary(
+                        textTheme,
+                        CartManager(CartList(List.castFrom<dynamic, CartItem>(
+                            snapshot.data as List<dynamic>))),
+                        context),
+                  ],
+                )
+              : const Center(
+                  child: CircularProgressIndicator(),
+                ),
+        );
+      },
     );
   }
 
@@ -81,8 +97,9 @@ class _CartScreenState extends State<CartScreen> {
 
   Widget buildCartDetails(CartManager cart) {
     return ListView(
-      children: cart.productEntries
-          .map((e) => CartItemCard(productId: e.key, cartItem: e.value))
+      children: cart.items.getCartList
+          .map(
+              (item) => CartItemCard(productId: item.productId, cartItem: item))
           .toList(),
     );
   }

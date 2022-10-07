@@ -19,4 +19,9 @@ const MEDIUM_GREY = Color(0xFF9ca3af);
 //placeholder
 const USER_PRODUCT_ADD_FORM_TITLE = 'sdf';
 //variables
-const accessTokenKey = 'accessToken';
+const KEY_ACCESS_TOKEN = 'accessToken';
+const KEY_USER_INFO = 'userInfo';
+const ROLE_USER = 'ROLE_USER';
+const ROLE_ADMIN = 'ROLE_ADMIN';
+//assets
+const placeholderImage = AssetImage('assets/images/placeholder-image.jpg');

@@ -1,7 +1,9 @@
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 import 'package:tmdt/models/products.dart';
+import 'package:tmdt/models/user.dart';
 import 'package:tmdt/services/products.dart';
 import 'package:tmdt/ui/drawer/drawer.dart';
 import 'package:tmdt/ui/products/products_grid.dart';
@@ -13,6 +15,7 @@ import 'package:tmdt/ui/shared/utils/debouncer.util.dart';
 enum FilterOptions { favorite, all }
 
 class OverviewScreen extends StatefulWidget {
+  static String routeName = '/';
   final List productData;
   final Future<void> Function() reloadProducts;
   const OverviewScreen(
@@ -30,7 +33,7 @@ class _OverviewScreenState extends State<OverviewScreen> {
   final FocusNode _searchFocusNode = FocusNode();
   bool isSearching = false;
   Debouncer handleSeachDebounce =
-      Debouncer(delay: const Duration(milliseconds: 800));
+      Debouncer(delay: const Duration(milliseconds: 300));
 
   @override
   void initState() {
@@ -51,7 +54,9 @@ class _OverviewScreenState extends State<OverviewScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        leading: Builder(builder: ((context) => buildDrawerIcon(context))),
+        leading: isSearching
+            ? buildSearchBackIcon()
+            : Builder(builder: ((context) => buildDrawerIcon(context))),
         centerTitle: true,
         title: buildSearchBar(
             onSearch: (value) => handleSeachDebounce(() {
@@ -74,58 +79,7 @@ class _OverviewScreenState extends State<OverviewScreen> {
                       .toList();
                 }
                 return snapshot.hasData
-                    ? ListView(
-                        padding: const EdgeInsets.all(10),
-                        children: productData
-                            .map((item) => Padding(
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 5),
-                                  child: OutlinedButton(
-                                      style: OutlinedButton.styleFrom(
-                                          side: BorderSide.none),
-                                      onPressed: () {
-                                        Navigator.of(context).pushNamed(
-                                            ProductDetailScreen.routeName,
-                                            arguments: item.productId);
-                                      },
-                                      child: GestureDetector(
-                                        onTap: () {
-                                          _searchFocusNode.unfocus();
-                                        },
-                                        child: Row(
-                                          children: [
-                                            Padding(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      horizontal: 5,
-                                                      vertical: 10),
-                                              child: ClipRRect(
-                                                borderRadius:
-                                                    BorderRadius.circular(10),
-                                                child: SizedBox(
-                                                  height: 80,
-                                                  width: 100,
-                                                  child: Image.network(
-                                                    item.imageUrl,
-                                                    fit: BoxFit.cover,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                            const Padding(
-                                                padding: EdgeInsets.all(5)),
-                                            Text(
-                                              item.title,
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .titleLarge,
-                                            )
-                                          ],
-                                        ),
-                                      )),
-                                ))
-                            .toList(),
-                      )
+                    ? buildSearchResultList(productData: productData)
                     : const Center(
                         child: CircularProgressIndicator(),
                       );
@@ -136,7 +90,11 @@ class _OverviewScreenState extends State<OverviewScreen> {
                   onRefresh: widget.reloadProducts,
                   child: ProductsGrid(_showOnlyFavorites, widget.productData))
               : const Center(child: CircularProgressIndicator()),
-      drawer: const NavigationDrawer(),
+      drawer: Consumer<UserModel>(
+        builder: (context, user, child) {
+          return NavigationDrawer(userInfo: user.getUser);
+        },
+      ),
       backgroundColor: themeData.backgroundColor,
     );
   }
@@ -192,11 +150,54 @@ class _OverviewScreenState extends State<OverviewScreen> {
     );
   }
 
+  Widget buildSearchResultList({required List<dynamic> productData}) {
+    return ListView(
+      padding: const EdgeInsets.all(10),
+      children: productData
+          .map((item) => Padding(
+                padding: const EdgeInsets.symmetric(vertical: 1),
+                child: OutlinedButton(
+                  style: OutlinedButton.styleFrom(side: BorderSide.none),
+                  onPressed: () {
+                    Navigator.of(context).pushNamed(
+                        ProductDetailScreen.routeName,
+                        arguments: item.productId);
+                  },
+                  child: Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 5, vertical: 2),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: SizedBox(
+                            height: 80,
+                            width: 100,
+                            child: Image.network(
+                              item.imageUrl,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
+                      ),
+                      const Padding(padding: EdgeInsets.all(5)),
+                      Text(
+                        item.title,
+                        style: Theme.of(context).textTheme.titleLarge,
+                      )
+                    ],
+                  ),
+                ),
+              ))
+          .toList(),
+    );
+  }
+
   Widget buildShoppingCartIcon(IconThemeData iconThemeData) {
     return FutureBuilder(
       builder: (context, snapshot) {
         return TopRightBadge(
-          data: CartManager().productCount,
+          data: 34,
           child: IconButton(
             onPressed: () {
               Navigator.of(context).pushNamed(CartScreen.routeName);
@@ -212,10 +213,24 @@ class _OverviewScreenState extends State<OverviewScreen> {
     );
   }
 
+  Widget buildSearchBackIcon() {
+    return IconButton(
+        onPressed: () {
+          _searchFocusNode.unfocus();
+          setState(() {
+            isSearching = false;
+          });
+        },
+        icon: Icon(
+          FluentIcons.arrow_left_16_regular,
+          color: Theme.of(context).iconTheme.color,
+          size: Theme.of(context).iconTheme.size,
+        ));
+  }
+
   void handleChangeFocus() {
     setState(() {
       isSearching = _searchFocusNode.hasFocus;
     });
-    print(isSearching);
   }
 }

@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 class CartItem {
   final String productId;
   final String title;
@@ -32,7 +34,20 @@ class CartItem {
       title: json['title'] ?? 'No Data',
       quantity: json['quantity'] ?? 0,
       imageUrl: json['imageUrl'] ?? 'No Data',
-      price: json['price'] == null ? 0 : double.parse(json['price']),
+      price: json['price'] == null ? 0 : double.parse(json['price'].toString()),
     );
+  }
+}
+
+class CartList extends ChangeNotifier {
+  List<CartItem> cartItem = [];
+
+  CartList(this.cartItem);
+
+  List<CartItem> get getCartList => cartItem;
+
+  void add(CartItem item) {
+    cartItem.add(item);
+    notifyListeners();
   }
 }
