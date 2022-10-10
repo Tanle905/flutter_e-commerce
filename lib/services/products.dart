@@ -1,26 +1,35 @@
 import 'dart:convert';
 
-import 'package:http/http.dart' as http;
+import 'package:dio/dio.dart';
 import 'package:tmdt/constants/endpoints.dart';
+import 'package:tmdt/utils/storage.util.dart';
 
-Future<dynamic> fetchProducts({String? initalQuery}) async {
+Future<Map> fetchProducts({String? initalQuery}) async {
   String query = initalQuery ?? '?Page=1&pageSize=1000';
+  Map productsData = {};
   try {
-    final products =
-        await http.get(Uri.parse('$baseUrl$PRODUCTS_ENDPOINT_BASE$query'));
-    final productsBody = jsonDecode(products.body);
-    return productsBody;
-  } catch (error, stackTrace) {
-    throw ('$error\n$stackTrace');
+    final products = await Dio().get(baseUrl + PRODUCTS_ENDPOINT_BASE + query);
+    productsData = products.data;
+  } on DioError catch (error) {
+    if (error.response != null) {
+      throw error.response!.data;
+    }
   }
+
+  return productsData;
 }
 
 Future<dynamic> postProduct(dynamic payload) async {
   try {
-    return await http.post(Uri.parse(baseUrl + PRODUCTS_ENDPOINT_BASE),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode(payload));
-  } catch (error, stackTrace) {
-    throw ('$error\n$stackTrace');
+    return await Dio().post(baseUrl + PRODUCTS_ENDPOINT_BASE,
+        options: Options(headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ${(await getAccessToken())}'
+        }),
+        data: jsonEncode(payload));
+  } on DioError catch (error) {
+    if (error.response != null) {
+      throw error.response!.data;
+    }
   }
 }

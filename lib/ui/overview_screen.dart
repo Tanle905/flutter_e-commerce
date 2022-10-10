@@ -1,27 +1,29 @@
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:tmdt/models/cart.dart';
 import 'package:tmdt/models/products.dart';
-import 'package:tmdt/models/user.dart';
 import 'package:tmdt/services/cart.dart';
 import 'package:tmdt/services/products.dart';
 import 'package:tmdt/ui/drawer/drawer.dart';
 import 'package:tmdt/ui/products/products_grid.dart';
 import 'package:tmdt/ui/screens.dart';
+import 'package:tmdt/ui/shared/ui/404.dart';
 import 'package:tmdt/ui/shared/ui/badges.dart';
 import 'package:tmdt/ui/shared/ui/icons.dart';
 import 'package:tmdt/ui/shared/utils/debouncer.util.dart';
+import 'package:tmdt/utils/responseMapping.util.dart';
 
 enum FilterOptions { favorite, all }
 
 class OverviewScreen extends StatefulWidget {
   static String routeName = '/';
-  final List productData;
+  final Future<Map> futureProductResponse;
   final Future<void> Function() reloadProducts;
   const OverviewScreen(
-      {required this.productData, required this.reloadProducts, Key? key})
+      {required this.futureProductResponse,
+      required this.reloadProducts,
+      Key? key})
       : super(key: key);
 
   @override
@@ -69,35 +71,49 @@ class _OverviewScreenState extends State<OverviewScreen> {
                   });
                 }),
             focusNode: _searchFocusNode),
-        actions: <Widget>[buildShoppingCartIcon(iconThemeData)],
+        actions: <Widget>[
+          Consumer<CartList>(
+            builder: (context, value, child) => buildShoppingCartIcon(
+                iconThemeData: iconThemeData, cartList: value),
+          )
+        ],
       ),
       body: isSearching
           ? FutureBuilder(
               future: futureSearchResponse,
               builder: (context, snapshot) {
-                List productData = List.empty();
+                List<Product> productData = List.empty();
                 if (snapshot.hasData) {
-                  productData = (snapshot.data as dynamic)['data']
-                      .map((product) => Product.fromJson(product))
-                      .toList();
+                  productData = productResponseMapping(snapshot);
                 }
                 return snapshot.hasData
-                    ? buildSearchResultList(productData: productData)
+                    ? productData.isNotEmpty
+                        ? buildSearchResultList(productData: productData)
+                        : const NotFoundPage()
                     : const Center(
                         child: CircularProgressIndicator(),
                       );
               },
             )
-          : widget.productData.isNotEmpty
-              ? RefreshIndicator(
-                  onRefresh: widget.reloadProducts,
-                  child: ProductsGrid(_showOnlyFavorites, widget.productData))
-              : const Center(child: CircularProgressIndicator()),
-      drawer: Consumer<UserModel>(
-        builder: (context, user, child) {
-          return NavigationDrawer(userInfo: user.getUser);
-        },
-      ),
+          : FutureBuilder(
+              future: widget.futureProductResponse,
+              builder: (context, snapshot) {
+                List<Product> productData = List.empty();
+                if (snapshot.hasData) {
+                  productData = productResponseMapping(snapshot);
+                }
+
+                return snapshot.hasData
+                    ? RefreshIndicator(
+                        onRefresh: widget.reloadProducts,
+                        child: productData.isNotEmpty
+                            ? ProductsGrid(_showOnlyFavorites, productData)
+                            : ListView(
+                                children: const [NotFoundPage()],
+                              ))
+                    : const Center(child: CircularProgressIndicator());
+              }),
+      drawer: const NavigationDrawer(),
       backgroundColor: themeData.backgroundColor,
     );
   }
@@ -153,7 +169,9 @@ class _OverviewScreenState extends State<OverviewScreen> {
     );
   }
 
-  Widget buildSearchResultList({required List<dynamic> productData}) {
+  Widget buildSearchResultList({required List<Product> productData}) {
+    final TextTheme textTheme = Theme.of(context).textTheme;
+
     return ListView(
       padding: const EdgeInsets.all(10),
       children: productData
@@ -172,9 +190,9 @@ class _OverviewScreenState extends State<OverviewScreen> {
                         padding: const EdgeInsets.symmetric(
                             horizontal: 5, vertical: 2),
                         child: ClipRRect(
-                          borderRadius: BorderRadius.circular(10),
+                          borderRadius: BorderRadius.circular(5),
                           child: SizedBox(
-                            height: 80,
+                            height: 70,
                             width: 100,
                             child: Image.network(
                               item.imageUrl,
@@ -184,9 +202,19 @@ class _OverviewScreenState extends State<OverviewScreen> {
                         ),
                       ),
                       const Padding(padding: EdgeInsets.all(5)),
-                      Text(
-                        item.title,
-                        style: Theme.of(context).textTheme.titleLarge,
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text(
+                            item.title,
+                            style: textTheme.titleLarge,
+                          ),
+                          Text(
+                            item.description,
+                            style: textTheme.bodyMedium,
+                          )
+                        ],
                       )
                     ],
                   ),
@@ -196,23 +224,22 @@ class _OverviewScreenState extends State<OverviewScreen> {
     );
   }
 
-  Widget buildShoppingCartIcon(IconThemeData iconThemeData) {
-    return FutureBuilder(
-      builder: (context, snapshot) {
-        return TopRightBadge(
-          data: CartManager(Provider.of<CartList>(context)).productCount,
-          child: IconButton(
-            onPressed: () {
-              Navigator.of(context).pushNamed(CartScreen.routeName);
-            },
-            icon: Icon(
-              FluentIcons.cart_16_regular,
-              color: iconThemeData.color,
-              size: iconThemeData.size,
-            ),
-          ),
-        );
-      },
+  Widget buildShoppingCartIcon(
+      {required IconThemeData iconThemeData, required CartList cartList}) {
+    final int cartQuantities = CartManager(cartList).productCount;
+
+    return TopRightBadge(
+      data: cartQuantities,
+      child: IconButton(
+        onPressed: () {
+          Navigator.of(context).pushNamed(CartScreen.routeName);
+        },
+        icon: Icon(
+          FluentIcons.cart_16_regular,
+          color: iconThemeData.color,
+          size: iconThemeData.size,
+        ),
+      ),
     );
   }
 
@@ -232,8 +259,10 @@ class _OverviewScreenState extends State<OverviewScreen> {
   }
 
   void handleChangeFocus() {
-    setState(() {
-      isSearching = _searchFocusNode.hasFocus;
-    });
+    if (_searchFocusNode.hasFocus) {
+      setState(() {
+        isSearching = true;
+      });
+    }
   }
 }

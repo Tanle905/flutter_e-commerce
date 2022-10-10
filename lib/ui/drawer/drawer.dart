@@ -3,16 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:provider/provider.dart';
 import 'package:tmdt/constants/constants.dart';
+import 'package:tmdt/models/cart.dart';
 import 'package:tmdt/models/user.dart';
 import 'package:tmdt/ui/screens.dart';
 import 'package:tmdt/ui/shared/ui/scaffold_snackbar.dart';
 
 class NavigationDrawer extends StatelessWidget {
-  final User? userInfo;
-  const NavigationDrawer({Key? key, this.userInfo}) : super(key: key);
+  const NavigationDrawer({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    User? userInfo = Provider.of<UserModel>(context).getUser;
+
     return Container(
       color: Colors.white,
       child: Drawer(
@@ -34,7 +36,7 @@ class NavigationDrawer extends StatelessWidget {
                         height: 100,
                         child: userInfo?.imageUrl != null
                             ? Image.network(userInfo?.imageUrl as String)
-                            : const Image(image: placeholderImage)),
+                            : const Image(image: IMAGE_PLACEHOLDER)),
                   ),
                   const Padding(padding: EdgeInsets.symmetric(vertical: 5)),
                   userInfo != null
@@ -43,16 +45,19 @@ class NavigationDrawer extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Text(
-                              userInfo?.username as String,
+                              userInfo.username,
                               style: Theme.of(context).textTheme.titleMedium,
                             ),
                             ElevatedButton(
                                 onPressed: () async {
                                   const storage = FlutterSecureStorage();
                                   storage.delete(key: KEY_ACCESS_TOKEN);
-                                  storage.delete(key: KEY_USER_INFO);
                                   Provider.of<UserModel>(context, listen: false)
                                       .setUser = null;
+                                  Provider.of<CartList>(context, listen: false)
+                                      .setCartList = List.empty();
+                                  Navigator.of(context).pushReplacementNamed(
+                                      OverviewScreen.routeName);
                                   showSnackbar(
                                       context: context,
                                       message: "Log out completed!");
@@ -87,7 +92,7 @@ class NavigationDrawer extends StatelessWidget {
                     .pushReplacementNamed(OrdersScreen.routeName);
               },
             ),
-            userInfo != null && userInfo!.roles!.contains(ROLE_ADMIN)
+            userInfo != null && (userInfo.roles?.contains(ROLE_ADMIN) ?? false)
                 ? ListTile(
                     leading: const Icon(
                       FluentIcons.edit_16_regular,
@@ -96,6 +101,16 @@ class NavigationDrawer extends StatelessWidget {
                     onTap: () {
                       Navigator.of(context)
                           .pushReplacementNamed(UserProductsScreen.routeName);
+                    },
+                  )
+                : const SizedBox.shrink(),
+            userInfo != null
+                ? ListTile(
+                    leading: const Icon(FluentIcons.settings_16_regular),
+                    title: const Text('User Settings'),
+                    onTap: () {
+                      Navigator.of(context)
+                          .pushReplacementNamed(UserSettingsScreen.routeName);
                     },
                   )
                 : const SizedBox.shrink()

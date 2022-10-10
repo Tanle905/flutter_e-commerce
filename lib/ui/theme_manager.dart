@@ -8,10 +8,18 @@ ThemeData lightTheme() {
       backgroundColor: COLOR_BACKGROUND,
       // drawerTheme: DrawerThemeData(backgroundColor: Colors.grey.shade700),
       textTheme: TextTheme(
+          labelLarge: const TextStyle(
+              color: COLOR_BUTTON_AND_LINK_TEXT,
+              fontWeight: FontWeight.bold,
+              fontSize: 15),
           headlineLarge: TextStyle(
               color: COLOR_TEXT_AND_ICON,
               fontWeight: FontWeight.bold,
               fontSize: 50),
+          headlineMedium: TextStyle(
+            color: COLOR_TEXT_AND_ICON,
+            fontWeight: FontWeight.bold,
+          ),
           titleSmall: TextStyle(color: COLOR_TEXT_AND_ICON),
           titleLarge: TextStyle(
               color: COLOR_TEXT_AND_ICON, fontWeight: FontWeight.bold),
@@ -25,7 +33,10 @@ ThemeData lightTheme() {
           secondary: COLOR_BACKGROUND_ACCENT, brightness: Brightness.light),
       shadowColor: COLOR_SHADOW,
       elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ElevatedButton.styleFrom(primary: COLOR_TEXT_AND_ICON)));
+          style: ElevatedButton.styleFrom(
+              primary: COLOR_BUTTON_AND_LINK_TEXT,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)))));
 }
 
 ThemeData darkTheme() {
@@ -53,7 +64,8 @@ ThemeData darkTheme() {
           secondary: COLOR_BACKGROUND_ACCENT_DARK, brightness: Brightness.dark),
       shadowColor: COLOR_SHADOW_DARK,
       elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ElevatedButton.styleFrom(primary: COLOR_TEXT_AND_ICON_DARK)));
+          style: ElevatedButton.styleFrom(
+              primary: COLOR_BUTTON_AND_LINK_TEXT_DARK)));
 }
 
 ThemeMode themeMode() {

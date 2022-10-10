@@ -11,8 +11,9 @@ Future<List<CartItem>> fetchCart() async {
     final cart = await http.get(Uri.parse(baseUrl + CART_ENDPOINT_BASE),
         headers: {'Authorization': 'Bearer ${(await getAccessToken())}'});
     final cartBody = jsonDecode(cart.body);
-    return List.castFrom<dynamic, CartItem>(
+    final mappedCartData = List.castFrom<dynamic, CartItem>(
         cartBody['data'].map((product) => CartItem.fromJson(product)).toList());
+    return mappedCartData;
   } catch (error, stackTrace) {
     throw ('$error\n$stackTrace');
   }

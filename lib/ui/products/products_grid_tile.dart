@@ -89,7 +89,9 @@ class ProductGridTile extends StatelessWidget {
                         shape: const CircleBorder(),
                         primary: accentColor.secondary),
                     child: Icon(
-                      FluentIcons.heart_16_filled,
+                      product.isFavorite
+                          ? FluentIcons.heart_48_filled
+                          : FluentIcons.heart_48_regular,
                       color: product.isFavorite
                           ? Colors.red.shade400
                           : primaryColor,
@@ -107,10 +109,11 @@ class ProductGridTile extends StatelessWidget {
                       showSnackbar(
                           context: context, message: 'Product added to cart!');
                     }),
-                    style:
-                        ElevatedButton.styleFrom(shape: const CircleBorder()),
+                    style: ElevatedButton.styleFrom(
+                        shape: const CircleBorder(),
+                        primary: accentColor.secondary),
                     child: Icon(
-                      FluentIcons.cart_16_filled,
+                      FluentIcons.cart_24_regular,
                       color: primaryColor,
                     ),
                   ),

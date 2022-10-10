@@ -9,9 +9,10 @@ class User {
   final String? password;
   final String? address;
   final String? imageUrl;
+  final String? accessToken;
 
-  final String? phoneNumber;
-  final String? paymemt;
+  final int? phoneNumber;
+  final String? payment;
 
   User(
       {required this.userId,
@@ -22,7 +23,8 @@ class User {
       this.address,
       this.imageUrl,
       this.phoneNumber,
-      this.paymemt});
+      this.payment,
+      this.accessToken});
 
   User copyWith(
       {String? userId,
@@ -31,29 +33,32 @@ class User {
       List<String>? roles,
       String? address,
       String? imageUrl,
-      String? phoneNumber,
-      String? paymemt}) {
+      int? phoneNumber,
+      String? payment,
+      String? accessToken}) {
     return User(
         userId: userId ?? this.userId,
         username: username ?? this.username,
         email: email ?? this.email,
         roles: roles ?? [ROLE_USER],
         imageUrl: imageUrl ?? this.imageUrl,
-        address: address,
-        paymemt: paymemt,
-        phoneNumber: phoneNumber);
+        address: address ?? this.address,
+        payment: payment ?? this.payment,
+        phoneNumber: phoneNumber ?? this.phoneNumber,
+        accessToken: accessToken ?? this.accessToken);
   }
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
-        userId: json['userId'],
+        userId: json['userId'] ?? json['_id'] ?? json['id'],
         username: json['username'],
-        email: json['email'] ?? '',
+        email: json['email'],
         roles: List.castFrom<dynamic, String>(json['roles']),
         address: json['address'],
         imageUrl: json['imageUrl'],
-        paymemt: json['payment'],
-        phoneNumber: json['phoneNumber']);
+        payment: json['payment'],
+        phoneNumber: json['phoneNumber'],
+        accessToken: json['accessToken']);
   }
 
   Map<String, dynamic> toJson() => {
@@ -64,7 +69,8 @@ class User {
         'address': address,
         'imageUrl': imageUrl,
         'phoneNumber': phoneNumber,
-        'paymemt': paymemt
+        'payment': payment,
+        'accessToken': accessToken
       };
 }
 

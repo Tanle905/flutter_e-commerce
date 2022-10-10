@@ -1,16 +1,16 @@
-import 'dart:convert';
-
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:provider/provider.dart';
-import 'package:tmdt/constants/constants.dart';
 import 'package:tmdt/models/cart.dart';
 import 'package:tmdt/models/products.dart';
 import 'package:tmdt/models/user.dart';
 import 'package:tmdt/services/products.dart';
+import 'package:tmdt/services/user.dart';
 import 'package:tmdt/ui/screens.dart';
 import 'package:tmdt/ui/theme_manager.dart';
+import 'package:tmdt/utils/error_handling.util.dart';
+import 'package:tmdt/utils/responseMapping.util.dart';
 
 import 'firebase_options.dart';
 
@@ -35,19 +35,19 @@ class _MyAppState extends State<MyApp> {
   final UserModel user = UserModel();
   final CartList cartList = CartList(List.empty());
   final storage = const FlutterSecureStorage();
-  late Future<dynamic> futureProductResponse;
+  late Future<Map> futureProductResponse;
 
   @override
   void initState() {
     super.initState();
-    futureProductResponse = fetchProducts();
-    storage
-        .read(key: KEY_ACCESS_TOKEN)
-        .then((value) => storage.read(key: KEY_USER_INFO).then((storedUser) {
-              if (storedUser != null) {
-                user.setUser = User.fromJson(jsonDecode(storedUser));
-              }
-            }));
+    try {
+      futureProductResponse = fetchProducts();
+      fetchUserProfile().then((value) {
+        user.setUser = value;
+      });
+    } catch (error) {
+      restApiErrorHandling(error, context);
+    }
   }
 
   @override
@@ -60,12 +60,9 @@ class _MyAppState extends State<MyApp> {
       child: FutureBuilder(
         future: futureProductResponse,
         builder: (context, snapshot) {
-          List productData = List.empty();
-
+          List<Product> productData = List.empty();
           if (snapshot.hasData) {
-            productData = (snapshot.data as dynamic)['data']
-                .map((product) => Product.fromJson(product))
-                .toList();
+            productData = productResponseMapping(snapshot);
           }
 
           return MaterialApp(
@@ -76,7 +73,7 @@ class _MyAppState extends State<MyApp> {
             themeMode: themeMode(),
             home: snapshot.hasData
                 ? OverviewScreen(
-                    productData: productData,
+                    futureProductResponse: futureProductResponse,
                     reloadProducts: reloadProducts,
                   )
                 : const Scaffold(
@@ -85,13 +82,14 @@ class _MyAppState extends State<MyApp> {
             routes: {
               CartScreen.routeName: (context) => const CartScreen(),
               OrdersScreen.routeName: (context) => const OrdersScreen(),
-              UserProductsScreen.routeName: (context) => UserProductsScreen(
-                  (snapshot.data as dynamic)['data']
-                      .map((product) => Product.fromJson(product))
-                      .toList()),
+              UserProductsScreen.routeName: (context) =>
+                  UserProductsScreen(productData),
               UserProductsAddScreen.routeName: ((context) =>
                   const UserProductsAddScreen()),
-              UserLoginScreen.routeName: (context) => UserLoginScreen()
+              UserLoginScreen.routeName: (context) => const UserLoginScreen(),
+              UserSignUpScreen.routeName: (context) => const UserSignUpScreen(),
+              UserSettingsScreen.routeName: (context) =>
+                  const UserSettingsScreen()
             },
             onGenerateRoute: (settings) {
               if (settings.name == ProductDetailScreen.routeName) {

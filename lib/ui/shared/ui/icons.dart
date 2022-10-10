@@ -23,3 +23,26 @@ Widget buildDrawerIcon(BuildContext context) {
     ),
   );
 }
+
+Widget loadingIcon({required String text}) {
+  return Padding(
+    padding: const EdgeInsets.all(5.0),
+    child: Row(
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[
+        Text(text),
+        const SizedBox(
+          width: 5,
+        ),
+        const SizedBox(
+          height: 20,
+          width: 20,
+          child: CircularProgressIndicator(
+            valueColor: AlwaysStoppedAnimation(Colors.white),
+            strokeWidth: 3,
+          ),
+        )
+      ],
+    ),
+  );
+}

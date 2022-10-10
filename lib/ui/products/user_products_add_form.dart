@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tmdt/services/products.dart';
 import 'package:tmdt/ui/shared/styles/input_styles.dart';
+import 'package:tmdt/ui/shared/ui/icons.dart';
 import 'package:tmdt/ui/shared/ui/scaffold_snackbar.dart';
 import 'package:tmdt/utils/validator.util.dart';
 
@@ -52,27 +53,7 @@ class _UserProductAddFormState extends State<UserProductAddForm> {
                   isLoading ? null : handleSubmitForm(context);
                 },
                 child: isLoading
-                    ? Padding(
-                        padding: const EdgeInsets.all(5.0),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: const <Widget>[
-                            Text("Loading"),
-                            SizedBox(
-                              width: 5,
-                            ),
-                            SizedBox(
-                              height: 20,
-                              width: 20,
-                              child: CircularProgressIndicator(
-                                valueColor:
-                                    AlwaysStoppedAnimation(Colors.white),
-                                strokeWidth: 3,
-                              ),
-                            )
-                          ],
-                        ),
-                      )
+                    ? loadingIcon(text: 'Loading')
                     : const Text('Submit'))
           ],
         ));
@@ -83,28 +64,23 @@ class _UserProductAddFormState extends State<UserProductAddForm> {
       TextFormField(
         onSaved: (newValue) => formData['title'] = newValue,
         validator: requiredValidator,
-        decoration: inputStyle(label: 'Title *'),
+        decoration: inputStyle(context: context, label: 'Title *'),
       ),
       TextFormField(
         onSaved: (newValue) => formData['description'] = newValue,
         validator: requiredValidator,
-        decoration: inputStyle(label: 'Description *'),
+        decoration: inputStyle(context: context, label: 'Description *'),
         maxLines: 5,
       ),
       TextFormField(
         onSaved: (newValue) => formData['price'] = newValue,
         validator: requiredValidator,
-        decoration: inputStyle(label: 'Price *'),
+        decoration: inputStyle(context: context, label: 'Price *'),
         keyboardType: TextInputType.number,
         inputFormatters: <TextInputFormatter>[
           FilteringTextInputFormatter.allow(RegExp(r'[0-9]'))
         ],
       ),
-      // TextFormField(
-      //   onSaved: (newValue) => formData['imageUrl'] = newValue,
-      //   validator: requiredValidator,
-      //   decoration: inputStyle(label: 'Image link'),
-      // )
       ElevatedButton(onPressed: selectImage, child: const Text('Upload Image'))
     ];
   }
@@ -112,7 +88,7 @@ class _UserProductAddFormState extends State<UserProductAddForm> {
   void selectImage() async {
     final imagePicker = ImagePicker();
     final XFile? image = await imagePicker.pickImage(
-        source: ImageSource.gallery, imageQuality: 1);
+        source: ImageSource.gallery, imageQuality: 25);
     try {
       setState(() {
         imagefile = File(image!.path);
@@ -131,7 +107,7 @@ class _UserProductAddFormState extends State<UserProductAddForm> {
       });
       try {
         final imageRef = storageRef.child(
-            'images/${imagefile.path.substring(imagefile.path.lastIndexOf('/'), imagefile.path.length - 1)}');
+            'images/product/${imagefile.path.substring(imagefile.path.lastIndexOf('/'), imagefile.path.length - 1)}');
         await imageRef.putFile(imagefile);
         formData['imageUrl'] = await imageRef.getDownloadURL();
         _formKey.currentState!.save();

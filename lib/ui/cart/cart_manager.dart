@@ -7,7 +7,7 @@ class CartManager {
   int get productCount {
     int totalQuantity = 0;
     for (var item in _items.getCartList) {
-      totalQuantity += item.quantity;
+      totalQuantity = totalQuantity + item.quantity;
     }
     return totalQuantity;
   }

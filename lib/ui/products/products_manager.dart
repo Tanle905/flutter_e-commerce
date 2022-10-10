@@ -1,7 +1,7 @@
 import 'package:tmdt/models/products.dart';
 
 class ProductManager {
-  final _items;
+  final List<Product> _items;
 
   ProductManager(this._items);
 

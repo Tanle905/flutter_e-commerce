@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 
-InputDecoration inputStyle({String? label}) {
+InputDecoration inputStyle(
+    {required BuildContext context, String? label, Icon? icon}) {
   return InputDecoration(
+      iconColor: Theme.of(context).iconTheme.color,
       labelText: label,
-      enabledBorder:
-          OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-      focusedBorder:
-          OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-      fillColor: Colors.grey.shade300);
+      prefixIcon: icon,
+      border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)));
 }

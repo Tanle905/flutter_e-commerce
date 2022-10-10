@@ -5,7 +5,7 @@ import 'package:tmdt/ui/products/products_manager.dart';
 
 class ProductsGrid extends StatelessWidget {
   final bool showFavorites;
-  final List<dynamic> productsData;
+  final List<Product> productsData;
   const ProductsGrid(this.showFavorites, this.productsData, {Key? key})
       : super(key: key);
 
