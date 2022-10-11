@@ -1,24 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:tmdt/constants/constants.dart';
 
 Future<bool?> showConfirmDialog(
-    BuildContext context, String title, String message) {
+    {required BuildContext context,
+    String? title,
+    required String message,
+    required VoidCallback onOk,
+    required VoidCallback onCancel}) {
   return showDialog(
       context: context,
       builder: (context) => AlertDialog(
-            title: Text(title),
+            title: title != null ? Text(title) : null,
             content: Text(message),
             actions: <Widget>[
-              TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop(false);
-                  },
-                  child: const Text('No')),
-              TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop(true);
-                  },
-                  child: const Text('Yes')),
+              TextButton(onPressed: onCancel, child: const Text('No')),
+              TextButton(onPressed: onOk, child: const Text('Yes')),
             ],
           ));
 }

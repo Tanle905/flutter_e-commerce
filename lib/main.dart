@@ -82,10 +82,14 @@ class _MyAppState extends State<MyApp> {
             routes: {
               CartScreen.routeName: (context) => const CartScreen(),
               OrdersScreen.routeName: (context) => const OrdersScreen(),
-              UserProductsScreen.routeName: (context) =>
-                  UserProductsScreen(productData),
+              UserProductsScreen.routeName: (context) => UserProductsScreen(
+                    futureProductResponse: futureProductResponse,
+                    reloadProducts: reloadProducts,
+                  ),
               UserProductsAddScreen.routeName: ((context) =>
-                  const UserProductsAddScreen()),
+                  UserProductsAddScreen(
+                    reloadProducts: reloadProducts,
+                  )),
               UserLoginScreen.routeName: (context) => const UserLoginScreen(),
               UserSignUpScreen.routeName: (context) => const UserSignUpScreen(),
               UserSettingsScreen.routeName: (context) =>

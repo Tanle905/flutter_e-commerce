@@ -70,12 +70,15 @@ class ProductGridTile extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(
+                  Flexible(
+                      child: Text(
                     product.title,
                     textAlign: TextAlign.center,
                     style: const TextStyle(
-                        fontSize: 15, fontWeight: FontWeight.w600),
-                  ),
+                        fontSize: 15,
+                        fontWeight: FontWeight.w600,
+                        overflow: TextOverflow.ellipsis),
+                  )),
                 ],
               ),
               Row(
@@ -97,9 +100,12 @@ class ProductGridTile extends StatelessWidget {
                           : primaryColor,
                     ),
                   ),
-                  Text('\$${product.price.toString()}',
-                      style: const TextStyle(
-                          fontSize: 15, fontWeight: FontWeight.w700)),
+                  Flexible(
+                      child: Text('\$${product.price.toString()}',
+                          style: const TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w700,
+                              overflow: TextOverflow.ellipsis))),
                   ElevatedButton(
                     onPressed: (() async {
                       await addToCart(product: product, quantity: 1);

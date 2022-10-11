@@ -4,6 +4,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:tmdt/models/products.dart';
 import 'package:tmdt/services/products.dart';
 import 'package:tmdt/ui/shared/styles/input_styles.dart';
 import 'package:tmdt/ui/shared/ui/icons.dart';
@@ -11,8 +12,11 @@ import 'package:tmdt/ui/shared/ui/scaffold_snackbar.dart';
 import 'package:tmdt/utils/validator.util.dart';
 
 class UserProductAddForm extends StatefulWidget {
-  const UserProductAddForm({Key? key}) : super(key: key);
-
+  final Product? initalData;
+  final Future<void> Function() reloadProducts;
+  const UserProductAddForm(
+      {Key? key, this.initalData, required this.reloadProducts})
+      : super(key: key);
   @override
   State<UserProductAddForm> createState() => _UserProductAddFormState();
 }
@@ -30,6 +34,26 @@ class _UserProductAddFormState extends State<UserProductAddForm> {
   late Image productImage;
   bool isLoading = false;
   bool isImageValid = false;
+  bool isEditingProduct = false;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.initalData != null) {
+      formData = {
+        'productId': widget.initalData?.productId,
+        'title': widget.initalData?.title,
+        'description': widget.initalData?.description,
+        'price': widget.initalData?.price,
+        'imageUrl': widget.initalData?.imageUrl
+      };
+      if (widget.initalData?.imageUrl != null) {
+        productImage = Image.network(widget.initalData?.imageUrl as String);
+        isImageValid = true;
+      }
+      isEditingProduct = true;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,13 +72,22 @@ class _UserProductAddFormState extends State<UserProductAddForm> {
                   padding: const EdgeInsets.symmetric(vertical: 5),
                   child: widget,
                 )),
-            ElevatedButton(
-                onPressed: () {
-                  isLoading ? null : handleSubmitForm(context);
-                },
-                child: isLoading
-                    ? loadingIcon(text: 'Loading')
-                    : const Text('Submit'))
+            Padding(
+              padding: const EdgeInsets.only(top: 30),
+              child: SizedBox(
+                width: double.infinity,
+                height: 50,
+                child: ElevatedButton(
+                    onPressed: isLoading
+                        ? null
+                        : () {
+                            handleSubmitForm(context);
+                          },
+                    child: isLoading
+                        ? loadingIcon(text: 'Loading')
+                        : const Text('Submit')),
+              ),
+            )
           ],
         ));
   }
@@ -62,17 +95,20 @@ class _UserProductAddFormState extends State<UserProductAddForm> {
   List<Widget> productsAddInputList() {
     return [
       TextFormField(
+        initialValue: formData['title'],
         onSaved: (newValue) => formData['title'] = newValue,
         validator: requiredValidator,
         decoration: inputStyle(context: context, label: 'Title *'),
       ),
       TextFormField(
+        initialValue: formData['description'],
         onSaved: (newValue) => formData['description'] = newValue,
         validator: requiredValidator,
         decoration: inputStyle(context: context, label: 'Description *'),
         maxLines: 5,
       ),
       TextFormField(
+        initialValue: formData['price']?.toString(),
         onSaved: (newValue) => formData['price'] = newValue,
         validator: requiredValidator,
         decoration: inputStyle(context: context, label: 'Price *'),
@@ -101,32 +137,40 @@ class _UserProductAddFormState extends State<UserProductAddForm> {
   }
 
   Future handleSubmitForm(BuildContext context) async {
-    if (_formKey.currentState!.validate() && isImageValid) {
+    if ((_formKey.currentState?.validate() ?? false) && isImageValid) {
       setState(() {
         isLoading = true;
       });
       try {
-        final imageRef = storageRef.child(
-            'images/product/${imagefile.path.substring(imagefile.path.lastIndexOf('/'), imagefile.path.length - 1)}');
-        await imageRef.putFile(imagefile);
-        formData['imageUrl'] = await imageRef.getDownloadURL();
-        _formKey.currentState!.save();
-        await postProduct(formData);
+        if (!isEditingProduct) {
+          final imageRef = storageRef.child(
+              'images/product/${imagefile.path.substring(imagefile.path.lastIndexOf('/'), imagefile.path.length - 1)}');
+          await imageRef.putFile(imagefile);
+          formData['imageUrl'] = await imageRef.getDownloadURL();
+        }
+        _formKey.currentState?.save();
+        isEditingProduct
+            ? await updateProduct(
+                payload: formData, productId: formData['productId'])
+            : await postProduct(formData);
         _formKey.currentState?.reset();
+        if (!isEditingProduct) {
+          setState(() {
+            imagefile = File('');
+            isLoading = false;
+            isImageValid = false;
+          });
+        }
+        widget.reloadProducts();
         showSnackbar(
             context: context, message: "Product added/edited successfully!");
-        setState(() {
-          imagefile.writeAsStringSync('');
-          isLoading = false;
-          isImageValid = false;
-        });
       } catch (error, stackTrace) {
-        setState(() {
-          isLoading = false;
-        });
         showSnackbar(context: context, message: "Error adding/editing product");
         throw ('$error\n$stackTrace');
       }
+      setState(() {
+        isLoading = false;
+      });
     } else if (!isImageValid) {
       showSnackbar(context: context, message: 'Please add product image!');
     }

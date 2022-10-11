@@ -152,7 +152,7 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
         onSaved: (newValue) => userSettingsFormData['address'] = newValue,
       ),
       TextFormField(
-        initialValue: userSettingsFormData['phoneNumber'].toString(),
+        initialValue: userSettingsFormData['phoneNumber']?.toString(),
         keyboardType: TextInputType.number,
         decoration: inputStyle(
             context: context,

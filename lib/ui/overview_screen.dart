@@ -202,20 +202,23 @@ class _OverviewScreenState extends State<OverviewScreen> {
                         ),
                       ),
                       const Padding(padding: EdgeInsets.all(5)),
-                      Column(
+                      Flexible(
+                          child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Text(
                             item.title,
                             style: textTheme.titleLarge,
+                            overflow: TextOverflow.ellipsis,
                           ),
                           Text(
                             item.description,
                             style: textTheme.bodyMedium,
+                            overflow: TextOverflow.ellipsis,
                           )
                         ],
-                      )
+                      ))
                     ],
                   ),
                 ),

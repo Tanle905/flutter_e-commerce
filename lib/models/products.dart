@@ -1,7 +1,7 @@
 import 'package:tmdt/constants/endpoints.dart';
 
 class Product {
-  final String? productId;
+  final String productId;
   final String title;
   final String description;
   final double price;

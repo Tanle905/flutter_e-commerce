@@ -1,7 +1,5 @@
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:tmdt/models/cart.dart';
 import 'package:tmdt/constants/constants.dart';
 import 'package:tmdt/ui/shared/utils/dialog_util.dart';
@@ -29,8 +27,16 @@ class CartItemCard extends StatelessWidget {
         ),
         direction: DismissDirection.endToStart,
         confirmDismiss: (direction) {
-          return showConfirmDialog(context, MODAL_DELETE_CONFIRM_TITLE,
-              MODAL_DELETE_CONFIRM_MESSAGE);
+          return showConfirmDialog(
+              context: context,
+              title: MODAL_DELETE_CONFIRM_TITLE,
+              message: MODAL_DELETE_CONFIRM_MESSAGE,
+              onCancel: () {
+                Navigator.of(context).pop(false);
+              },
+              onOk: () {
+                Navigator.of(context).pop(true);
+              });
         },
         onDismissed: (direction) {
           print('Cart item di');

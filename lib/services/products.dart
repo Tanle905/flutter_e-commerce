@@ -33,3 +33,34 @@ Future<dynamic> postProduct(dynamic payload) async {
     }
   }
 }
+
+Future<dynamic> updateProduct(
+    {required dynamic payload, required String productId}) async {
+  try {
+    return await Dio().put('$baseUrl$PRODUCTS_ENDPOINT_BASE/$productId',
+        options: Options(headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ${(await getAccessToken())}'
+        }),
+        data: jsonEncode(payload));
+  } on DioError catch (error) {
+    if (error.response != null) {
+      throw error.response!.data;
+    }
+  }
+}
+
+Future<dynamic> deleteProduct(List<String> idArray) async {
+  try {
+    final response = await Dio().delete(baseUrl + PRODUCTS_ENDPOINT_BASE,
+        options: Options(headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ${(await getAccessToken())}'
+        }),
+        data: jsonEncode({"idArray": idArray}));
+  } on DioError catch (error) {
+    if (error.response != null) {
+      throw error.response!.data;
+    }
+  }
+}

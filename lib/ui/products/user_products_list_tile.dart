@@ -1,12 +1,17 @@
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:tmdt/models/products.dart';
+import 'package:tmdt/services/products.dart';
+import 'package:tmdt/ui/products/user_products_add.dart';
+import 'package:tmdt/ui/shared/ui/scaffold_snackbar.dart';
 
 class UserProductsListTile extends StatelessWidget {
   final Product product;
+  final Future<void> Function() reloadProducts;
 
-  const UserProductsListTile(this.product, {Key? key}) : super(key: key);
+  const UserProductsListTile(
+      {Key? key, required this.product, required this.reloadProducts})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -17,32 +22,45 @@ class UserProductsListTile extends StatelessWidget {
         width: 100,
         child: Row(children: <Widget>[
           buildEditButton(context),
-          buildDeleteButton(context)
+          buildDeleteButton(context, product.productId)
         ]),
       ),
-      onTap: () {
-        print("Go to product details");
-      },
+      onTap: () => handleEditProduct(context),
     );
   }
 
-  Widget buildDeleteButton(BuildContext context) {
+  Widget buildDeleteButton(BuildContext context, String productId) {
     return IconButton(
       onPressed: () async {
-        print('Delete a product');
+        try {
+          await deleteProduct(List.filled(1, productId));
+          reloadProducts();
+          showSnackbar(
+              context: context, message: "Product removed successfully!");
+        } catch (error) {
+          rethrow;
+        }
       },
-      icon: const Icon(Icons.delete),
+      icon: const Icon(FluentIcons.delete_16_regular),
       color: Theme.of(context).errorColor,
     );
   }
 
   Widget buildEditButton(BuildContext context) {
     return IconButton(
-      onPressed: (() {
-        print('Go to edit product screen');
-      }),
-      icon: const Icon(Icons.edit),
-      color: Theme.of(context).primaryColor,
+      onPressed: (() => handleEditProduct(context)),
+      icon: const Icon(FluentIcons.edit_16_regular),
     );
+  }
+
+  void handleEditProduct(BuildContext context) {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => UserProductsAddScreen(
+            initalData: product,
+            reloadProducts: reloadProducts,
+          ),
+        ));
   }
 }

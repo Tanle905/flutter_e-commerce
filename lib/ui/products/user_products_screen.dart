@@ -1,21 +1,26 @@
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
-import 'package:tmdt/models/products.dart';
-import 'package:tmdt/ui/cart/cart_screen.dart';
+import 'package:provider/provider.dart';
+import 'package:tmdt/main.dart';
 import 'package:tmdt/ui/drawer/drawer.dart';
-import 'package:tmdt/ui/products/products_manager.dart';
 import 'package:tmdt/ui/products/user_products_list_tile.dart';
 import 'package:tmdt/ui/screens.dart';
 import 'package:tmdt/ui/shared/ui/icons.dart';
+import 'package:tmdt/utils/responseMapping.util.dart';
 
 class UserProductsScreen extends StatelessWidget {
   static const routeName = '/user-products';
-  final List<Product> productsData;
+  final Future<Map> futureProductResponse;
+  final Future<void> Function() reloadProducts;
 
-  const UserProductsScreen(this.productsData, {Key? key}) : super(key: key);
+  const UserProductsScreen(
+      {Key? key,
+      required this.reloadProducts,
+      required this.futureProductResponse})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final productsManager = ProductManager(productsData);
     final textTheme = Theme.of(context).textTheme;
     final IconThemeData iconThemeData = Theme.of(context).iconTheme;
 
@@ -30,9 +35,21 @@ class UserProductsScreen extends StatelessWidget {
         actions: <Widget>[buildAddButton(iconThemeData, context)],
         iconTheme: iconThemeData,
       ),
-      body: RefreshIndicator(
-        onRefresh: () async => print('Refresh Product'),
-        child: buildUserProductListView(productsManager),
+      body: FutureBuilder(
+        future: futureProductResponse,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            final productsManager =
+                ProductManager(productResponseMapping(snapshot));
+            return RefreshIndicator(
+              onRefresh: reloadProducts,
+              child: buildUserProductListView(productsManager),
+            );
+          }
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        },
       ),
     );
   }
@@ -42,7 +59,10 @@ class UserProductsScreen extends StatelessWidget {
         itemCount: productManager.itemCount,
         itemBuilder: (ctx, i) => Column(
               children: [
-                UserProductsListTile(productManager.items[i]),
+                UserProductsListTile(
+                  product: productManager.items[i],
+                  reloadProducts: reloadProducts,
+                ),
                 const Divider()
               ],
             ));
@@ -54,7 +74,7 @@ class UserProductsScreen extends StatelessWidget {
           Navigator.of(context).pushNamed(UserProductsAddScreen.routeName);
         },
         icon: const Icon(
-          Icons.add,
+          FluentIcons.add_16_regular,
         ));
   }
 }
