@@ -20,17 +20,21 @@ ThemeData lightTheme() {
             color: COLOR_TEXT_AND_ICON,
             fontWeight: FontWeight.bold,
           ),
-          titleSmall: TextStyle(color: COLOR_TEXT_AND_ICON),
+          headlineSmall: TextStyle(
+            color: COLOR_TEXT_AND_ICON,
+            fontWeight: FontWeight.w900,
+          ),
           titleLarge: TextStyle(
               color: COLOR_TEXT_AND_ICON, fontWeight: FontWeight.bold),
-          titleMedium: TextStyle(color: COLOR_TEXT_AND_ICON)),
+          titleMedium: TextStyle(color: COLOR_TEXT_AND_ICON),
+          titleSmall: TextStyle(color: COLOR_TEXT_AND_ICON)),
       iconTheme: IconThemeData(color: COLOR_TEXT_AND_ICON, size: 25),
       appBarTheme: AppBarTheme(backgroundColor: COLOR_BACKGROUND, elevation: 0),
       fontFamily: 'Lato',
       brightness: Brightness.light,
       primaryColor: COLOR_BACKGROUND,
       colorScheme: ColorScheme.fromSwatch().copyWith(
-          secondary: COLOR_BACKGROUND_ACCENT, brightness: Brightness.light),
+          secondary: COLOR_BUTTON_AND_LINK_TEXT, brightness: Brightness.light),
       shadowColor: COLOR_SHADOW,
       elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
@@ -46,10 +50,16 @@ ThemeData darkTheme() {
       backgroundColor: COLOR_BACKGROUND_DARK,
       // drawerTheme: DrawerThemeData(backgroundColor: Colors.grey.shade700),
       textTheme: TextTheme(
+          labelLarge: const TextStyle(
+              color: COLOR_BUTTON_AND_LINK_TEXT,
+              fontWeight: FontWeight.bold,
+              fontSize: 15),
           headlineLarge: TextStyle(
               color: COLOR_TEXT_AND_ICON_DARK,
               fontWeight: FontWeight.bold,
               fontSize: 50),
+          headlineSmall: TextStyle(
+              color: COLOR_TEXT_AND_ICON, fontWeight: FontWeight.w900),
           titleSmall: TextStyle(color: COLOR_TEXT_AND_ICON_DARK),
           titleLarge: TextStyle(
               color: COLOR_TEXT_AND_ICON_DARK, fontWeight: FontWeight.bold),
@@ -61,7 +71,8 @@ ThemeData darkTheme() {
       brightness: Brightness.dark,
       primaryColor: COLOR_BACKGROUND_DARK,
       colorScheme: ColorScheme.fromSwatch().copyWith(
-          secondary: COLOR_BACKGROUND_ACCENT_DARK, brightness: Brightness.dark),
+          secondary: COLOR_BUTTON_AND_LINK_TEXT_DARK,
+          brightness: Brightness.dark),
       shadowColor: COLOR_SHADOW_DARK,
       elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(

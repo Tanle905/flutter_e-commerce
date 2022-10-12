@@ -74,7 +74,9 @@ class _OverviewScreenState extends State<OverviewScreen> {
         actions: <Widget>[
           Consumer<CartList>(
             builder: (context, value, child) => buildShoppingCartIcon(
-                iconThemeData: iconThemeData, cartList: value),
+                iconThemeData: iconThemeData,
+                cartList: value,
+                context: context),
           )
         ],
       ),
@@ -224,25 +226,6 @@ class _OverviewScreenState extends State<OverviewScreen> {
                 ),
               ))
           .toList(),
-    );
-  }
-
-  Widget buildShoppingCartIcon(
-      {required IconThemeData iconThemeData, required CartList cartList}) {
-    final int cartQuantities = CartManager(cartList).productCount;
-
-    return TopRightBadge(
-      data: cartQuantities,
-      child: IconButton(
-        onPressed: () {
-          Navigator.of(context).pushNamed(CartScreen.routeName);
-        },
-        icon: Icon(
-          FluentIcons.cart_16_regular,
-          color: iconThemeData.color,
-          size: iconThemeData.size,
-        ),
-      ),
     );
   }
 
