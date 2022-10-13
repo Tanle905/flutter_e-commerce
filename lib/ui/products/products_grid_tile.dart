@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:tmdt/models/cart.dart';
 import 'package:tmdt/models/products.dart';
 import 'package:tmdt/services/cart.dart';
+import 'package:tmdt/ui/products/utils/product.utils.dart';
 import 'package:tmdt/ui/screens.dart';
 import 'package:tmdt/ui/shared/ui/scaffold_snackbar.dart';
 
@@ -107,14 +108,8 @@ class ProductGridTile extends StatelessWidget {
                               fontWeight: FontWeight.w700,
                               overflow: TextOverflow.ellipsis))),
                   ElevatedButton(
-                    onPressed: (() async {
-                      await addToCart(product: product, quantity: 1);
-                      await fetchCart().then((itemsList) =>
-                          Provider.of<CartList>(context, listen: false)
-                              .setCartList = itemsList);
-                      showSnackbar(
-                          context: context, message: 'Product added to cart!');
-                    }),
+                    onPressed: (() =>
+                        handleAddToCart(product: product, context: context)),
                     style: ElevatedButton.styleFrom(
                         shape: const CircleBorder(),
                         primary: accentColor.secondary),

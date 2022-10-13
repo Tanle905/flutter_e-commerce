@@ -10,7 +10,7 @@ const USER_SETTINGS_SAVED_SUCCESSFUL = "User profile saved successfully!";
 const USER_SETTINGS_SAVED_FAILED = "Error updating user profile!";
 //colors
 final COLOR_BACKGROUND = Colors.grey.shade100;
-final COLOR_BACKGROUND_ACCENT = Colors.grey.shade800;
+final COLOR_BACKGROUND_ACCENT = Colors.grey.shade900;
 final COLOR_BACKGROUND_ACCENT_DARK = Colors.grey.shade200;
 final COLOR_BACKGROUND_DARK = Colors.grey.shade900;
 const COLOR_SHADOW = Colors.grey;

@@ -1,13 +1,22 @@
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tmdt/models/cart.dart';
 import 'package:tmdt/models/products.dart';
+import 'package:tmdt/ui/products/utils/product.utils.dart';
+import 'package:tmdt/ui/shared/styles/text_styles.dart';
 import 'package:tmdt/ui/shared/ui/icons.dart';
 
-class ProductDetailScreen extends StatelessWidget {
+class ProductDetailScreen extends StatefulWidget {
   static const routeName = '/product-detail';
   const ProductDetailScreen(this.product, {super.key});
   final Product product;
+  @override
+  State<ProductDetailScreen> createState() => _ProductDetailScreenState();
+}
+
+class _ProductDetailScreenState extends State<ProductDetailScreen> {
+  int _itemCount = 1;
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +54,7 @@ class ProductDetailScreen extends StatelessWidget {
                         width: double.infinity,
                         height: 200,
                         child: Image.network(
-                          product.imageUrl,
+                          widget.product.imageUrl,
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -55,7 +64,7 @@ class ProductDetailScreen extends StatelessWidget {
                     alignment: Alignment.centerLeft,
                     child: SizedBox(
                       child: Text(
-                        product.title,
+                        widget.product.title,
                         style: themeData.textTheme.headlineSmall,
                       ),
                     ),
@@ -64,8 +73,8 @@ class ProductDetailScreen extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(horizontal: 10),
                     width: double.infinity,
                     child: Text(
-                      product.description,
-                      textAlign: TextAlign.center,
+                      widget.product.description,
+                      textAlign: TextAlign.left,
                       softWrap: true,
                     ),
                   )
@@ -79,49 +88,69 @@ class ProductDetailScreen extends StatelessWidget {
               )),
           Positioned(
             bottom: 0,
-            child: ClipRRect(
-              borderRadius:
-                  const BorderRadius.vertical(top: Radius.circular(20)),
-              child: Container(
-                decoration:
-                    BoxDecoration(color: themeData.colorScheme.secondary),
-                width: MediaQuery.of(context).size.width,
-                height: 100,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            "Price",
-                            style: themeData.textTheme.titleLarge,
-                          ),
-                          Text('\$${product.price}'),
-                        ],
-                      ),
-                      ElevatedButton(
-                        onPressed: () {},
-                        style: ElevatedButton.styleFrom(
-                            primary: Colors.white, alignment: Alignment.center),
-                        child: const SizedBox(
-                          width: 100,
-                          height: 50,
-                          child: Text(
-                            "Add to cart",
-                            style: TextStyle(color: Colors.black),
-                            textAlign: TextAlign.center,
-                          ),
+            child: Container(
+              decoration: BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                        color: themeData.shadowColor,
+                        blurRadius: 2,
+                        spreadRadius: 0.0),
+                  ],
+                  borderRadius:
+                      const BorderRadius.vertical(top: Radius.circular(10)),
+                  color: themeData.backgroundColor),
+              width: MediaQuery.of(context).size.width,
+              height: 100,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 15),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Price",
+                          style: themeData.textTheme.titleMedium,
                         ),
-                      )
-                    ],
-                  ),
+                        Text(
+                          '\$${widget.product.price}',
+                          style: themeData.textTheme.titleLarge,
+                        ),
+                      ]
+                          .map((widget) => Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 5),
+                                child: widget,
+                              ))
+                          .toList(),
+                    ),
+                    buildQuantityInputIcon(
+                        value: _itemCount,
+                        onSubtract: () => _itemCount > 1
+                            ? setState(() => _itemCount--)
+                            : null,
+                        onAdd: () => setState(() => _itemCount++)),
+                    SizedBox(
+                      width: 150,
+                      height: 50,
+                      child: ElevatedButton(
+                        onPressed: () => handleAddToCart(
+                            product: widget.product,
+                            context: context,
+                            quantity: _itemCount),
+                        style: themeData.elevatedButtonTheme.style,
+                        child: const Text(
+                          "Add to cart",
+                        ),
+                      ),
+                    )
+                  ],
                 ),
               ),
             ),
-          )
+          ),
         ]),
       ),
     );

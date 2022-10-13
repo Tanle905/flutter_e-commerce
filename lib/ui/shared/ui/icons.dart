@@ -1,5 +1,6 @@
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:tmdt/constants/constants.dart';
 import 'package:tmdt/models/cart.dart';
 import 'package:tmdt/ui/screens.dart';
 import 'package:tmdt/ui/shared/ui/badges.dart';
@@ -68,5 +69,53 @@ Widget buildShoppingCartIcon(
         size: iconThemeData.size,
       ),
     ),
+  );
+}
+
+Widget buildQuantityInputIcon(
+    {VoidCallback? onSubtract, VoidCallback? onAdd, required int value}) {
+  return Row(
+    children: [
+      Container(
+          width: 25,
+          height: 25,
+          decoration: BoxDecoration(
+              border: Border.all(color: COLOR_SHADOW),
+              borderRadius:
+                  const BorderRadius.horizontal(left: Radius.circular(5))),
+          alignment: Alignment.center,
+          child: IconButton(
+            padding: const EdgeInsets.all(0),
+            alignment: Alignment.center,
+            icon: const Icon(
+              FluentIcons.subtract_16_regular,
+              size: 15,
+            ),
+            onPressed: onSubtract,
+          )),
+      Container(
+          width: 35,
+          height: 25,
+          decoration: const BoxDecoration(
+              border: Border.symmetric(
+                  horizontal: BorderSide(color: COLOR_SHADOW))),
+          alignment: Alignment.center,
+          child: Text(value.toString())),
+      Container(
+          width: 25,
+          height: 25,
+          decoration: BoxDecoration(
+              border: Border.all(color: COLOR_SHADOW),
+              borderRadius:
+                  const BorderRadius.horizontal(right: Radius.circular(5))),
+          alignment: Alignment.center,
+          child: IconButton(
+              padding: const EdgeInsets.all(0),
+              icon: const Icon(
+                FluentIcons.add_16_regular,
+                size: 15,
+              ),
+              onPressed: onAdd))
+    ],
   );
 }

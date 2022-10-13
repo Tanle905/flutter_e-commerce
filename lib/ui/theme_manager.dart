@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:tmdt/constants/constants.dart';
 
 ThemeData lightTheme() {
@@ -34,7 +35,7 @@ ThemeData lightTheme() {
       brightness: Brightness.light,
       primaryColor: COLOR_BACKGROUND,
       colorScheme: ColorScheme.fromSwatch().copyWith(
-          secondary: COLOR_BUTTON_AND_LINK_TEXT, brightness: Brightness.light),
+          secondary: COLOR_BACKGROUND_ACCENT, brightness: Brightness.light),
       shadowColor: COLOR_SHADOW,
       elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
@@ -71,8 +72,7 @@ ThemeData darkTheme() {
       brightness: Brightness.dark,
       primaryColor: COLOR_BACKGROUND_DARK,
       colorScheme: ColorScheme.fromSwatch().copyWith(
-          secondary: COLOR_BUTTON_AND_LINK_TEXT_DARK,
-          brightness: Brightness.dark),
+          secondary: COLOR_BACKGROUND_ACCENT_DARK, brightness: Brightness.dark),
       shadowColor: COLOR_SHADOW_DARK,
       elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
@@ -82,3 +82,14 @@ ThemeData darkTheme() {
 ThemeMode themeMode() {
   return ThemeMode.system;
 }
+
+final myLightSystemTheme = SystemUiOverlayStyle.light.copyWith(
+    statusBarColor: COLOR_BACKGROUND,
+    statusBarBrightness: Brightness.dark,
+    systemNavigationBarColor: COLOR_BACKGROUND,
+    systemNavigationBarIconBrightness: Brightness.dark);
+final myDarkSystemTheme = SystemUiOverlayStyle.light.copyWith(
+    statusBarColor: COLOR_BACKGROUND_DARK,
+    statusBarBrightness: Brightness.light,
+    systemNavigationBarColor: COLOR_BACKGROUND_DARK,
+    systemNavigationBarIconBrightness: Brightness.light);
