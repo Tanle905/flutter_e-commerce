@@ -2,6 +2,7 @@ import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:tmdt/constants/constants.dart';
 import 'package:tmdt/models/cart.dart';
+import 'package:tmdt/models/products.dart';
 import 'package:tmdt/ui/screens.dart';
 import 'package:tmdt/ui/shared/ui/badges.dart';
 
@@ -117,5 +118,24 @@ Widget buildQuantityInputIcon(
               ),
               onPressed: onAdd))
     ],
+  );
+}
+
+Widget addToFavoriteIcon(
+    {required Product product, required BuildContext context}) {
+  final Color primaryColor = Theme.of(context).primaryColor;
+  final ColorScheme accentColor = Theme.of(context).colorScheme;
+
+  return ElevatedButton(
+    onPressed: (() {
+      print('Add item to favorite');
+    }),
+    style: ElevatedButton.styleFrom(shape: const CircleBorder()),
+    child: Icon(
+      product.isFavorite
+          ? FluentIcons.heart_48_filled
+          : FluentIcons.heart_48_regular,
+      color: product.isFavorite ? Colors.red.shade500 : primaryColor,
+    ),
   );
 }

@@ -113,9 +113,7 @@ class _UserProductAddFormState extends State<UserProductAddForm> {
         validator: requiredValidator,
         decoration: inputStyle(context: context, label: 'Price *'),
         keyboardType: TextInputType.number,
-        inputFormatters: <TextInputFormatter>[
-          FilteringTextInputFormatter.allow(RegExp(r'[0-9]'))
-        ],
+        inputFormatters: <TextInputFormatter>[numberFormatter],
       ),
       ElevatedButton(onPressed: selectImage, child: const Text('Upload Image'))
     ];

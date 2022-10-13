@@ -28,7 +28,8 @@ ThemeData lightTheme() {
           titleLarge: TextStyle(
               color: COLOR_TEXT_AND_ICON, fontWeight: FontWeight.bold),
           titleMedium: TextStyle(color: COLOR_TEXT_AND_ICON),
-          titleSmall: TextStyle(color: COLOR_TEXT_AND_ICON)),
+          titleSmall: TextStyle(color: COLOR_TEXT_AND_ICON),
+          bodyMedium: TextStyle(color: COLOR_TEXT_BODY)),
       iconTheme: IconThemeData(color: COLOR_TEXT_AND_ICON, size: 25),
       appBarTheme: AppBarTheme(backgroundColor: COLOR_BACKGROUND, elevation: 0),
       fontFamily: 'Lato',
@@ -60,11 +61,12 @@ ThemeData darkTheme() {
               fontWeight: FontWeight.bold,
               fontSize: 50),
           headlineSmall: TextStyle(
-              color: COLOR_TEXT_AND_ICON, fontWeight: FontWeight.w900),
+              color: COLOR_TEXT_AND_ICON_DARK, fontWeight: FontWeight.w900),
           titleSmall: TextStyle(color: COLOR_TEXT_AND_ICON_DARK),
           titleLarge: TextStyle(
               color: COLOR_TEXT_AND_ICON_DARK, fontWeight: FontWeight.bold),
-          titleMedium: TextStyle(color: COLOR_TEXT_AND_ICON_DARK)),
+          titleMedium: TextStyle(color: COLOR_TEXT_AND_ICON_DARK),
+          bodyMedium: TextStyle(color: COLOR_TEXT_BODY_DARK)),
       iconTheme: IconThemeData(color: COLOR_TEXT_AND_ICON_DARK, size: 25),
       appBarTheme:
           AppBarTheme(backgroundColor: COLOR_BACKGROUND_DARK, elevation: 0),

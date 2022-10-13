@@ -42,10 +42,16 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    var brightness = SchedulerBinding.instance.window.platformBrightness;
-    bool isLightMode = brightness == Brightness.light;
+    final window = WidgetsBinding.instance.window;
+    bool isLightMode = window.platformBrightness == Brightness.light;
     SystemChrome.setSystemUIOverlayStyle(
         isLightMode ? myLightSystemTheme : myDarkSystemTheme);
+    window.onPlatformBrightnessChanged = () {
+      WidgetsBinding.instance.handlePlatformBrightnessChanged();
+      isLightMode = window.platformBrightness == Brightness.light;
+      SystemChrome.setSystemUIOverlayStyle(
+          isLightMode ? myLightSystemTheme : myDarkSystemTheme);
+    };
     try {
       futureProductResponse = fetchProducts();
       fetchUserProfile().then((value) {

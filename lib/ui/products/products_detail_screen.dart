@@ -1,10 +1,12 @@
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tmdt/constants/constants.dart';
 import 'package:tmdt/models/cart.dart';
 import 'package:tmdt/models/products.dart';
 import 'package:tmdt/ui/products/utils/product.utils.dart';
 import 'package:tmdt/ui/shared/styles/text_styles.dart';
+import 'package:tmdt/ui/shared/ui/expandable_text.dart';
 import 'package:tmdt/ui/shared/ui/icons.dart';
 
 class ProductDetailScreen extends StatefulWidget {
@@ -46,19 +48,37 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               padding: const EdgeInsets.all(10),
               child: Column(
                 children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 20),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
-                      child: SizedBox(
-                        width: double.infinity,
-                        height: 200,
-                        child: Image.network(
-                          widget.product.imageUrl,
-                          fit: BoxFit.cover,
-                        ),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: SizedBox(
+                      width: double.infinity,
+                      height: 200,
+                      child: Image.network(
+                        widget.product.imageUrl,
+                        fit: BoxFit.cover,
                       ),
                     ),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 6, horizontal: 10),
+                        decoration: BoxDecoration(
+                            color: COLOR_BUTTON_AND_LINK_TEXT,
+                            borderRadius: BorderRadius.circular(5)),
+                        child: const Text(
+                          'Free shipping',
+                          style: TextStyle(
+                              color: Colors.white, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                      SizedBox(
+                        child: addToFavoriteIcon(
+                            product: widget.product, context: context),
+                      )
+                    ],
                   ),
                   Align(
                     alignment: Alignment.centerLeft,
@@ -69,15 +89,12 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       ),
                     ),
                   ),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    width: double.infinity,
-                    child: Text(
-                      widget.product.description,
-                      textAlign: TextAlign.left,
-                      softWrap: true,
-                    ),
-                  )
+                  ExpandableText(
+                    text: widget.product.description,
+                    trimLines: 4,
+                    textStyle: themeData.textTheme.bodyMedium,
+                  ),
+                  const Padding(padding: EdgeInsets.only(bottom: 100))
                 ]
                     .map((widget) => Padding(
                           padding: const EdgeInsets.symmetric(vertical: 5),
@@ -115,7 +132,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                           style: themeData.textTheme.titleMedium,
                         ),
                         Text(
-                          '\$${widget.product.price}',
+                          '\$${widget.product.price * _itemCount}',
                           style: themeData.textTheme.titleLarge,
                         ),
                       ]

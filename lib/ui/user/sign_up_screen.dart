@@ -110,7 +110,7 @@ class _UserSignUpScreenState extends State<UserSignUpScreen> {
             label: 'Email',
             icon: const Icon(FluentIcons.mail_16_regular)),
         onSaved: (newValue) => signUpFormData['email'] = newValue,
-        validator: requiredValidator,
+        validator: emailValidator,
       ),
       TextFormField(
         autovalidateMode: AutovalidateMode.onUserInteraction,

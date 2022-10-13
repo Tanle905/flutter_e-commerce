@@ -154,6 +154,7 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
       TextFormField(
         initialValue: userSettingsFormData['phoneNumber']?.toString(),
         keyboardType: TextInputType.number,
+        inputFormatters: [numberFormatter],
         decoration: inputStyle(
             context: context,
             label: 'Phone Number',

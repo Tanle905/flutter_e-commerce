@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:tmdt/models/products.dart';
 import 'package:tmdt/ui/products/products_grid_tile.dart';
 import 'package:tmdt/ui/products/products_manager.dart';
@@ -14,6 +14,8 @@ class ProductsGrid extends StatelessWidget {
     final productsManager = ProductManager(productsData);
     final products =
         showFavorites ? productsManager.favoriteItems : productsManager.items;
+    final ThemeData themeData = Theme.of(context);
+
     return GridView.builder(
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
@@ -24,10 +26,13 @@ class ProductsGrid extends StatelessWidget {
         if (i == 0) {
           return Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: const [
+            children: [
               Text(
                 'Find Your Styles.',
-                style: TextStyle(fontSize: 60, fontWeight: FontWeight.w900),
+                style: TextStyle(
+                    fontSize: 60,
+                    fontWeight: FontWeight.w900,
+                    color: themeData.textTheme.headlineLarge?.color),
                 textAlign: TextAlign.end,
               )
             ],
