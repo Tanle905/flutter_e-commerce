@@ -14,6 +14,7 @@ import 'package:tmdt/ui/shared/ui/icons.dart';
 import 'package:tmdt/ui/shared/utils/debouncer.util.dart';
 import 'package:tmdt/utils/infinity_scroll_fetcher.util.dart';
 import 'package:tmdt/utils/responseMapping.util.dart';
+import 'package:tmdt/utils/storage.util.dart';
 
 class OverviewScreen extends StatefulWidget {
   static String routeName = '/';
@@ -45,8 +46,14 @@ class _OverviewScreenState extends State<OverviewScreen> {
           isAsc: true);
     });
     _searchFocusNode.addListener(handleChangeFocus);
-    fetchCart().then((itemsList) =>
-        Provider.of<CartList>(context, listen: false).setCartList = itemsList);
+    getAccessToken().then((token) => {
+          if (token != null)
+            {
+              fetchCart().then((itemsList) =>
+                  Provider.of<CartList>(context, listen: false).setCartList =
+                      itemsList)
+            }
+        });
     super.initState();
   }
 

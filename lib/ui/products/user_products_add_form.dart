@@ -119,7 +119,7 @@ class _UserProductAddFormState extends State<UserProductAddForm> {
   void selectImage() async {
     final imagePicker = ImagePicker();
     final XFile? image = await imagePicker.pickImage(
-        source: ImageSource.gallery, imageQuality: 25);
+        source: ImageSource.gallery, imageQuality: 10);
     try {
       setState(() {
         imagefile = File(image!.path);

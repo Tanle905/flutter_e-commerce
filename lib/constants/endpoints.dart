@@ -6,5 +6,6 @@ const LOGIN_ENDPOINT = '/auth/login';
 const SIGNUP_ENDPOINT = '/auth/signup';
 const PROFILE_ENDPOINT = '/profile';
 const PRODUCTS_ENDPOINT_BASE = '/product';
+const FAVORITE_ENDPOINT = '/favorite';
 const CART_ENDPOINT_BASE = '/cart';
 const USER_MANAGEMENT_ENDPOINT = '/user-management';

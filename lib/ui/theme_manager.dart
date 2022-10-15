@@ -4,6 +4,7 @@ import 'package:tmdt/constants/constants.dart';
 
 ThemeData lightTheme() {
   return ThemeData(
+      canvasColor: COLOR_BACKGROUND,
       inputDecorationTheme:
           InputDecorationTheme(fillColor: Colors.grey.shade300),
       backgroundColor: COLOR_BACKGROUND,
@@ -47,6 +48,7 @@ ThemeData lightTheme() {
 
 ThemeData darkTheme() {
   return ThemeData(
+      canvasColor: COLOR_BACKGROUND_DARK,
       inputDecorationTheme:
           InputDecorationTheme(fillColor: Colors.grey.shade800),
       backgroundColor: COLOR_BACKGROUND_DARK,

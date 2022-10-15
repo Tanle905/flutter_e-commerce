@@ -3,12 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:tmdt/models/cart.dart';
+import 'package:tmdt/models/products.dart';
 import 'package:tmdt/models/user.dart';
 import 'package:tmdt/services/user.dart';
 import 'package:tmdt/ui/screens.dart';
 import 'package:tmdt/ui/theme_manager.dart';
 import 'package:tmdt/ui/user/users_management_screen.dart';
 import 'package:tmdt/utils/error_handling.util.dart';
+import 'package:tmdt/utils/storage.util.dart';
 
 import 'firebase_options.dart';
 
@@ -46,11 +48,16 @@ class _MyAppState extends State<MyApp> {
       SystemChrome.setSystemUIOverlayStyle(
           isLightMode ? myLightSystemTheme : myDarkSystemTheme);
     };
-    fetchUserProfile().then((value) {
-      user.setUser = value;
-    }, onError: (error) {
-      restApiErrorHandling(error, context);
-    });
+    getAccessToken().then((token) => {
+          if (token != null)
+            {
+              fetchUserProfile().then((value) {
+                user.setUser = value;
+              }, onError: (error) {
+                restApiErrorHandling(error, context);
+              })
+            }
+        });
     super.initState();
   }
 
@@ -59,7 +66,7 @@ class _MyAppState extends State<MyApp> {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<UserModel>.value(value: user),
-        ChangeNotifierProvider<CartList>.value(value: cartList)
+        ChangeNotifierProvider<CartList>.value(value: cartList),
       ],
       child: MaterialApp(
         title: 'My Shop',

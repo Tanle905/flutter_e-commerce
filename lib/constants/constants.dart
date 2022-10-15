@@ -12,7 +12,7 @@ const USER_SETTINGS_SAVED_FAILED = "Error updating user profile!";
 final COLOR_BACKGROUND = Colors.grey.shade100;
 final COLOR_BACKGROUND_ACCENT = Colors.grey.shade900;
 final COLOR_BACKGROUND_ACCENT_DARK = Colors.grey.shade200;
-final COLOR_BACKGROUND_DARK = Colors.grey.shade900;
+const COLOR_BACKGROUND_DARK = Colors.black;
 const COLOR_SHADOW = Colors.grey;
 final COLOR_SHADOW_DARK = Colors.grey.shade900;
 final COLOR_TEXT_BODY = Colors.grey.shade600;
@@ -20,7 +20,7 @@ final COLOR_TEXT_BODY_DARK = Colors.grey.shade500;
 final COLOR_TEXT_AND_ICON = Colors.grey.shade800;
 final COLOR_TEXT_AND_ICON_DARK = Colors.grey.shade200;
 const COLOR_BUTTON_AND_LINK_TEXT = Color(0xff0065ff);
-final COLOR_BUTTON_AND_LINK_TEXT_DARK = Colors.indigo.shade800;
+final COLOR_BUTTON_AND_LINK_TEXT_DARK = Colors.indigo.shade700;
 const MEDIUM_GREY = Color(0xFF9ca3af);
 //placeholder
 const USER_PRODUCT_ADD_FORM_TITLE = 'sdf';

@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:tmdt/constants/endpoints.dart';
 
 class Product {
@@ -6,7 +7,7 @@ class Product {
   final String description;
   final double price;
   final String imageUrl;
-  final bool isFavorite;
+  bool isFavorite;
   Product(
       {required this.productId,
       required this.title,

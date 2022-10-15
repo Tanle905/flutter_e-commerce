@@ -42,10 +42,12 @@ class _UserProductsScreenState extends State<UserProductsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final ThemeData themeData = Theme.of(context);
     final textTheme = Theme.of(context).textTheme;
     final IconThemeData iconThemeData = Theme.of(context).iconTheme;
 
     return Scaffold(
+      backgroundColor: themeData.backgroundColor,
       drawer: const NavigationDrawer(),
       appBar: AppBar(
         leading: Builder(builder: ((context) => buildDrawerIcon(context))),
@@ -73,7 +75,10 @@ class _UserProductsScreenState extends State<UserProductsScreen> {
                         UserProductsListTile(
                           product: product,
                         ),
-                        const Divider()
+                        const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 5),
+                          child: Divider(),
+                        )
                       ],
                     ))));
   }

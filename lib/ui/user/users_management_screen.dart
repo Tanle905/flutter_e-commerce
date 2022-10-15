@@ -36,16 +36,17 @@ class _UsersManagementScreenState extends State<UsersManagementScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
+    final ThemeData themeData = Theme.of(context);
     final IconThemeData iconThemeData = Theme.of(context).iconTheme;
 
     return Scaffold(
+      backgroundColor: themeData.backgroundColor,
       drawer: const NavigationDrawer(),
       appBar: AppBar(
         leading: Builder(builder: ((context) => buildDrawerIcon(context))),
         title: Text(
           'Users Management',
-          style: textTheme.titleLarge,
+          style: themeData.textTheme.titleLarge,
         ),
         iconTheme: iconThemeData,
       ),
@@ -70,7 +71,10 @@ class _UsersManagementScreenState extends State<UsersManagementScreen> {
                 itemBuilder: (ctx, user, index) => Column(
                       children: [
                         UserManagementListTile(user: user),
-                        const Divider()
+                        const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 15),
+                          child: Divider(),
+                        )
                       ],
                     ))));
   }

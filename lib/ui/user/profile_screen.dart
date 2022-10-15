@@ -177,7 +177,7 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
   void selectImage() async {
     final imagePicker = ImagePicker();
     final XFile? image = await imagePicker.pickImage(
-        source: ImageSource.gallery, imageQuality: 25);
+        source: ImageSource.gallery, imageQuality: 10);
     try {
       if (image != null) {
         setState(() {

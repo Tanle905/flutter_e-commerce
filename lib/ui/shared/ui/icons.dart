@@ -1,10 +1,14 @@
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:tmdt/constants/constants.dart';
 import 'package:tmdt/models/cart.dart';
 import 'package:tmdt/models/products.dart';
+import 'package:tmdt/services/products.dart';
 import 'package:tmdt/ui/screens.dart';
 import 'package:tmdt/ui/shared/ui/badges.dart';
+import 'package:tmdt/ui/shared/ui/scaffold_snackbar.dart';
+import 'package:tmdt/utils/storage.util.dart';
 
 Widget buildBackIcon(BuildContext context) {
   return IconButton(
@@ -61,9 +65,10 @@ Widget buildShoppingCartIcon(
   return TopRightBadge(
     data: cartQuantities,
     child: IconButton(
-      onPressed: () {
-        Navigator.of(context).pushNamed(CartScreen.routeName);
-      },
+      onPressed: () => getAccessToken().then((token) {
+        Navigator.of(context).pushNamed(
+            token != null ? CartScreen.routeName : UserLoginScreen.routeName);
+      }),
       icon: Icon(
         FluentIcons.cart_16_regular,
         color: iconThemeData.color,
@@ -121,21 +126,41 @@ Widget buildQuantityInputIcon(
   );
 }
 
-Widget addToFavoriteIcon(
-    {required Product product, required BuildContext context}) {
-  final Color primaryColor = Theme.of(context).primaryColor;
-  final ColorScheme accentColor = Theme.of(context).colorScheme;
+class AddToFavoriteIcon extends StatefulWidget {
+  final Product product;
+  const AddToFavoriteIcon({Key? key, required this.product}) : super(key: key);
 
-  return ElevatedButton(
-    onPressed: (() {
-      print('Add item to favorite');
-    }),
-    style: ElevatedButton.styleFrom(shape: const CircleBorder()),
-    child: Icon(
-      product.isFavorite
-          ? FluentIcons.heart_48_filled
-          : FluentIcons.heart_48_regular,
-      color: product.isFavorite ? Colors.red.shade500 : primaryColor,
-    ),
-  );
+  @override
+  State<AddToFavoriteIcon> createState() => _AddToFavoriteIconState();
+}
+
+class _AddToFavoriteIconState extends State<AddToFavoriteIcon> {
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+      onPressed: (() async {
+        getAccessToken().then((token) {
+          if (token != null) {
+            handleProductFavortie(widget.product.productId).then((response) {
+              showSnackbar(context: context, message: response['message']);
+              setState(() {
+                widget.product.isFavorite = !widget.product.isFavorite;
+              });
+            });
+          } else {
+            Navigator.of(context).pushNamed(UserLoginScreen.routeName);
+          }
+        });
+      }),
+      style: ElevatedButton.styleFrom(shape: const CircleBorder()),
+      child: Icon(
+        widget.product.isFavorite
+            ? FluentIcons.heart_48_filled
+            : FluentIcons.heart_48_regular,
+        color: widget.product.isFavorite
+            ? HSLColor.fromColor(Colors.red).withLightness(0.6).toColor()
+            : Colors.white,
+      ),
+    );
+  }
 }

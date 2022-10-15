@@ -72,8 +72,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         ),
                       ),
                       SizedBox(
-                        child: addToFavoriteIcon(
-                            product: widget.product, context: context),
+                        child: AddToFavoriteIcon(product: widget.product),
                       )
                     ],
                   ),

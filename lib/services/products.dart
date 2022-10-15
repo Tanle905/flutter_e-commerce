@@ -12,7 +12,11 @@ Future<Map> fetchProducts(
   }
   Map productsData = {};
   try {
-    final products = await Dio().get(baseUrl + PRODUCTS_ENDPOINT_BASE + query);
+    final accessToken = await getAccessToken();
+    final products = await Dio().get(baseUrl + PRODUCTS_ENDPOINT_BASE + query,
+        options: accessToken != null
+            ? Options(headers: {'Authorization': 'Bearer $accessToken'})
+            : null);
     productsData = products.data;
   } on DioError catch (error) {
     if (error.response != null) {
@@ -62,6 +66,25 @@ Future<dynamic> deleteProduct(List<String> idArray) async {
           'Authorization': 'Bearer ${(await getAccessToken())}'
         }),
         data: jsonEncode({"idArray": idArray}));
+    return response.data;
+  } on DioError catch (error) {
+    if (error.response != null) {
+      throw error.response!.data;
+    }
+  }
+}
+
+Future<dynamic> handleProductFavortie(dynamic payload) async {
+  try {
+    final response = await Dio().put(baseUrl + FAVORITE_ENDPOINT,
+        options: Options(headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ${(await getAccessToken())}'
+        }),
+        data: jsonEncode({
+          "data": [payload]
+        }));
+    return response.data;
   } on DioError catch (error) {
     if (error.response != null) {
       throw error.response!.data;

@@ -88,7 +88,7 @@ class ProductGridTile extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  addToFavoriteIcon(product: product, context: context),
+                  AddToFavoriteIcon(product: product),
                   Flexible(
                       child: Text('\$${product.price.toString()}',
                           style: TextStyle(
@@ -102,9 +102,9 @@ class ProductGridTile extends StatelessWidget {
                     style: ElevatedButton.styleFrom(
                       shape: const CircleBorder(),
                     ),
-                    child: Icon(
+                    child: const Icon(
                       FluentIcons.cart_24_regular,
-                      color: primaryColor,
+                      color: Colors.white,
                     ),
                   ),
                 ],
