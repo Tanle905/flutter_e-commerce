@@ -10,6 +10,7 @@ class User {
   final String? address;
   final String? imageUrl;
   final String? accessToken;
+  final bool? isDeactivated;
 
   final int? phoneNumber;
   final String? payment;
@@ -24,7 +25,8 @@ class User {
       this.imageUrl,
       this.phoneNumber,
       this.payment,
-      this.accessToken});
+      this.accessToken,
+      this.isDeactivated});
 
   User copyWith(
       {String? userId,
@@ -35,7 +37,8 @@ class User {
       String? imageUrl,
       int? phoneNumber,
       String? payment,
-      String? accessToken}) {
+      String? accessToken,
+      bool? isDeactivated}) {
     return User(
         userId: userId ?? this.userId,
         username: username ?? this.username,
@@ -45,7 +48,8 @@ class User {
         address: address ?? this.address,
         payment: payment ?? this.payment,
         phoneNumber: phoneNumber ?? this.phoneNumber,
-        accessToken: accessToken ?? this.accessToken);
+        accessToken: accessToken ?? this.accessToken,
+        isDeactivated: isDeactivated ?? false);
   }
 
   factory User.fromJson(Map<String, dynamic> json) {
@@ -53,12 +57,15 @@ class User {
         userId: json['userId'] ?? json['_id'] ?? json['id'],
         username: json['username'],
         email: json['email'],
-        roles: List.castFrom<dynamic, String>(json['roles']),
+        roles: json['roles'] != null
+            ? List.castFrom<dynamic, String>(json['roles'])
+            : null,
         address: json['address'],
         imageUrl: json['imageUrl'],
         payment: json['payment'],
         phoneNumber: json['phoneNumber'],
-        accessToken: json['accessToken']);
+        accessToken: json['accessToken'],
+        isDeactivated: json['isDeactivated'] ?? false);
   }
 
   Map<String, dynamic> toJson() => {
@@ -70,7 +77,8 @@ class User {
         'imageUrl': imageUrl,
         'phoneNumber': phoneNumber,
         'payment': payment,
-        'accessToken': accessToken
+        'accessToken': accessToken,
+        'isDeactivated': isDeactivated
       };
 }
 

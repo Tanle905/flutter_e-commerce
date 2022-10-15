@@ -1,43 +1,37 @@
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
-import 'package:tmdt/models/products.dart';
+import 'package:tmdt/models/user.dart';
 import 'package:tmdt/ui/drawer/drawer.dart';
-import 'package:tmdt/ui/products/user_products_list_tile.dart';
 import 'package:tmdt/ui/screens.dart';
 import 'package:tmdt/ui/shared/ui/404.dart';
 import 'package:tmdt/ui/shared/ui/icons.dart';
+import 'package:tmdt/ui/user/user_management_list_tile.dart';
 import 'package:tmdt/utils/infinity_scroll_fetcher.util.dart';
 
-class UserProductsScreen extends StatefulWidget {
-  static const routeName = '/user-products';
+class UsersManagementScreen extends StatefulWidget {
+  static const routeName = '/user-management';
 
-  const UserProductsScreen({Key? key}) : super(key: key);
+  const UsersManagementScreen({Key? key}) : super(key: key);
 
   @override
-  State<UserProductsScreen> createState() => _UserProductsScreenState();
+  State<UsersManagementScreen> createState() => _UsersManagementScreenState();
 }
 
-class _UserProductsScreenState extends State<UserProductsScreen> {
-  static const _pageSize = 8;
-  final PagingController<int, Product> _pagingController =
+class _UsersManagementScreenState extends State<UsersManagementScreen> {
+  static const _pageSize = 10;
+  final PagingController<int, User> _pagingController =
       PagingController(firstPageKey: 1);
 
   @override
   void initState() {
     _pagingController.addPageRequestListener((pageKey) {
-      fetchProductPage(
+      fetchUserPage(
           page: pageKey,
           pageSize: _pageSize,
           pagingController: _pagingController);
     });
     super.initState();
-  }
-
-  @override
-  void dispose() {
-    _pagingController.dispose();
-    super.dispose();
   }
 
   @override
@@ -50,29 +44,32 @@ class _UserProductsScreenState extends State<UserProductsScreen> {
       appBar: AppBar(
         leading: Builder(builder: ((context) => buildDrawerIcon(context))),
         title: Text(
-          'Your products',
+          'Users Management',
           style: textTheme.titleLarge,
         ),
-        actions: <Widget>[buildAddButton(iconThemeData, context)],
         iconTheme: iconThemeData,
       ),
-      body: buildUserProductListView(pagingController: _pagingController),
+      body: buildUsersListView(pagingController: _pagingController),
     );
   }
 
-  Widget buildUserProductListView(
-      {required PagingController<int, Product> pagingController}) {
+  @override
+  void dispose() {
+    _pagingController.dispose();
+    super.dispose();
+  }
+
+  Widget buildUsersListView(
+      {required PagingController<int, User> pagingController}) {
     return RefreshIndicator(
         onRefresh: () => Future.sync(() => pagingController.refresh()),
-        child: PagedListView<int, Product>(
+        child: PagedListView<int, User>(
             pagingController: pagingController,
             builderDelegate: PagedChildBuilderDelegate(
                 noItemsFoundIndicatorBuilder: (context) => const NotFoundPage(),
-                itemBuilder: (ctx, product, index) => Column(
+                itemBuilder: (ctx, user, index) => Column(
                       children: [
-                        UserProductsListTile(
-                          product: product,
-                        ),
+                        UserManagementListTile(user: user),
                         const Divider()
                       ],
                     ))));

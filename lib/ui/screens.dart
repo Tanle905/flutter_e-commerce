@@ -10,3 +10,4 @@ export 'products/user_products_add.dart';
 export 'user/login_screen.dart';
 export 'user/sign_up_screen.dart';
 export 'user/profile_screen.dart';
+export 'user/users_management_screen.dart';

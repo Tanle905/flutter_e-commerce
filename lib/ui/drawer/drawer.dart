@@ -7,6 +7,7 @@ import 'package:tmdt/models/cart.dart';
 import 'package:tmdt/models/user.dart';
 import 'package:tmdt/ui/screens.dart';
 import 'package:tmdt/ui/shared/ui/scaffold_snackbar.dart';
+import 'package:tmdt/ui/user/users_management_screen.dart';
 
 class NavigationDrawer extends StatelessWidget {
   const NavigationDrawer({Key? key}) : super(key: key);
@@ -14,6 +15,9 @@ class NavigationDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     User? userInfo = Provider.of<UserModel>(context).getUser;
+    final bool isLoggedIn = userInfo != null;
+    final bool isAdmin =
+        isLoggedIn && (userInfo.roles?.contains(ROLE_ADMIN) ?? false);
 
     return Container(
       color: Colors.white,
@@ -35,7 +39,10 @@ class NavigationDrawer extends StatelessWidget {
                         width: 100,
                         height: 100,
                         child: userInfo?.imageUrl != null
-                            ? Image.network(userInfo?.imageUrl as String)
+                            ? Image.network(
+                                userInfo?.imageUrl as String,
+                                fit: BoxFit.cover,
+                              )
                             : const Image(image: IMAGE_PLACEHOLDER)),
                   ),
                   const Padding(padding: EdgeInsets.symmetric(vertical: 5)),
@@ -92,19 +99,7 @@ class NavigationDrawer extends StatelessWidget {
                     .pushReplacementNamed(OrdersScreen.routeName);
               },
             ),
-            userInfo != null && (userInfo.roles?.contains(ROLE_ADMIN) ?? false)
-                ? ListTile(
-                    leading: const Icon(
-                      FluentIcons.edit_16_regular,
-                    ),
-                    title: const Text('Manage Products'),
-                    onTap: () {
-                      Navigator.of(context)
-                          .pushReplacementNamed(UserProductsScreen.routeName);
-                    },
-                  )
-                : const SizedBox.shrink(),
-            userInfo != null
+            isLoggedIn
                 ? ListTile(
                     leading: const Icon(FluentIcons.settings_16_regular),
                     title: const Text('User Settings'),
@@ -113,7 +108,29 @@ class NavigationDrawer extends StatelessWidget {
                           .pushReplacementNamed(UserSettingsScreen.routeName);
                     },
                   )
-                : const SizedBox.shrink()
+                : const SizedBox.shrink(),
+            isAdmin
+                ? ListTile(
+                    leading: const Icon(FluentIcons.person_edit_20_regular),
+                    title: const Text('Manage Users'),
+                    onTap: () {
+                      Navigator.of(context).pushReplacementNamed(
+                          UsersManagementScreen.routeName);
+                    },
+                  )
+                : const SizedBox.shrink(),
+            isAdmin
+                ? ListTile(
+                    leading: const Icon(
+                      FluentIcons.box_edit_20_regular,
+                    ),
+                    title: const Text('Manage Products'),
+                    onTap: () {
+                      Navigator.of(context)
+                          .pushReplacementNamed(UserProductsScreen.routeName);
+                    },
+                  )
+                : const SizedBox.shrink(),
           ],
         )),
       ),

@@ -31,8 +31,9 @@ class ProductGridTile extends StatelessWidget {
             footer: buildGridFooterBar(context),
             child: GestureDetector(
               onTap: (() {
-                Navigator.of(context).pushNamed(ProductDetailScreen.routeName,
-                    arguments: product.productId);
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => ProductDetailScreen(product),
+                ));
               }),
               child: Container(
                 padding: const EdgeInsets.all(0.5),
@@ -48,10 +49,7 @@ class ProductGridTile extends StatelessWidget {
 
   Widget buildGridFooterBar(BuildContext context) {
     final Color primaryColor = Theme.of(context).primaryColor;
-    final ColorScheme accentColor = Theme.of(context).colorScheme;
     final TextTheme textTheme = Theme.of(context).textTheme;
-    final ElevatedButtonThemeData elevatedButtonThemeData =
-        Theme.of(context).elevatedButtonTheme;
 
     return ClipRRect(
       child: Container(

@@ -7,3 +7,4 @@ const SIGNUP_ENDPOINT = '/auth/signup';
 const PROFILE_ENDPOINT = '/profile';
 const PRODUCTS_ENDPOINT_BASE = '/product';
 const CART_ENDPOINT_BASE = '/cart';
+const USER_MANAGEMENT_ENDPOINT = '/user-management';

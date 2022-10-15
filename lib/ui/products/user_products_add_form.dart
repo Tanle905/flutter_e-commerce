@@ -13,10 +13,7 @@ import 'package:tmdt/utils/validator.util.dart';
 
 class UserProductAddForm extends StatefulWidget {
   final Product? initalData;
-  final Future<void> Function() reloadProducts;
-  const UserProductAddForm(
-      {Key? key, this.initalData, required this.reloadProducts})
-      : super(key: key);
+  const UserProductAddForm({Key? key, this.initalData}) : super(key: key);
   @override
   State<UserProductAddForm> createState() => _UserProductAddFormState();
 }
@@ -105,7 +102,7 @@ class _UserProductAddFormState extends State<UserProductAddForm> {
         onSaved: (newValue) => formData['description'] = newValue,
         validator: requiredValidator,
         decoration: inputStyle(context: context, label: 'Description *'),
-        maxLines: 5,
+        maxLines: 7,
       ),
       TextFormField(
         initialValue: formData['price']?.toString(),
@@ -159,7 +156,6 @@ class _UserProductAddFormState extends State<UserProductAddForm> {
             isImageValid = false;
           });
         }
-        widget.reloadProducts();
         showSnackbar(
             context: context, message: "Product added/edited successfully!");
       } catch (error, stackTrace) {

@@ -1,5 +1,6 @@
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:provider/provider.dart';
 import 'package:tmdt/models/cart.dart';
 import 'package:tmdt/models/products.dart';
@@ -9,47 +10,51 @@ import 'package:tmdt/ui/drawer/drawer.dart';
 import 'package:tmdt/ui/products/products_grid.dart';
 import 'package:tmdt/ui/screens.dart';
 import 'package:tmdt/ui/shared/ui/404.dart';
-import 'package:tmdt/ui/shared/ui/badges.dart';
 import 'package:tmdt/ui/shared/ui/icons.dart';
 import 'package:tmdt/ui/shared/utils/debouncer.util.dart';
+import 'package:tmdt/utils/infinity_scroll_fetcher.util.dart';
 import 'package:tmdt/utils/responseMapping.util.dart';
-
-enum FilterOptions { favorite, all }
 
 class OverviewScreen extends StatefulWidget {
   static String routeName = '/';
-  final Future<Map> futureProductResponse;
-  final Future<void> Function() reloadProducts;
-  const OverviewScreen(
-      {required this.futureProductResponse,
-      required this.reloadProducts,
-      Key? key})
-      : super(key: key);
+  const OverviewScreen({Key? key}) : super(key: key);
 
   @override
   State<OverviewScreen> createState() => _OverviewScreenState();
 }
 
 class _OverviewScreenState extends State<OverviewScreen> {
-  final _showOnlyFavorites = false;
+  static const _pageSize = 8;
+  final PagingController<int, Product> _pagingController =
+      PagingController(firstPageKey: 1, invisibleItemsThreshold: 1);
   late Future<dynamic> futureSearchResponse = Future.value();
   final FocusNode _searchFocusNode = FocusNode();
+  String sortBy = '';
   bool isSearching = false;
   Debouncer handleSeachDebounce =
       Debouncer(delay: const Duration(milliseconds: 300));
 
   @override
   void initState() {
-    super.initState();
+    _pagingController.addPageRequestListener((pageKey) {
+      fetchProductPage(
+          page: pageKey,
+          pageSize: _pageSize,
+          pagingController: _pagingController,
+          sortBy: sortBy,
+          isAsc: true);
+    });
     _searchFocusNode.addListener(handleChangeFocus);
     fetchCart().then((itemsList) =>
         Provider.of<CartList>(context, listen: false).setCartList = itemsList);
+    super.initState();
   }
 
   @override
   void dispose() {
-    super.dispose();
     _searchFocusNode.removeListener(handleChangeFocus);
+    _pagingController.dispose();
+    super.dispose();
   }
 
   @override
@@ -86,7 +91,7 @@ class _OverviewScreenState extends State<OverviewScreen> {
               builder: (context, snapshot) {
                 List<Product> productData = List.empty();
                 if (snapshot.hasData) {
-                  productData = productResponseMapping(snapshot);
+                  productData = productResponseMapping(snapshot.data);
                 }
                 return snapshot.hasData
                     ? productData.isNotEmpty
@@ -97,52 +102,58 @@ class _OverviewScreenState extends State<OverviewScreen> {
                       );
               },
             )
-          : FutureBuilder(
-              future: widget.futureProductResponse,
-              builder: (context, snapshot) {
-                List<Product> productData = List.empty();
-                if (snapshot.hasData) {
-                  productData = productResponseMapping(snapshot);
-                }
-
-                return snapshot.hasData
-                    ? RefreshIndicator(
-                        onRefresh: widget.reloadProducts,
-                        child: productData.isNotEmpty
-                            ? ProductsGrid(_showOnlyFavorites, productData)
-                            : ListView(
-                                children: const [NotFoundPage()],
-                              ))
-                    : const Center(child: CircularProgressIndicator());
-              }),
+          : RefreshIndicator(
+              onRefresh: () => Future.sync(() => _pagingController.refresh()),
+              child: Column(children: [
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 1),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'All Products',
+                        style: themeData.textTheme.titleLarge,
+                      ),
+                      buildProductFilterMenu()
+                    ],
+                  ),
+                ),
+                Expanded(
+                    child: ProductsGrid(
+                  pagingController: _pagingController,
+                ))
+              ])),
       drawer: const NavigationDrawer(),
       backgroundColor: themeData.backgroundColor,
     );
   }
 
-  // Widget buildProductFilterMenu() {
-  //   return PopupMenuButton(
-  //     itemBuilder: (ctx) => [
-  //       const PopupMenuItem(
-  //         value: FilterOptions.favorite,
-  //         child: Text('Only Favorite'),
-  //       ),
-  //       const PopupMenuItem(
-  //         value: FilterOptions.all,
-  //         child: Text('Show all'),
-  //       )
-  //     ],
-  //     onSelected: (FilterOptions selectedValue) {
-  //       setState(() {
-  //         if (selectedValue == FilterOptions.favorite) {
-  //           _showOnlyFavorites = true;
-  //         }
-  //         if (selectedValue == FilterOptions.all) _showOnlyFavorites = false;
-  //       });
-  //     },
-  //     icon: const Icon(Icons.more_vert),
-  //   );
-  // }
+  Widget buildProductFilterMenu() {
+    return PopupMenuButton(
+      itemBuilder: (ctx) => [
+        const PopupMenuItem(
+          value: 'title',
+          child: Text('Sort by Title'),
+        ),
+        const PopupMenuItem(
+          value: 'price',
+          child: Text('Sort by Price'),
+        ),
+        const PopupMenuItem(
+          value: 'createdAt',
+          child: Text('Sort by Latest'),
+        )
+      ],
+      onSelected: (String value) {
+        setState(() {
+          sortBy = value;
+        });
+        _pagingController.refresh();
+      },
+      icon: const Icon(FluentIcons.more_horizontal_48_regular),
+    );
+  }
 
   Widget buildSearchBar(
       {Function(String)? onSearch, required FocusNode focusNode}) {
@@ -177,27 +188,27 @@ class _OverviewScreenState extends State<OverviewScreen> {
     return ListView(
       padding: const EdgeInsets.all(10),
       children: productData
-          .map((item) => Padding(
+          .map((product) => Padding(
                 padding: const EdgeInsets.symmetric(vertical: 1),
                 child: OutlinedButton(
                   style: OutlinedButton.styleFrom(side: BorderSide.none),
                   onPressed: () {
-                    Navigator.of(context).pushNamed(
-                        ProductDetailScreen.routeName,
-                        arguments: item.productId);
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => ProductDetailScreen(product),
+                    ));
                   },
                   child: Row(
                     children: [
                       Padding(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 5, vertical: 2),
+                            horizontal: 1, vertical: 2),
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(5),
                           child: SizedBox(
                             height: 70,
                             width: 100,
                             child: Image.network(
-                              item.imageUrl,
+                              product.imageUrl,
                               fit: BoxFit.cover,
                             ),
                           ),
@@ -210,14 +221,20 @@ class _OverviewScreenState extends State<OverviewScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Text(
-                            item.title,
+                            product.title,
                             style: textTheme.titleLarge,
                             overflow: TextOverflow.ellipsis,
                           ),
                           Text(
-                            item.description,
+                            product.price.toString(),
+                            style: textTheme.titleMedium,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          Text(
+                            product.description,
                             style: textTheme.bodyMedium,
                             overflow: TextOverflow.ellipsis,
+                            maxLines: 2,
                           )
                         ],
                       ))

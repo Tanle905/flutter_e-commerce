@@ -1,16 +1,13 @@
-import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tmdt/constants/constants.dart';
 import 'package:tmdt/models/cart.dart';
 import 'package:tmdt/models/products.dart';
 import 'package:tmdt/ui/products/utils/product.utils.dart';
-import 'package:tmdt/ui/shared/styles/text_styles.dart';
 import 'package:tmdt/ui/shared/ui/expandable_text.dart';
 import 'package:tmdt/ui/shared/ui/icons.dart';
 
 class ProductDetailScreen extends StatefulWidget {
-  static const routeName = '/product-detail';
   const ProductDetailScreen(this.product, {super.key});
   final Product product;
   @override

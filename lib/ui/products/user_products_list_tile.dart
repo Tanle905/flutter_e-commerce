@@ -7,16 +7,31 @@ import 'package:tmdt/ui/shared/ui/scaffold_snackbar.dart';
 
 class UserProductsListTile extends StatelessWidget {
   final Product product;
-  final Future<void> Function() reloadProducts;
 
-  const UserProductsListTile(
-      {Key? key, required this.product, required this.reloadProducts})
+  const UserProductsListTile({Key? key, required this.product})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final ThemeData themeData = Theme.of(context);
+
     return ListTile(
-      title: Text(product.title),
+      title: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            product.title,
+            style: themeData.textTheme.titleLarge,
+            textAlign: TextAlign.start,
+          ),
+          Text(
+            product.description,
+            style: themeData.textTheme.bodyMedium,
+            maxLines: 3,
+            overflow: TextOverflow.ellipsis,
+          )
+        ],
+      ),
       leading: CircleAvatar(backgroundImage: NetworkImage(product.imageUrl)),
       trailing: SizedBox(
         width: 100,
@@ -34,7 +49,6 @@ class UserProductsListTile extends StatelessWidget {
       onPressed: () async {
         try {
           await deleteProduct(List.filled(1, productId));
-          reloadProducts();
           showSnackbar(
               context: context, message: "Product removed successfully!");
         } catch (error) {
@@ -59,7 +73,6 @@ class UserProductsListTile extends StatelessWidget {
         MaterialPageRoute(
           builder: (context) => UserProductsAddScreen(
             initalData: product,
-            reloadProducts: reloadProducts,
           ),
         ));
   }

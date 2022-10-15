@@ -4,8 +4,12 @@ import 'package:dio/dio.dart';
 import 'package:tmdt/constants/endpoints.dart';
 import 'package:tmdt/utils/storage.util.dart';
 
-Future<Map> fetchProducts({String? initalQuery}) async {
-  String query = initalQuery ?? '?Page=1&pageSize=1000';
+Future<Map> fetchProducts(
+    {String? initalQuery, int? page, int? pageSize}) async {
+  String query = initalQuery != null ? '?$initalQuery' : '?';
+  if (page != null && pageSize != null) {
+    query = '$query&page=$page&pageSize=$pageSize';
+  }
   Map productsData = {};
   try {
     final products = await Dio().get(baseUrl + PRODUCTS_ENDPOINT_BASE + query);

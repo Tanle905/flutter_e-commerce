@@ -6,10 +6,7 @@ import 'package:tmdt/ui/shared/ui/icons.dart';
 class UserProductsAddScreen extends StatelessWidget {
   final Product? initalData;
   static const routeName = '/user-product-add';
-  final Future<void> Function() reloadProducts;
-  const UserProductsAddScreen(
-      {Key? key, this.initalData, required this.reloadProducts})
-      : super(key: key);
+  const UserProductsAddScreen({Key? key, this.initalData}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -28,15 +25,9 @@ class UserProductsAddScreen extends StatelessWidget {
       body: Padding(
           padding: const EdgeInsets.all(20),
           child: SingleChildScrollView(
-            child: initalData != null
-                ? UserProductAddForm(
-                    initalData: initalData,
-                    reloadProducts: reloadProducts,
-                  )
-                : UserProductAddForm(
-                    reloadProducts: reloadProducts,
-                  ),
-          )),
+              child: UserProductAddForm(
+            initalData: initalData,
+          ))),
     );
   }
 }
