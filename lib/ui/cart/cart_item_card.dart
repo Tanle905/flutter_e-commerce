@@ -8,6 +8,7 @@ import 'package:tmdt/services/cart.dart';
 import 'package:tmdt/ui/products/products_detail_screen.dart';
 import 'package:tmdt/ui/shared/ui/icons.dart';
 import 'package:tmdt/ui/shared/ui/scaffold_snackbar.dart';
+import 'package:tmdt/ui/shared/utils/debouncer.util.dart';
 import 'package:tmdt/ui/shared/utils/dialog_util.dart';
 
 class CartItemCard extends StatefulWidget {
@@ -19,12 +20,25 @@ class CartItemCard extends StatefulWidget {
 }
 
 class _CartItemCardState extends State<CartItemCard> {
-  int itemCount = 1;
+  ValueNotifier<int> itemCount = ValueNotifier<int>(1);
+  final Debouncer debouncer =
+      Debouncer(delay: const Duration(milliseconds: 500));
 
   @override
   void initState() {
-    itemCount = widget.cartItem.quantity;
+    itemCount.value = widget.cartItem.quantity;
+    itemCount.addListener(() {
+      debouncer(() => updateItemInCart(
+          product: Product.fromCartitem(widget.cartItem),
+          quantity: itemCount.value));
+    });
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    itemCount.dispose();
+    super.dispose();
   }
 
   @override
@@ -104,18 +118,18 @@ class _CartItemCardState extends State<CartItemCard> {
           trailing: SizedBox(
             width: 100,
             child: buildQuantityInputIcon(
-                value: itemCount,
-                onSubtract: () => itemCount > 1
+                value: itemCount.value,
+                onSubtract: () => itemCount.value > 1
                     ? setState(() {
-                        itemCount--;
-                        widget.cartItem.quantity = itemCount;
+                        itemCount.value--;
+                        widget.cartItem.quantity = itemCount.value;
                         cartList.updateCartList(widget.cartItem);
                       })
                     : null,
                 onAdd: () {
                   setState(() {
-                    itemCount++;
-                    widget.cartItem.quantity = itemCount;
+                    itemCount.value++;
+                    widget.cartItem.quantity = itemCount.value;
                     cartList.updateCartList(widget.cartItem);
                   });
                 }),

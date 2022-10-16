@@ -38,6 +38,23 @@ Future addToCart({required Product product, required int quantity}) async {
   }
 }
 
+Future updateItemInCart(
+    {required Product product, required int quantity}) async {
+  try {
+    final httpBody = jsonEncode({
+      "data": [
+        {'productId': product.productId, 'quantity': quantity}
+      ]
+    });
+    http.put(Uri.parse(baseUrl + CART_ENDPOINT_BASE), body: httpBody, headers: {
+      'Authorization': 'Bearer ${await getAccessToken()}',
+      'Content-Type': 'application/json'
+    });
+  } catch (error, stackTrace) {
+    throw ('$error\n$stackTrace');
+  }
+}
+
 Future deleteItemInCart({required String productId}) async {
   final mappedData = {
     "data": [
