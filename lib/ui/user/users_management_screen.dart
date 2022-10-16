@@ -43,6 +43,7 @@ class _UsersManagementScreenState extends State<UsersManagementScreen> {
       backgroundColor: themeData.backgroundColor,
       drawer: const NavigationDrawer(),
       appBar: AppBar(
+        centerTitle: true,
         leading: Builder(builder: ((context) => buildDrawerIcon(context))),
         title: Text(
           'Users Management',

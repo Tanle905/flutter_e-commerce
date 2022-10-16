@@ -156,7 +156,7 @@ class _AddToFavoriteIconState extends State<AddToFavoriteIcon> {
       child: Icon(
         widget.product.isFavorite
             ? FluentIcons.heart_48_filled
-            : FluentIcons.heart_48_regular,
+            : FluentIcons.heart_16_regular,
         color: widget.product.isFavorite
             ? HSLColor.fromColor(Colors.red).withLightness(0.6).toColor()
             : Colors.white,

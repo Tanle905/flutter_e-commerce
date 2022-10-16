@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tmdt/constants/endpoints.dart';
+import 'package:tmdt/models/cart.dart';
 
 class Product {
   final String productId;
@@ -40,6 +41,16 @@ class Product {
         price:
             json['price'] == null ? 0 : double.parse(json['price'].toString()),
         isFavorite: json['isFavorite'] ?? false);
+  }
+
+  factory Product.fromCartitem(CartItem cartItem) {
+    return Product(
+        productId: cartItem.productId,
+        title: cartItem.title,
+        description: cartItem.description,
+        imageUrl: cartItem.imageUrl,
+        price: cartItem.price,
+        isFavorite: cartItem.isFavorite);
   }
 
   Map<String, dynamic> toJson() => {

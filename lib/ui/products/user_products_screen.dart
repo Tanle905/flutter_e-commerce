@@ -50,6 +50,7 @@ class _UserProductsScreenState extends State<UserProductsScreen> {
       backgroundColor: themeData.backgroundColor,
       drawer: const NavigationDrawer(),
       appBar: AppBar(
+        centerTitle: true,
         leading: Builder(builder: ((context) => buildDrawerIcon(context))),
         title: Text(
           'Your products',

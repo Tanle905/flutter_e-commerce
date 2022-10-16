@@ -6,6 +6,7 @@ import 'package:tmdt/ui/cart/cart_item_card.dart';
 import 'package:tmdt/ui/cart/cart_manager.dart';
 import 'package:tmdt/ui/order/orders_screen.dart';
 import 'package:tmdt/ui/shared/ui/icons.dart';
+import 'package:tmdt/ui/shared/ui/scaffold_snackbar.dart';
 
 class CartScreen extends StatefulWidget {
   static const routeName = '/cart';
@@ -23,6 +24,11 @@ class _CartScreenState extends State<CartScreen> {
   void initState() {
     super.initState();
     futureCart = fetchCart();
+    futureCart.then((value) {
+      Provider.of<CartList>(context, listen: false).setCartList = value;
+    },
+        onError: (error) =>
+            showSnackbar(context: context, message: error['message']));
   }
 
   @override
@@ -40,23 +46,23 @@ class _CartScreenState extends State<CartScreen> {
         }
         return Scaffold(
           appBar: AppBar(
+              titleTextStyle: textTheme.titleLarge,
+              centerTitle: true,
               iconTheme: iconTheme,
               leading: Builder(builder: (context) => buildBackIcon(context)),
-              title: Text(
+              title: const Text(
                 'Your cart',
-                style: textTheme.titleLarge,
               )),
           body: snapshot.hasData
               ? Column(
                   children: <Widget>[
                     Expanded(
-                        child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 15),
                       child: buildCartDetails(CartManager(CartList(itemsList))),
-                    )),
-                    const SizedBox(height: 10),
-                    buildCartSummary(
-                        textTheme, CartManager(CartList(itemsList)), context),
+                    ),
+                    Consumer<CartList>(
+                      builder: (context, cartList, child) => buildCartSummary(
+                          textTheme, CartManager(cartList), context),
+                    ),
                   ],
                 )
               : const Center(
@@ -69,27 +75,38 @@ class _CartScreenState extends State<CartScreen> {
 
   Widget buildCartSummary(
       TextTheme textTheme, CartManager cart, BuildContext context) {
+    final ThemeData themeData = Theme.of(context);
+
     return Card(
-      margin: const EdgeInsets.all(15),
+      color: themeData.backgroundColor,
       child: Padding(
         padding: const EdgeInsets.all(8),
-        child: Row(
+        child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            const Text('Total', style: TextStyle(fontSize: 20)),
-            const Spacer(),
-            Chip(
-              label: Text('\$${cart.totalAmount.toStringAsFixed(2)}',
-                  style: textTheme.titleMedium),
+            SizedBox(
+                width: double.infinity,
+                height: 50,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('Total (${cart.productCount}):',
+                        style: textTheme.titleMedium),
+                    Text('\$${cart.totalAmount.toStringAsFixed(2)}',
+                        style: textTheme.titleMedium),
+                  ],
+                )),
+            SizedBox(
+              width: double.infinity,
+              height: 50,
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => const OrdersScreen()));
+                },
+                child: const Text('Go to Payment'),
+              ),
             ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => const OrdersScreen()));
-              },
-              style: TextButton.styleFrom(textStyle: textTheme.titleSmall),
-              child: const Text('ORDER NOW'),
-            )
           ],
         ),
       ),
@@ -99,8 +116,7 @@ class _CartScreenState extends State<CartScreen> {
   Widget buildCartDetails(CartManager cart) {
     return ListView(
       children: cart.items.getCartList
-          .map(
-              (item) => CartItemCard(productId: item.productId, cartItem: item))
+          .map((item) => CartItemCard(cartItem: item))
           .toList(),
     );
   }

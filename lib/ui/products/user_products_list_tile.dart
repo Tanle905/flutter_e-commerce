@@ -4,6 +4,7 @@ import 'package:tmdt/models/products.dart';
 import 'package:tmdt/services/products.dart';
 import 'package:tmdt/ui/products/user_products_add.dart';
 import 'package:tmdt/ui/shared/ui/scaffold_snackbar.dart';
+import 'package:tmdt/ui/shared/utils/dialog_util.dart';
 
 class UserProductsListTile extends StatelessWidget {
   final Product product;
@@ -46,15 +47,19 @@ class UserProductsListTile extends StatelessWidget {
 
   Widget buildDeleteButton(BuildContext context, String productId) {
     return IconButton(
-      onPressed: () async {
-        try {
-          await deleteProduct(List.filled(1, productId));
-          showSnackbar(
-              context: context, message: "Product removed successfully!");
-        } catch (error) {
-          rethrow;
-        }
-      },
+      onPressed: () => showConfirmDialog(
+          context: context,
+          message: "Do you want to delete this product?",
+          onOk: () {
+            deleteProduct(List.filled(1, productId)).then((value) {
+              showSnackbar(
+                  context: context, message: "Product removed successfully!");
+            },
+                onError: (error) =>
+                    showSnackbar(context: context, message: error['message']));
+            Navigator.of(context).pop();
+          },
+          onCancel: () => Navigator.of(context).pop()),
       icon: const Icon(FluentIcons.delete_16_regular),
       color: Theme.of(context).errorColor,
     );

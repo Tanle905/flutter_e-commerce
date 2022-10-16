@@ -28,7 +28,8 @@ ThemeData lightTheme() {
           ),
           titleLarge: TextStyle(
               color: COLOR_TEXT_AND_ICON, fontWeight: FontWeight.bold),
-          titleMedium: TextStyle(color: COLOR_TEXT_AND_ICON),
+          titleMedium: TextStyle(
+              color: COLOR_TEXT_AND_ICON, fontWeight: FontWeight.bold),
           titleSmall: TextStyle(color: COLOR_TEXT_AND_ICON),
           bodyMedium: TextStyle(color: COLOR_TEXT_BODY)),
       iconTheme: IconThemeData(color: COLOR_TEXT_AND_ICON, size: 25),

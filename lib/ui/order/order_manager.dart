@@ -13,7 +13,9 @@ class OrderManager with ChangeNotifier {
               title: 'Red shirt',
               price: 29.99,
               quantity: 2,
-              imageUrl: 'sdf')
+              imageUrl: 'sdf',
+              description: 'sdf',
+              isFavorite: false)
         ],
         dateTime: DateTime.now())
   ];

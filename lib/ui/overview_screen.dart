@@ -79,7 +79,7 @@ class _OverviewScreenState extends State<OverviewScreen> {
             onSearch: (value) => handleSeachDebounce(() {
                   setState(() {
                     futureSearchResponse =
-                        fetchProducts(initalQuery: '?title=$value');
+                        fetchProducts(initalQuery: 'title=$value');
                   });
                 }),
             focusNode: _searchFocusNode),

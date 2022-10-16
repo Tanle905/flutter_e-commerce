@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:dio/dio.dart';
 import 'package:http/http.dart' as http;
 import 'package:tmdt/constants/endpoints.dart';
 import 'package:tmdt/models/cart.dart';
@@ -34,5 +35,27 @@ Future addToCart({required Product product, required int quantity}) async {
         });
   } catch (error, stackTrace) {
     throw ('$error\n$stackTrace');
+  }
+}
+
+Future deleteItemInCart({required String productId}) async {
+  final mappedData = {
+    "data": [
+      {"productId": productId}
+    ]
+  };
+
+  try {
+    final response = await Dio().delete(baseUrl + CART_ENDPOINT_BASE,
+        data: jsonEncode(mappedData),
+        options: Options(headers: {
+          'Authorization': 'Bearer ${await getAccessToken()}',
+          'Content-Type': 'application/json'
+        }));
+    return response.data;
+  } on DioError catch (error) {
+    if (error.response != null) {
+      throw error.response?.data;
+    }
   }
 }
