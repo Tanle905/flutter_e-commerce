@@ -4,6 +4,12 @@ import 'package:tmdt/constants/constants.dart';
 
 ThemeData lightTheme() {
   return ThemeData(
+      cardColor: COLOR_BACKGROUND,
+      cardTheme: CardTheme(
+          shadowColor: Colors.transparent,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+              side: const BorderSide(color: COLOR_SHADOW))),
       canvasColor: COLOR_BACKGROUND,
       inputDecorationTheme:
           InputDecorationTheme(fillColor: Colors.grey.shade300),
@@ -49,6 +55,11 @@ ThemeData lightTheme() {
 
 ThemeData darkTheme() {
   return ThemeData(
+      cardColor: COLOR_BACKGROUND_DARK,
+      cardTheme: CardTheme(
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+              side: BorderSide(color: COLOR_SHADOW_DARK))),
       canvasColor: COLOR_BACKGROUND_DARK,
       inputDecorationTheme:
           InputDecorationTheme(fillColor: Colors.grey.shade800),
@@ -71,8 +82,8 @@ ThemeData darkTheme() {
           titleMedium: TextStyle(color: COLOR_TEXT_AND_ICON_DARK),
           bodyMedium: TextStyle(color: COLOR_TEXT_BODY_DARK)),
       iconTheme: IconThemeData(color: COLOR_TEXT_AND_ICON_DARK, size: 25),
-      appBarTheme:
-          AppBarTheme(backgroundColor: COLOR_BACKGROUND_DARK, elevation: 0),
+      appBarTheme: const AppBarTheme(
+          backgroundColor: COLOR_BACKGROUND_DARK, elevation: 0),
       fontFamily: 'Lato',
       brightness: Brightness.dark,
       primaryColor: COLOR_BACKGROUND_DARK,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tmdt/constants/constants.dart';
 import 'package:tmdt/models/cart.dart';
 import 'package:tmdt/services/cart.dart';
 import 'package:tmdt/ui/cart/cart_item_card.dart';
@@ -77,8 +78,14 @@ class _CartScreenState extends State<CartScreen> {
       TextTheme textTheme, CartManager cart, BuildContext context) {
     final ThemeData themeData = Theme.of(context);
 
-    return Card(
-      color: themeData.backgroundColor,
+    return Container(
+      decoration: BoxDecoration(
+          boxShadow: [
+            BoxShadow(
+                color: themeData.shadowColor, blurRadius: 2, spreadRadius: 0.0),
+          ],
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(10)),
+          color: themeData.backgroundColor),
       child: Padding(
         padding: const EdgeInsets.all(8),
         child: Column(
