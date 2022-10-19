@@ -1,7 +1,9 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:provider/provider.dart';
+import 'package:tmdt/constants/constants.dart';
 import 'package:tmdt/models/cart.dart';
 import 'package:tmdt/models/user.dart';
 import 'package:tmdt/services/user.dart';
@@ -19,6 +21,8 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  Stripe.publishableKey = STRIPE_PUBLIC_KEY;
+  await Stripe.instance.applySettings();
   runApp(const MyApp());
 }
 

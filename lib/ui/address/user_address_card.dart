@@ -1,10 +1,10 @@
-import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:tmdt/models/address.dart';
 
 class UserAddressCard extends StatelessWidget {
   final Address userAddress;
-  const UserAddressCard({Key? key, required this.userAddress})
+  final Color? borderColor;
+  const UserAddressCard({Key? key, required this.userAddress, this.borderColor})
       : super(key: key);
 
   @override
@@ -15,6 +15,13 @@ class UserAddressCard extends StatelessWidget {
       width: double.infinity,
       height: 125,
       child: Card(
+        margin: const EdgeInsets.all(0),
+        elevation: 0,
+        color: Colors.transparent,
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+            side: BorderSide(
+                color: borderColor ?? themeData.shadowColor, width: 2)),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
           child: Column(

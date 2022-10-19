@@ -4,6 +4,7 @@ import 'package:tmdt/models/cart.dart';
 import 'package:tmdt/services/cart.dart';
 import 'package:tmdt/ui/cart/cart_item_card.dart';
 import 'package:tmdt/ui/cart/cart_manager.dart';
+import 'package:tmdt/ui/checkout/checkout_screen.dart';
 import 'package:tmdt/ui/order/orders_screen.dart';
 import 'package:tmdt/ui/shared/ui/icons.dart';
 import 'package:tmdt/ui/shared/ui/scaffold_snackbar.dart';
@@ -107,10 +108,9 @@ class _CartScreenState extends State<CartScreen> {
               height: 50,
               child: ElevatedButton(
                 onPressed: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => const OrdersScreen()));
+                  Navigator.of(context).pushNamed(CheckoutScreen.routeName);
                 },
-                child: const Text('Go to Payment'),
+                child: const Text('Go to Checkout'),
               ),
             ),
           ],
