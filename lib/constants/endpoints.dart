@@ -8,4 +8,5 @@ const PROFILE_ENDPOINT = '/profile';
 const PRODUCTS_ENDPOINT_BASE = '/product';
 const FAVORITE_ENDPOINT = '/favorite';
 const CART_ENDPOINT_BASE = '/cart';
+const USER_ADDRESS_ENDPOINT = '/profile/address';
 const USER_MANAGEMENT_ENDPOINT = '/user-management';

@@ -2,7 +2,9 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:tmdt/constants/endpoints.dart';
+import 'package:tmdt/models/address.dart';
 import 'package:tmdt/models/user.dart';
+import 'package:tmdt/utils/responseMapping.util.dart';
 import 'package:tmdt/utils/storage.util.dart';
 
 Future<User?> fetchUserProfile() async {
@@ -82,4 +84,25 @@ Future<Map<dynamic, dynamic>?> setUserStatus(String userId, bool value) async {
     }
   }
   return null;
+}
+
+Future<List<Address>> fetchUserAddress() async {
+  List<Address> data = List.empty();
+
+  try {
+    final authResponse = await Dio().get(
+      baseUrl + USER_ADDRESS_ENDPOINT,
+      options: Options(headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ${(await getAccessToken())}'
+      }),
+    );
+    data = addressResponseMapping(authResponse.data);
+  } on DioError catch (error) {
+    if (error.response != null) {
+      throw error.response!.data;
+    }
+  }
+
+  return data;
 }

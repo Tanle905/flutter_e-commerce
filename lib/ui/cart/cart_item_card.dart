@@ -100,8 +100,8 @@ class _CartItemCardState extends State<CartItemCard> {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(100),
               child: SizedBox(
-                width: 1500,
-                height: 1500,
+                width: 150,
+                height: 150,
                 child: Image.network(
                   widget.cartItem.imageUrl,
                   fit: BoxFit.cover,

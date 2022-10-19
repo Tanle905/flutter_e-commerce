@@ -33,30 +33,22 @@ class _UserManagementListTileState extends State<UserManagementListTile> {
         children: [
           Text(
             widget.user.username,
-            style: themeData.textTheme.titleLarge,
+            style: themeData.textTheme.titleMedium,
             textAlign: TextAlign.start,
           ),
           const Padding(padding: EdgeInsets.only(bottom: 5)),
           Text(
             widget.user.email,
-            style: themeData.textTheme.titleMedium,
+            style: themeData.textTheme.titleSmall,
             overflow: TextOverflow.ellipsis,
           ),
           widget.user.phoneNumber != null
               ? Text(
                   widget.user.phoneNumber.toString(),
-                  style: themeData.textTheme.bodyMedium,
+                  style: themeData.textTheme.titleSmall,
                   overflow: TextOverflow.ellipsis,
                 )
               : const SizedBox.shrink(),
-          widget.user.address != null
-              ? Text(
-                  widget.user.address as String,
-                  style: themeData.textTheme.bodyMedium,
-                  maxLines: 3,
-                  overflow: TextOverflow.ellipsis,
-                )
-              : const SizedBox.shrink()
         ],
       ),
       trailing: Column(

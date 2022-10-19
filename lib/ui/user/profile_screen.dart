@@ -9,6 +9,7 @@ import 'package:provider/provider.dart';
 import 'package:tmdt/constants/constants.dart';
 import 'package:tmdt/models/user.dart';
 import 'package:tmdt/services/user.dart';
+import 'package:tmdt/ui/address/user_address_screen.dart';
 import 'package:tmdt/ui/drawer/drawer.dart';
 import 'package:tmdt/ui/shared/styles/input_styles.dart';
 import 'package:tmdt/ui/shared/ui/icons.dart';
@@ -31,7 +32,6 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
   final Map userSettingsFormData = {
     'username': null,
     'email': null,
-    'address': null,
     'phoneNumber': null,
     'imageUrl': null
   };
@@ -64,61 +64,60 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
         ),
         centerTitle: true,
       ),
-      body: SingleChildScrollView(
-          child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: FutureBuilder(
-          future: futureUserProfile,
-          builder: (context, snapshot) {
-            if (snapshot.hasData && snapshot.data != null) {
-              final User userInfo = snapshot.data as User;
-              userSettingsFormData
-                  .updateAll((key, value) => value = userInfo.toJson()[key]);
-              imagefile.exists().then((value) {
-                if (userInfo.imageUrl != null && !value) {
-                  setState(() {
-                    avatar = Image.network(userInfo.imageUrl as String);
-                  });
-                }
-              });
-            }
+      body: FutureBuilder(
+        future: futureUserProfile,
+        builder: (context, snapshot) {
+          if (snapshot.hasData && snapshot.data != null) {
+            final User userInfo = snapshot.data as User;
+            userSettingsFormData
+                .updateAll((key, value) => value = userInfo.toJson()[key]);
+            imagefile.exists().then((value) {
+              if (userInfo.imageUrl != null && !value) {
+                setState(() {
+                  avatar = Image.network(userInfo.imageUrl as String);
+                });
+              }
+            });
+          }
 
-            return snapshot.hasData
-                ? Column(
-                    children: [
-                      ClipRRect(
-                          borderRadius: BorderRadius.circular(100),
-                          child: SizedBox(
-                            width: 150,
-                            height: 150,
-                            child: InkWell(
-                              onTap: selectImage,
-                              splashColor: Colors.white10,
-                              child: avatar,
+          return snapshot.hasData
+              ? SingleChildScrollView(
+                  child: Padding(
+                      padding: const EdgeInsets.all(20),
+                      child: Column(
+                        children: [
+                          ClipRRect(
+                              borderRadius: BorderRadius.circular(100),
+                              child: SizedBox(
+                                width: 150,
+                                height: 150,
+                                child: InkWell(
+                                  onTap: selectImage,
+                                  splashColor: Colors.white10,
+                                  child: avatar,
+                                ),
+                              )),
+                          const Padding(
+                              padding: EdgeInsets.symmetric(vertical: 20)),
+                          Form(
+                            key: _formKey,
+                            child: Column(
+                              children: userSettingsInputList()
+                                  .map((item) => Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 5),
+                                        child: item,
+                                      ))
+                                  .toList(),
                             ),
-                          )),
-                      const Padding(
-                          padding: EdgeInsets.symmetric(vertical: 20)),
-                      Form(
-                        key: _formKey,
-                        child: Column(
-                          children: userSettingsInputList()
-                              .map((item) => Padding(
-                                    padding:
-                                        const EdgeInsets.symmetric(vertical: 5),
-                                    child: item,
-                                  ))
-                              .toList(),
-                        ),
-                      )
-                    ],
-                  )
-                : const Center(
-                    child: CircularProgressIndicator(),
-                  );
-          },
-        ),
-      )),
+                          )
+                        ],
+                      )))
+              : const Center(
+                  child: CircularProgressIndicator(),
+                );
+        },
+      ),
       drawer: const NavigationDrawer(),
     );
   }
@@ -144,14 +143,6 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
         validator: requiredValidator,
       ),
       TextFormField(
-        initialValue: userSettingsFormData['address'],
-        decoration: inputStyle(
-            context: context,
-            label: 'Address',
-            icon: const Icon(FluentIcons.home_16_regular)),
-        onSaved: (newValue) => userSettingsFormData['address'] = newValue,
-      ),
-      TextFormField(
         initialValue: userSettingsFormData['phoneNumber']?.toString(),
         keyboardType: TextInputType.number,
         inputFormatters: [numberFormatter],
@@ -160,6 +151,14 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
             label: 'Phone Number',
             icon: const Icon(FluentIcons.phone_16_regular)),
         onSaved: (newValue) => userSettingsFormData['phoneNumber'] = newValue,
+      ),
+      SizedBox(
+        height: 50,
+        width: double.infinity,
+        child: ElevatedButton(
+            onPressed: () =>
+                Navigator.of(context).pushNamed(UserAddressScreen.routeName),
+            child: const Text('Go to Shipping Address')),
       ),
       const Padding(padding: EdgeInsets.symmetric(vertical: 5)),
       SizedBox(

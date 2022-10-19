@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tmdt/constants/constants.dart';
+import 'package:tmdt/models/address.dart';
 
 class User {
   final String userId;
@@ -7,7 +8,7 @@ class User {
   final String email;
   final List<String>? roles;
   final String? password;
-  final String? address;
+  final List<Address>? address;
   final String? imageUrl;
   final String? accessToken;
   final bool? isDeactivated;
@@ -33,7 +34,7 @@ class User {
       String? username,
       String? email,
       List<String>? roles,
-      String? address,
+      List<Address>? address,
       String? imageUrl,
       int? phoneNumber,
       String? payment,
@@ -60,7 +61,9 @@ class User {
         roles: json['roles'] != null
             ? List.castFrom<dynamic, String>(json['roles'])
             : null,
-        address: json['address'],
+        address: json['address'] != null
+            ? List.castFrom<dynamic, Address>(json['address'])
+            : null,
         imageUrl: json['imageUrl'],
         payment: json['payment'],
         phoneNumber: json['phoneNumber'],
