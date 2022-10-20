@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tmdt/models/address.dart';
+import 'package:tmdt/utils/address.dart';
 
 class UserAddressCard extends StatelessWidget {
   final Address userAddress;
@@ -43,7 +44,7 @@ class UserAddressCard extends StatelessWidget {
                 ),
                 const Padding(padding: EdgeInsets.symmetric(vertical: 5)),
                 Text(
-                  '${userAddress.address}, ${userAddress.city}, ${userAddress.country}',
+                  getFullAddress(userAddress),
                   style: themeData.textTheme.bodyMedium,
                 )
               ]),

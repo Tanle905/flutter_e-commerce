@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:tmdt/models/cart.dart';
+import 'package:tmdt/models/checkout.dart';
+import 'package:tmdt/models/user.dart';
+import 'package:tmdt/ui/cart/cart_manager.dart';
 import 'package:tmdt/ui/checkout/payment_step.dart';
 import 'package:tmdt/ui/checkout/shipping_step.dart';
 import 'package:tmdt/ui/shared/ui/icons.dart';
@@ -16,7 +21,12 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final CartList cartList = Provider.of<CartList>(context);
+    final UserModel userModel = Provider.of<UserModel>(context);
+    final CheckoutDetails checkoutDetails = CheckoutDetails(
+        user: userModel.getUser, totalPrice: CartManager(cartList).totalAmount);
     final ThemeData themeData = Theme.of(context);
+
     return Scaffold(
       appBar: AppBar(
         leading: buildBackIcon(context),
@@ -26,27 +36,30 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         iconTheme: themeData.iconTheme,
       ),
       backgroundColor: themeData.backgroundColor,
-      body: Stepper(
-        currentStep: _currentStep,
-        onStepContinue: () => onStepContinue(),
-        onStepTapped: (currentStep) => setState(() {
-          _currentStep = currentStep;
-        }),
-        type: StepperType.horizontal,
-        controlsBuilder: (context, details) => const SizedBox.shrink(),
-        steps: <Step>[
-          Step(
-              title: const Text("Shipping"),
-              content: ShippingStep(
-                onStepContinue: onStepContinue,
-              )),
-          Step(
-              title: const Text("Payment"),
-              content: PaymentStep(
-                onStepContinue: onStepContinue,
-              )),
-          const Step(title: Text("Review"), content: SizedBox.shrink())
-        ],
+      body: ChangeNotifierProvider.value(
+        value: checkoutDetails,
+        child: Stepper(
+          currentStep: _currentStep,
+          onStepContinue: () => onStepContinue(),
+          onStepTapped: (currentStep) => setState(() {
+            _currentStep = currentStep;
+          }),
+          type: StepperType.horizontal,
+          controlsBuilder: (context, details) => const SizedBox.shrink(),
+          steps: <Step>[
+            Step(
+                title: const Text("Shipping"),
+                content: ShippingStep(
+                  onStepContinue: onStepContinue,
+                )),
+            const Step(title: Text("Review"), content: SizedBox.shrink()),
+            Step(
+                title: const Text("Payment"),
+                content: PaymentStep(
+                  onStepContinue: onStepContinue,
+                )),
+          ],
+        ),
       ),
     );
   }

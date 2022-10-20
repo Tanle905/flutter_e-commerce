@@ -10,3 +10,4 @@ const FAVORITE_ENDPOINT = '/favorite';
 const CART_ENDPOINT_BASE = '/cart';
 const USER_ADDRESS_ENDPOINT = '/profile/address';
 const USER_MANAGEMENT_ENDPOINT = '/user-management';
+const CHECKOUT_STRIPE_PAYMENT_INTENTS = '/checkout/stripe/payment_intents';

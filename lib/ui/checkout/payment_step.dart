@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
+import 'package:provider/provider.dart';
 import 'package:tmdt/constants/constants.dart';
+import 'package:tmdt/interface/stripe.interface.dart';
+import 'package:tmdt/models/checkout.dart';
+import 'package:tmdt/services/checkout.dart';
+import 'package:tmdt/ui/shared/ui/scaffold_snackbar.dart';
 
 class PaymentStep extends StatefulWidget {
   final Future<dynamic> Function() onStepContinue;
@@ -28,6 +33,8 @@ class _PaymentStepState extends State<PaymentStep> {
 
   @override
   Widget build(BuildContext context) {
+    final CheckoutDetails checkoutDetails =
+        Provider.of<CheckoutDetails>(context);
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
@@ -47,15 +54,30 @@ class _PaymentStepState extends State<PaymentStep> {
           width: double.infinity,
           height: 50,
           child: ElevatedButton(
-              onPressed: _card?.complete ?? false ? handlePayment : null,
+              onPressed: _card?.complete ?? false
+                  ? () => handlePayment(checkoutDetails)
+                  : null,
               child: const Text('Complete Payment')),
         )
       ],
     );
   }
 
-  Future<dynamic> handlePayment() async {
-    print(_card?.number);
-    widget.onStepContinue();
+  Future<dynamic> handlePayment(CheckoutDetails checkoutDetails) async {
+    final PaymentMethod paymentMethod = await Stripe.instance
+        .createPaymentMethod(PaymentMethodParams.card(
+            paymentMethodData: PaymentMethodData(
+                billingDetails: BillingDetails(
+                    phone: checkoutDetails.address?.phoneNumber.toString(),
+                    email: checkoutDetails.user?.email,
+                    name: checkoutDetails.user?.username))));
+    final intentsResponse = await createPaymentIntents(
+        useStripeSDK: true,
+        paymentMethodId: paymentMethod.id,
+        currency: "USD",
+        checkoutDetails: checkoutDetails);
+    if (intentsResponse['status'] == 'succeeded') {
+      showSnackbar(context: context, message: "Payment Succeeded!");
+    }
   }
 }

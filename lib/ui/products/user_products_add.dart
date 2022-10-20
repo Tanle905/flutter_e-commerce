@@ -15,7 +15,7 @@ class UserProductsAddScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Add a product'),
+        title: Text(initalData != null ? "Edit a product" : 'Add a product'),
         titleTextStyle: textTheme.titleLarge,
         iconTheme: iconThemeData,
         leading: Builder(

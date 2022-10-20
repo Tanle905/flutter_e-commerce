@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:tmdt/constants/constants.dart';
 import 'package:tmdt/models/address.dart';
+import 'package:tmdt/models/checkout.dart';
 import 'package:tmdt/services/user.dart';
 import 'package:tmdt/ui/address/user_address_card.dart';
 
@@ -69,8 +71,14 @@ class _ShippingStepState extends State<ShippingStep> {
                     width: double.infinity,
                     height: 50,
                     child: ElevatedButton(
-                        onPressed:
-                            selectedIndex >= 0 ? widget.onStepContinue : null,
+                        onPressed: selectedIndex >= 0
+                            ? () {
+                                Provider.of<CheckoutDetails>(context,
+                                        listen: false)
+                                    .setAddress = addressesList[selectedIndex];
+                                widget.onStepContinue();
+                              }
+                            : null,
                         child: const Text('Continue to Payment')),
                   )
                 ],
