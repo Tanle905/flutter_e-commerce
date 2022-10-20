@@ -5,7 +5,10 @@ import 'package:tmdt/services/user.dart';
 import 'package:tmdt/ui/address/user_address_card.dart';
 
 class ShippingStep extends StatefulWidget {
-  const ShippingStep({Key? key}) : super(key: key);
+  final Future<dynamic> Function() onStepContinue;
+
+  const ShippingStep({Key? key, required this.onStepContinue})
+      : super(key: key);
 
   @override
   State<ShippingStep> createState() => _ShippingStepState();
@@ -23,6 +26,8 @@ class _ShippingStepState extends State<ShippingStep> {
 
   @override
   Widget build(BuildContext context) {
+    final ThemeData themeData = Theme.of(context);
+
     return FutureBuilder(
       future: futureAddressesList,
       builder: (context, snapshot) {
@@ -33,6 +38,16 @@ class _ShippingStepState extends State<ShippingStep> {
         return snapshot.hasData
             ? Column(
                 children: [
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Padding(
+                      padding: const EdgeInsets.only(bottom: 20),
+                      child: Text(
+                        "Select Shipping Address",
+                        style: themeData.textTheme.titleLarge,
+                      ),
+                    ),
+                  ),
                   ...(addressesList
                       .asMap()
                       .entries
@@ -49,6 +64,15 @@ class _ShippingStepState extends State<ShippingStep> {
                             ),
                           ))
                       .toList()),
+                  const Padding(padding: EdgeInsets.only(top: 10)),
+                  SizedBox(
+                    width: double.infinity,
+                    height: 50,
+                    child: ElevatedButton(
+                        onPressed:
+                            selectedIndex >= 0 ? widget.onStepContinue : null,
+                        child: const Text('Continue to Payment')),
+                  )
                 ],
               )
             : const Center(

@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:tmdt/ui/checkout/payment_step.dart';
 import 'package:tmdt/ui/checkout/shipping_step.dart';
 import 'package:tmdt/ui/shared/ui/icons.dart';
@@ -30,23 +28,34 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       backgroundColor: themeData.backgroundColor,
       body: Stepper(
         currentStep: _currentStep,
-        onStepContinue: () {
-          if (_currentStep < 2) {
-            setState(() {
-              _currentStep += 1;
-            });
-          }
-        },
+        onStepContinue: () => onStepContinue(),
         onStepTapped: (currentStep) => setState(() {
           _currentStep = currentStep;
         }),
         type: StepperType.horizontal,
-        steps: const <Step>[
-          Step(title: Text("Shipping"), content: ShippingStep()),
-          Step(title: Text("Payment"), content: PaymentStep()),
-          Step(title: Text("Review"), content: SizedBox.shrink())
+        controlsBuilder: (context, details) => const SizedBox.shrink(),
+        steps: <Step>[
+          Step(
+              title: const Text("Shipping"),
+              content: ShippingStep(
+                onStepContinue: onStepContinue,
+              )),
+          Step(
+              title: const Text("Payment"),
+              content: PaymentStep(
+                onStepContinue: onStepContinue,
+              )),
+          const Step(title: Text("Review"), content: SizedBox.shrink())
         ],
       ),
     );
+  }
+
+  Future<dynamic> onStepContinue() async {
+    if (_currentStep < 2) {
+      setState(() {
+        _currentStep += 1;
+      });
+    }
   }
 }
