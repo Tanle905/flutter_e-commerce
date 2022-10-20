@@ -21,8 +21,7 @@ class UserAddressCard extends StatelessWidget {
         color: Colors.transparent,
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
-            side: BorderSide(
-                color: borderColor ?? themeData.shadowColor, width: 2)),
+            side: BorderSide(color: borderColor ?? themeData.shadowColor)),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
           child: Column(

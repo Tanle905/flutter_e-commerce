@@ -7,6 +7,7 @@ import 'package:tmdt/constants/constants.dart';
 import 'package:tmdt/models/cart.dart';
 import 'package:tmdt/models/user.dart';
 import 'package:tmdt/services/user.dart';
+import 'package:tmdt/ui/address/user_address_add_screen.dart';
 import 'package:tmdt/ui/address/user_address_screen.dart';
 import 'package:tmdt/ui/checkout/checkout_screen.dart';
 import 'package:tmdt/ui/screens.dart';
@@ -92,6 +93,8 @@ class _MyAppState extends State<MyApp> {
               const UsersManagementScreen(),
           UserAddressScreen.routeName: (context) => const UserAddressScreen(),
           CheckoutScreen.routeName: (context) => const CheckoutScreen(),
+          UserAddressAddScreen.routeName: (context) =>
+              const UserAddressAddScreen()
         },
       ),
     );

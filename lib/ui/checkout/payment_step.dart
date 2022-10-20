@@ -70,14 +70,25 @@ class _PaymentStepState extends State<PaymentStep> {
                 billingDetails: BillingDetails(
                     phone: checkoutDetails.address?.phoneNumber.toString(),
                     email: checkoutDetails.user?.email,
-                    name: checkoutDetails.user?.username))));
-    final intentsResponse = await createPaymentIntents(
-        useStripeSDK: true,
-        paymentMethodId: paymentMethod.id,
-        currency: "USD",
-        checkoutDetails: checkoutDetails);
-    if (intentsResponse['status'] == 'succeeded') {
-      showSnackbar(context: context, message: "Payment Succeeded!");
+                    name: checkoutDetails.user?.username,
+                    address: Address(
+                        city: checkoutDetails.address?.city,
+                        country: checkoutDetails.address?.country,
+                        line1: null,
+                        line2: null,
+                        postalCode: null,
+                        state: null)))));
+    try {
+      final intentsResponse = await createPaymentIntents(
+          useStripeSDK: true,
+          paymentMethodId: paymentMethod.id,
+          currency: "USD",
+          checkoutDetails: checkoutDetails);
+      if (intentsResponse['status'] == 'succeeded') {
+        showSnackbar(context: context, message: "Payment Succeeded!");
+      }
+    } catch (error) {
+      showSnackbar(context: context, message: error.toString());
     }
   }
 }
