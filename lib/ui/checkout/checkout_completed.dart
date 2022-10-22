@@ -37,8 +37,8 @@ class CheckoutCompleted extends StatelessWidget {
             width: double.infinity,
             height: 50,
             child: ElevatedButton(
-                onPressed: () =>
-                    Navigator.of(context).pushNamed(OverviewScreen.routeName),
+                onPressed: () => Navigator.of(context)
+                    .pushReplacementNamed(OverviewScreen.routeName),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: const [
