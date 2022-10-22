@@ -26,7 +26,6 @@ Future<void> handleLogin(
       });
     }
   } catch (error) {
-    rethrow;
-    // restApiErrorHandling(error, context);
+    restApiErrorHandling(error, context);
   }
 }

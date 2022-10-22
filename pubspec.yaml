@@ -76,6 +76,7 @@ flutter:
   assets:
     - assets/images/placeholder-image.jpg
     - assets/images/404.png
+    - assets/images/checkout-complete.png
   fonts:
     - family: Lato
       fonts:

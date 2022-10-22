@@ -128,10 +128,15 @@ class _UserLoginScreenState extends State<UserLoginScreen> {
     setState(() {
       isLoading = true;
     });
-    await handleLogin(
-        formKey: _formKey, formData: loginFormData, context: context);
-    setState(() {
-      isLoading = false;
-    });
+    try {
+      await handleLogin(
+          formKey: _formKey, formData: loginFormData, context: context);
+    } catch (error) {
+      rethrow;
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
   }
 }

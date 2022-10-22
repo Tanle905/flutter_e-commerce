@@ -24,8 +24,6 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   Widget build(BuildContext context) {
     final CartList cartList = Provider.of<CartList>(context);
     final UserModel userModel = Provider.of<UserModel>(context);
-    final CheckoutDetails checkoutDetails = CheckoutDetails(
-        user: userModel.getUser, totalPrice: CartManager(cartList).totalAmount);
     final ThemeData themeData = Theme.of(context);
 
     return Scaffold(
@@ -37,8 +35,10 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         iconTheme: themeData.iconTheme,
       ),
       backgroundColor: themeData.backgroundColor,
-      body: ChangeNotifierProvider.value(
-        value: checkoutDetails,
+      body: ChangeNotifierProvider(
+        create: (context) => CheckoutDetails(
+            user: userModel.getUser,
+            totalPrice: CartManager(cartList).totalAmount),
         child: Theme(
             data: themeData,
             child: Stepper(

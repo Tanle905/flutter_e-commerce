@@ -13,10 +13,12 @@ class CheckoutDetails extends ChangeNotifier {
 
   set setUser(User user) {
     this.user = user;
+    notifyListeners();
   }
 
   set setProductsList(List<CartItem> cartItems) {
     this.cartItems = cartItems;
+    notifyListeners();
   }
 
   set setAddress(Address address) {

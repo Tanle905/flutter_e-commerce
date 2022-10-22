@@ -152,9 +152,10 @@ class _UserSignUpScreenState extends State<UserSignUpScreen> {
           formKey: _formKey, formData: signUpFormData, context: context);
     } catch (error) {
       restApiErrorHandling(error, context);
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
     }
-    setState(() {
-      isLoading = false;
-    });
   }
 }
