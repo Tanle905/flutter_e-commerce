@@ -1,23 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:tmdt/models/address.dart';
-import 'package:tmdt/models/products.dart';
+import 'package:tmdt/models/cart.dart';
 import 'package:tmdt/models/user.dart';
 
 class CheckoutDetails extends ChangeNotifier {
   User? user;
-  List<Product>? productsList;
+  List<CartItem>? cartItems;
   Address? address;
   double? totalPrice;
 
-  CheckoutDetails(
-      {this.user, this.address, this.productsList, this.totalPrice});
+  CheckoutDetails({this.user, this.address, this.cartItems, this.totalPrice});
 
   set setUser(User user) {
     this.user = user;
   }
 
-  set setProductsList(List<Product> productsList) {
-    this.productsList = productsList;
+  set setProductsList(List<CartItem> cartItems) {
+    this.cartItems = cartItems;
   }
 
   set setAddress(Address address) {

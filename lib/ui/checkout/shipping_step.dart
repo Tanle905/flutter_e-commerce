@@ -3,8 +3,9 @@ import 'package:provider/provider.dart';
 import 'package:tmdt/constants/constants.dart';
 import 'package:tmdt/models/address.dart';
 import 'package:tmdt/models/checkout.dart';
-import 'package:tmdt/services/user.dart';
+import 'package:tmdt/services/address.dart';
 import 'package:tmdt/ui/address/user_address_card.dart';
+import 'package:tmdt/ui/shared/ui/widget.dart';
 
 class ShippingStep extends StatefulWidget {
   final Future<dynamic> Function() onStepContinue;
@@ -38,51 +39,71 @@ class _ShippingStepState extends State<ShippingStep> {
           addressesList = snapshot.data as List<Address>;
         }
         return snapshot.hasData
-            ? Column(
-                children: [
-                  Align(
-                    alignment: Alignment.centerLeft,
+            ? Column(children: [
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 20),
+                    child: Text(
+                      "Select Shipping Address",
+                      style: themeData.textTheme.titleLarge,
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 490,
+                  child: SingleChildScrollView(
                     child: Padding(
-                      padding: const EdgeInsets.only(bottom: 20),
-                      child: Text(
-                        "Select Shipping Address",
-                        style: themeData.textTheme.titleLarge,
+                      padding: const EdgeInsets.symmetric(horizontal: 5),
+                      child: Column(
+                        children: [
+                          ...(addressesList
+                              .asMap()
+                              .entries
+                              .map(
+                                (entry) => InkWell(
+                                  borderRadius: BorderRadius.circular(10),
+                                  onTap: () => setState(() {
+                                    selectedIndex = entry.key;
+                                  }),
+                                  child: UserAddressCard(
+                                    userAddress: entry.value,
+                                    borderColor: selectedIndex == entry.key
+                                        ? COLOR_BUTTON_AND_LINK_TEXT
+                                        : null,
+                                  ),
+                                ),
+                              )
+                              .toList()),
+                          buildUserAddAddress(
+                              context: context, themeData: themeData),
+                        ]
+                            .map((widget) => Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 5),
+                                  child: widget,
+                                ))
+                            .toList(),
                       ),
                     ),
                   ),
-                  ...(addressesList
-                      .asMap()
-                      .entries
-                      .map((entry) => InkWell(
-                            borderRadius: BorderRadius.circular(10),
-                            onTap: () => setState(() {
-                              selectedIndex = entry.key;
-                            }),
-                            child: UserAddressCard(
-                              userAddress: entry.value,
-                              borderColor: selectedIndex == entry.key
-                                  ? COLOR_BUTTON_AND_LINK_TEXT
-                                  : null,
-                            ),
-                          ))
-                      .toList()),
-                  const Padding(padding: EdgeInsets.only(top: 10)),
-                  SizedBox(
-                    width: double.infinity,
-                    height: 50,
-                    child: ElevatedButton(
-                        onPressed: selectedIndex >= 0
-                            ? () {
-                                Provider.of<CheckoutDetails>(context,
-                                        listen: false)
-                                    .setAddress = addressesList[selectedIndex];
-                                widget.onStepContinue();
-                              }
-                            : null,
-                        child: const Text('Continue to Payment')),
-                  )
-                ],
-              )
+                ),
+                const Padding(padding: EdgeInsets.only(top: 10)),
+                SizedBox(
+                  width: double.infinity,
+                  height: 50,
+                  child: ElevatedButton(
+                      onPressed: selectedIndex >= 0
+                          ? () {
+                              Provider.of<CheckoutDetails>(context,
+                                      listen: false)
+                                  .setAddress = addressesList[selectedIndex];
+                              widget.onStepContinue();
+                            }
+                          : null,
+                      child: const Text('Continue to Payment')),
+                )
+              ])
             : const Center(
                 child: CircularProgressIndicator(),
               );

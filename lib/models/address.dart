@@ -19,8 +19,8 @@ class Address {
         addressId: json['_id'],
         country: json['country'],
         city: json['city'],
-        fullName: json['fullName'],
-        address: json['address'],
-        phoneNumber: json['phoneNumber']);
+        fullName: json['fullName'] ?? '',
+        address: json['address'] ?? '',
+        phoneNumber: json['phoneNumber'] ?? '');
   }
 }

@@ -19,3 +19,8 @@ List<Address> addressResponseMapping(dynamic response) {
       .map((address) => Address.fromJson(address))
       .toList());
 }
+
+List<String> citiesListResponseMapping(dynamic response) {
+  return List.castFrom<dynamic, String>(
+      response.map((city) => city['name']).toList());
+}

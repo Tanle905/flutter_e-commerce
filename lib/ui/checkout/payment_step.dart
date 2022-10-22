@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:provider/provider.dart';
 import 'package:tmdt/constants/constants.dart';
-import 'package:tmdt/interface/stripe.interface.dart';
 import 'package:tmdt/models/checkout.dart';
 import 'package:tmdt/services/checkout.dart';
 import 'package:tmdt/ui/shared/ui/scaffold_snackbar.dart';
@@ -70,7 +69,7 @@ class _PaymentStepState extends State<PaymentStep> {
                 billingDetails: BillingDetails(
                     phone: checkoutDetails.address?.phoneNumber.toString(),
                     email: checkoutDetails.user?.email,
-                    name: checkoutDetails.user?.username,
+                    name: checkoutDetails.address?.fullName,
                     address: Address(
                         city: checkoutDetails.address?.city,
                         country: checkoutDetails.address?.country,

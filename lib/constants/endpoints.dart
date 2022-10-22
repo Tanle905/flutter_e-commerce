@@ -1,6 +1,7 @@
 // ignore_for_file: constant_identifier_names
 
 const baseUrl = 'https://tmdt-be-ygps.vercel.app';
+const VietnamProvinceBaseUrl = 'https://provinces.open-api.vn/api/';
 const placeholderImage = 'https://via.placeholder.com/500';
 const LOGIN_ENDPOINT = '/auth/login';
 const SIGNUP_ENDPOINT = '/auth/signup';

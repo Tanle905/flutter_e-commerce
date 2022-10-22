@@ -5,6 +5,7 @@ import 'package:tmdt/models/checkout.dart';
 import 'package:tmdt/models/user.dart';
 import 'package:tmdt/ui/cart/cart_manager.dart';
 import 'package:tmdt/ui/checkout/payment_step.dart';
+import 'package:tmdt/ui/checkout/review_step.dart';
 import 'package:tmdt/ui/checkout/shipping_step.dart';
 import 'package:tmdt/ui/shared/ui/icons.dart';
 
@@ -38,28 +39,30 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       backgroundColor: themeData.backgroundColor,
       body: ChangeNotifierProvider.value(
         value: checkoutDetails,
-        child: Stepper(
-          currentStep: _currentStep,
-          onStepContinue: () => onStepContinue(),
-          onStepTapped: (currentStep) => setState(() {
-            _currentStep = currentStep;
-          }),
-          type: StepperType.horizontal,
-          controlsBuilder: (context, details) => const SizedBox.shrink(),
-          steps: <Step>[
-            Step(
-                title: const Text("Shipping"),
-                content: ShippingStep(
-                  onStepContinue: onStepContinue,
-                )),
-            const Step(title: Text("Review"), content: SizedBox.shrink()),
-            Step(
-                title: const Text("Payment"),
-                content: PaymentStep(
-                  onStepContinue: onStepContinue,
-                )),
-          ],
-        ),
+        child: Theme(
+            data: themeData,
+            child: Stepper(
+              onStepTapped: null,
+              currentStep: _currentStep,
+              onStepContinue: () => onStepContinue(),
+              type: StepperType.horizontal,
+              controlsBuilder: (context, details) => const SizedBox.shrink(),
+              steps: <Step>[
+                Step(
+                    title: const Text("Shipping"),
+                    content: ShippingStep(
+                      onStepContinue: onStepContinue,
+                    )),
+                Step(
+                    title: const Text("Review"),
+                    content: ReviewStep(onStepContinue: onStepContinue)),
+                Step(
+                    title: const Text("Payment"),
+                    content: PaymentStep(
+                      onStepContinue: onStepContinue,
+                    )),
+              ],
+            )),
       ),
     );
   }

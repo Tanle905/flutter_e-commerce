@@ -85,24 +85,3 @@ Future<Map<dynamic, dynamic>?> setUserStatus(String userId, bool value) async {
   }
   return null;
 }
-
-Future<List<Address>> fetchUserAddress() async {
-  List<Address> data = List.empty();
-
-  try {
-    final authResponse = await Dio().get(
-      baseUrl + USER_ADDRESS_ENDPOINT,
-      options: Options(headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ${(await getAccessToken())}'
-      }),
-    );
-    data = addressResponseMapping(authResponse.data);
-  } on DioError catch (error) {
-    if (error.response != null) {
-      throw error.response!.data;
-    }
-  }
-
-  return data;
-}

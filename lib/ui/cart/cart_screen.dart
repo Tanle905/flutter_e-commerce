@@ -1,3 +1,4 @@
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tmdt/models/cart.dart';
@@ -6,6 +7,7 @@ import 'package:tmdt/ui/cart/cart_item_card.dart';
 import 'package:tmdt/ui/cart/cart_manager.dart';
 import 'package:tmdt/ui/checkout/checkout_screen.dart';
 import 'package:tmdt/ui/order/orders_screen.dart';
+import 'package:tmdt/ui/products/user_favorite_products_list.dart';
 import 'package:tmdt/ui/shared/ui/icons.dart';
 import 'package:tmdt/ui/shared/ui/scaffold_snackbar.dart';
 
@@ -47,13 +49,15 @@ class _CartScreenState extends State<CartScreen> {
         }
         return Scaffold(
           appBar: AppBar(
-              titleTextStyle: textTheme.titleLarge,
-              centerTitle: true,
-              iconTheme: iconTheme,
-              leading: Builder(builder: (context) => buildBackIcon(context)),
-              title: const Text(
-                'Your cart',
-              )),
+            titleTextStyle: textTheme.titleLarge,
+            centerTitle: true,
+            iconTheme: iconTheme,
+            leading: Builder(builder: (context) => buildBackIcon(context)),
+            title: const Text(
+              'Your cart',
+            ),
+            actions: [buildFavoritesListIcon()],
+          ),
           body: snapshot.hasData
               ? Column(
                   children: <Widget>[
@@ -125,5 +129,15 @@ class _CartScreenState extends State<CartScreen> {
           .map((item) => CartItemCard(cartItem: item))
           .toList(),
     );
+  }
+
+  Widget buildFavoritesListIcon() {
+    return IconButton(
+        onPressed: () => Navigator.of(context)
+            .pushNamed(UserFavoriteProductsScreen.routeName),
+        icon: const Icon(
+          FluentIcons.heart_16_filled,
+          color: Colors.red,
+        ));
   }
 }

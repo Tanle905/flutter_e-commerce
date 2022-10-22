@@ -1,6 +1,7 @@
+import 'package:flutter/material.dart';
 import 'package:tmdt/models/products.dart';
 
-class ProductManager {
+class ProductManager extends ChangeNotifier {
   final List<Product> _items;
 
   ProductManager(this._items);
