@@ -47,6 +47,16 @@ class CartItem {
         description: json['description'] ?? 'No Data',
         isFavorite: json['isFavorite'] ?? false);
   }
+
+  Map<String, dynamic> toJson() => {
+        'productId': productId,
+        'title': title,
+        'quantity': quantity,
+        'imageUrl': imageUrl,
+        'price': price,
+        'description': description,
+        'isFavorite': isFavorite
+      };
 }
 
 class CartList extends ChangeNotifier {

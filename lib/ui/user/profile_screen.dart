@@ -206,7 +206,7 @@ class _UserSettingsScreenState extends State<UserSettingsScreen> {
         }
         _formKey.currentState?.save();
         await updateUserProfile(userSettingsFormData).then((user) {
-          Provider.of<UserModel>(context, listen: false).setUser = user;
+          Provider.of<UserManager>(context, listen: false).setUser = user;
         });
         showSnackbar(context: context, message: USER_SETTINGS_SAVED_SUCCESSFUL);
       } catch (error, stackTrace) {

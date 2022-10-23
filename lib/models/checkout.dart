@@ -5,19 +5,29 @@ import 'package:tmdt/models/user.dart';
 
 class CheckoutDetails extends ChangeNotifier {
   User? user;
-  List<CartItem>? cartItems;
+  CartList? cartList;
   Address? address;
   double? totalPrice;
+  String? currency;
+  String? paymentStatus;
+  String? orderStatus;
 
-  CheckoutDetails({this.user, this.address, this.cartItems, this.totalPrice});
+  CheckoutDetails(
+      {this.user,
+      this.address,
+      this.cartList,
+      this.totalPrice,
+      this.currency,
+      this.paymentStatus,
+      this.orderStatus});
 
   set setUser(User user) {
     this.user = user;
     notifyListeners();
   }
 
-  set setProductsList(List<CartItem> cartItems) {
-    this.cartItems = cartItems;
+  set setProductsList(CartList cartList) {
+    this.cartList = cartList;
     notifyListeners();
   }
 
@@ -29,5 +39,18 @@ class CheckoutDetails extends ChangeNotifier {
   set setTotalPrice(double totalPrice) {
     this.totalPrice = totalPrice;
     notifyListeners();
+  }
+
+  set setCurrency(String currency) {
+    this.currency = currency;
+    notifyListeners();
+  }
+
+  set setPaymentStatus(String paymentStatus) {
+    this.paymentStatus = paymentStatus;
+  }
+
+  set setOrderStatus(String orderStatus) {
+    this.orderStatus = orderStatus;
   }
 }

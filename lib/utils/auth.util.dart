@@ -19,7 +19,7 @@ Future<void> handleLogin(
     if (user != null) {
       final accessToken = user.accessToken;
       storage.write(key: KEY_ACCESS_TOKEN, value: accessToken).then((value) {
-        Provider.of<UserModel>(context, listen: false).setUser = user;
+        Provider.of<UserManager>(context, listen: false).setUser = user;
         showSnackbar(
             context: context, message: 'Welcome back, ${user.username}');
         Navigator.of(context).pushReplacementNamed(OverviewScreen.routeName);

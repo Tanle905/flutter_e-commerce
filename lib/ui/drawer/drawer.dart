@@ -7,17 +7,15 @@ import 'package:tmdt/models/cart.dart';
 import 'package:tmdt/models/user.dart';
 import 'package:tmdt/ui/screens.dart';
 import 'package:tmdt/ui/shared/ui/scaffold_snackbar.dart';
-import 'package:tmdt/ui/user/users_management_screen.dart';
 
 class NavigationDrawer extends StatelessWidget {
   const NavigationDrawer({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    User? userInfo = Provider.of<UserModel>(context).getUser;
+    User? userInfo = Provider.of<UserManager>(context).getUser;
     final bool isLoggedIn = userInfo != null;
-    final bool isAdmin =
-        isLoggedIn && (userInfo.roles?.contains(ROLE_ADMIN) ?? false);
+    final bool isAdmin = isLoggedIn && (userInfo.roles.contains(ROLE_ADMIN));
 
     return Container(
       color: Colors.white,
@@ -59,7 +57,8 @@ class NavigationDrawer extends StatelessWidget {
                                 onPressed: () async {
                                   const storage = FlutterSecureStorage();
                                   storage.delete(key: KEY_ACCESS_TOKEN);
-                                  Provider.of<UserModel>(context, listen: false)
+                                  Provider.of<UserManager>(context,
+                                          listen: false)
                                       .setUser = null;
                                   Provider.of<CartList>(context, listen: false)
                                       .setCartList = List.empty();

@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:tmdt/constants/constants.dart';
 import 'package:tmdt/models/address.dart';
+import 'package:tmdt/models/order_item.dart';
 
 class User {
   final String userId;
   final String username;
   final String email;
-  final List<String>? roles;
+  final List<String> roles;
   final String? password;
-  final List<Address>? address;
+  final List<Address> address;
   final String? imageUrl;
   final String? accessToken;
   final bool? isDeactivated;
+  final List<OrderItem> order;
 
   final int? phoneNumber;
   final String? payment;
@@ -20,9 +22,10 @@ class User {
       {required this.userId,
       required this.username,
       required this.email,
-      this.roles,
+      required this.order,
+      required this.address,
+      required this.roles,
       this.password,
-      this.address,
       this.imageUrl,
       this.phoneNumber,
       this.payment,
@@ -33,6 +36,7 @@ class User {
       {String? userId,
       String? username,
       String? email,
+      List<OrderItem>? order,
       List<String>? roles,
       List<Address>? address,
       String? imageUrl,
@@ -44,6 +48,7 @@ class User {
         userId: userId ?? this.userId,
         username: username ?? this.username,
         email: email ?? this.email,
+        order: order ?? this.order,
         roles: roles ?? [ROLE_USER],
         imageUrl: imageUrl ?? this.imageUrl,
         address: address ?? this.address,
@@ -58,12 +63,17 @@ class User {
         userId: json['userId'] ?? json['_id'] ?? json['id'],
         username: json['username'],
         email: json['email'],
+        order: json['order'] != null
+            ? List.castFrom<dynamic, OrderItem>(json['order']
+                .map((order) => OrderItem.fromJson(order))
+                .toList())
+            : List.empty(),
         roles: json['roles'] != null
             ? List.castFrom<dynamic, String>(json['roles'])
-            : null,
+            : List.empty(),
         address: json['address'] != null
             ? List.castFrom<dynamic, Address>(json['address'])
-            : null,
+            : List.empty(),
         imageUrl: json['imageUrl'],
         payment: json['payment'],
         phoneNumber: json['phoneNumber'],
@@ -77,6 +87,7 @@ class User {
         'email': email,
         'roles': roles,
         'address': address,
+        'order': order,
         'imageUrl': imageUrl,
         'phoneNumber': phoneNumber,
         'payment': payment,
@@ -85,7 +96,7 @@ class User {
       };
 }
 
-class UserModel extends ChangeNotifier {
+class UserManager extends ChangeNotifier {
   User? _user;
 
   User? get getUser {

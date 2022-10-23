@@ -33,7 +33,7 @@ class _OrderItemCardState extends State<OrderItemCard> {
       padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 4),
       height: min(widget.order.productCount * 20.0 + 10, 100),
       child: ListView(
-          children: widget.order.products
+          children: widget.order.items
               .map((e) => Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
@@ -55,7 +55,7 @@ class _OrderItemCardState extends State<OrderItemCard> {
 
   Widget buildOrderSummary() {
     return ListTile(
-      title: Text('\$${widget.order.amount}'),
+      title: Text('\$${widget.order.totalPrice}'),
       subtitle:
           Text(DateFormat('dd/MM/yyyy hh:mm').format(widget.order.dateTime)),
       trailing: IconButton(

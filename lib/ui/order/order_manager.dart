@@ -1,24 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:tmdt/models/cart.dart';
+import 'package:tmdt/models/checkout.dart';
 import 'package:tmdt/models/order_item.dart';
+import 'package:tmdt/services/order.dart';
 
 class OrderManager with ChangeNotifier {
-  final List<OrderItem> _orders = [
-    OrderItem(
-        id: 'o1',
-        amount: 59.98,
-        products: [
-          CartItem(
-              productId: 'c1',
-              title: 'Red shirt',
-              price: 29.99,
-              quantity: 2,
-              imageUrl: 'sdf',
-              description: 'sdf',
-              isFavorite: false)
-        ],
-        dateTime: DateTime.now())
-  ];
+  List<OrderItem> _orders = List.empty();
+
+  set setOrder(List<OrderItem>? orderItem) {
+    if (orderItem != null) {
+      _orders = orderItem;
+      notifyListeners();
+    }
+  }
 
   int get orderCount {
     return _orders.length;
@@ -26,5 +20,20 @@ class OrderManager with ChangeNotifier {
 
   List<OrderItem> get orders {
     return [..._orders];
+  }
+
+  void addOrder(CheckoutDetails checkoutDetails) async {
+    if (checkoutDetails.cartList?.getCartList != null &&
+        checkoutDetails.totalPrice != null) {
+      await addUserOrder(checkoutDetails);
+      _orders.insert(
+          0,
+          OrderItem(
+              totalPrice: checkoutDetails.totalPrice as double,
+              items: checkoutDetails.cartList?.getCartList as List<CartItem>,
+              dateTime: DateTime.now(),
+              id: 'o${DateTime.now().toIso8601String()}'));
+      notifyListeners();
+    }
   }
 }

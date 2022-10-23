@@ -44,7 +44,7 @@ Future<List<dynamic>> fetchCities({int? depth}) async {
 
 Future<dynamic> addUserAddress(dynamic payload) async {
   try {
-    final response = await Dio().put(baseUrl + PROFILE_ENDPOINT,
+    final response = await Dio().put(baseUrl + USER_PROFILE_ENDPOINT,
         options: Options(headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer ${(await getAccessToken())}'

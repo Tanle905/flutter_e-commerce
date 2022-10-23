@@ -5,6 +5,7 @@ import 'package:tmdt/constants/constants.dart';
 import 'package:tmdt/models/checkout.dart';
 import 'package:tmdt/services/checkout.dart';
 import 'package:tmdt/ui/checkout/checkout_completed.dart';
+import 'package:tmdt/ui/order/order_manager.dart';
 import 'package:tmdt/ui/shared/ui/icons.dart';
 import 'package:tmdt/ui/shared/ui/scaffold_snackbar.dart';
 
@@ -38,6 +39,10 @@ class _PaymentStepState extends State<PaymentStep> {
   Widget build(BuildContext context) {
     final CheckoutDetails checkoutDetails =
         Provider.of<CheckoutDetails>(context);
+    final CheckoutDetails setCheckoutDetails =
+        Provider.of<CheckoutDetails>(context, listen: false);
+    final OrderManager orderManager =
+        Provider.of<OrderManager>(context, listen: false);
 
     return _isPaymentCompleted
         ? const CheckoutCompleted()
@@ -64,7 +69,10 @@ class _PaymentStepState extends State<PaymentStep> {
                     onPressed: _card?.complete ?? false
                         ? _isLoading
                             ? null
-                            : () => handlePayment(checkoutDetails)
+                            : () => handlePayment(
+                                checkoutDetails: checkoutDetails,
+                                setCheckoutDetails: setCheckoutDetails,
+                                orderManager: orderManager)
                         : null,
                     child: _isLoading
                         ? loadingIcon(text: "Proceeding Payment...")
@@ -74,7 +82,10 @@ class _PaymentStepState extends State<PaymentStep> {
           );
   }
 
-  Future<dynamic> handlePayment(CheckoutDetails checkoutDetails) async {
+  Future<dynamic> handlePayment(
+      {required CheckoutDetails checkoutDetails,
+      required CheckoutDetails setCheckoutDetails,
+      required OrderManager orderManager}) async {
     setState(() {
       _isLoading = true;
     });
@@ -99,6 +110,10 @@ class _PaymentStepState extends State<PaymentStep> {
           currency: "USD",
           checkoutDetails: checkoutDetails);
       if (intentsResponse['status'] == 'succeeded') {
+        setCheckoutDetails.setOrderStatus = 'pending';
+        setCheckoutDetails.setPaymentStatus = 'paid';
+        setCheckoutDetails.setCurrency = 'USD';
+        orderManager.addOrder(checkoutDetails);
         showSnackbar(context: context, message: "Payment Succeeded!");
         setState(() {
           _isPaymentCompleted = true;

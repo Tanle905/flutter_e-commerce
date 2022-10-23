@@ -2,15 +2,13 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:tmdt/constants/endpoints.dart';
-import 'package:tmdt/models/address.dart';
 import 'package:tmdt/models/user.dart';
-import 'package:tmdt/utils/responseMapping.util.dart';
 import 'package:tmdt/utils/storage.util.dart';
 
 Future<User?> fetchUserProfile() async {
   try {
     final authResponse = await Dio().get(
-      baseUrl + PROFILE_ENDPOINT,
+      baseUrl + USER_PROFILE_ENDPOINT,
       options: Options(headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer ${(await getAccessToken())}'
@@ -28,7 +26,7 @@ Future<User?> fetchUserProfile() async {
 
 Future<User?> updateUserProfile(payload) async {
   try {
-    final authResponse = await Dio().put(baseUrl + PROFILE_ENDPOINT,
+    final authResponse = await Dio().put(baseUrl + USER_PROFILE_ENDPOINT,
         options: Options(headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer ${(await getAccessToken())}'

@@ -28,9 +28,9 @@ class _ReviewStepState extends State<ReviewStep> {
   Widget build(BuildContext context) {
     final CheckoutDetails checkoutDetails =
         Provider.of<CheckoutDetails>(context);
-    final CartList cartList = Provider.of<CartList>(context);
     final ThemeData themeData = Theme.of(context);
-    final CartManager cartManager = CartManager(cartList);
+    final CartManager cartManager =
+        CartManager(checkoutDetails.cartList as CartList);
 
     return SingleChildScrollView(
       child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [

@@ -23,4 +23,13 @@ class Address {
         address: json['address'] ?? '',
         phoneNumber: json['phoneNumber'] ?? '');
   }
+
+  Map<String, dynamic> toJson() => {
+        'addressId': addressId,
+        'country': country,
+        'city': city,
+        'fullName': fullName,
+        'address': address,
+        'phoneNumber': phoneNumber,
+      };
 }

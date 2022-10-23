@@ -38,8 +38,9 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  final UserModel user = UserModel();
+  final UserManager user = UserManager();
   final CartList cartList = CartList(List.empty());
+  final OrderManager orderManager = OrderManager();
 
   @override
   void initState() {
@@ -59,11 +60,13 @@ class _MyAppState extends State<MyApp> {
             {
               fetchUserProfile().then((value) {
                 user.setUser = value;
+                orderManager.setOrder = user.getUser?.order;
               }, onError: (error) {
                 restApiErrorHandling(error, context);
               })
             }
         });
+
     super.initState();
   }
 
@@ -71,8 +74,9 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider<UserModel>.value(value: user),
+        ChangeNotifierProvider<UserManager>.value(value: user),
         ChangeNotifierProvider<CartList>.value(value: cartList),
+        ChangeNotifierProvider.value(value: orderManager)
       ],
       child: MaterialApp(
         title: 'My Shop',
