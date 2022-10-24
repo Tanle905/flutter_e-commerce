@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:tmdt/constants/constants.dart';
 import 'package:tmdt/models/cart.dart';
 import 'package:tmdt/models/user.dart';
+import 'package:tmdt/services/cart.dart';
 import 'package:tmdt/services/user.dart';
 import 'package:tmdt/ui/address/user_address_add_screen.dart';
 import 'package:tmdt/ui/address/user_address_screen.dart';
@@ -13,6 +14,7 @@ import 'package:tmdt/ui/checkout/checkout_screen.dart';
 import 'package:tmdt/ui/products/user_favorite_products_list.dart';
 import 'package:tmdt/ui/screens.dart';
 import 'package:tmdt/ui/theme_manager.dart';
+import 'package:tmdt/ui/user/user_manager.dart';
 import 'package:tmdt/utils/error_handling.util.dart';
 import 'package:tmdt/utils/storage.util.dart';
 
@@ -38,9 +40,10 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  final UserManager user = UserManager();
-  final CartList cartList = CartList(List.empty());
+  final UserManager userManager = UserManager();
+  final ProductManager productManager = ProductManager();
   final OrderManager orderManager = OrderManager();
+  final CartList cartList = CartList(List.empty());
 
   @override
   void initState() {
@@ -48,6 +51,7 @@ class _MyAppState extends State<MyApp> {
     bool isLightMode = window.platformBrightness == Brightness.light;
     SystemChrome.setSystemUIOverlayStyle(
         isLightMode ? myLightSystemTheme : myDarkSystemTheme);
+
     //On Device Theme Mode Change Event
     window.onPlatformBrightnessChanged = () {
       WidgetsBinding.instance.handlePlatformBrightnessChanged();
@@ -59,11 +63,12 @@ class _MyAppState extends State<MyApp> {
           if (token != null)
             {
               fetchUserProfile().then((value) {
-                user.setUser = value;
-                orderManager.setOrder = user.getUser?.order;
+                userManager.setUser = value;
+                orderManager.setOrder = userManager.getUser?.order;
               }, onError: (error) {
                 restApiErrorHandling(error, context);
-              })
+              }),
+              fetchCart().then((itemsList) => cartList.setCartList = itemsList)
             }
         });
 
@@ -74,9 +79,10 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider<UserManager>.value(value: user),
+        ChangeNotifierProvider<UserManager>.value(value: userManager),
+        ChangeNotifierProvider<ProductManager>.value(value: productManager),
+        ChangeNotifierProvider<OrderManager>.value(value: orderManager),
         ChangeNotifierProvider<CartList>.value(value: cartList),
-        ChangeNotifierProvider.value(value: orderManager)
       ],
       child: MaterialApp(
         title: 'My Shop',

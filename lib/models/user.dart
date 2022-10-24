@@ -95,16 +95,3 @@ class User {
         'isDeactivated': isDeactivated
       };
 }
-
-class UserManager extends ChangeNotifier {
-  User? _user;
-
-  User? get getUser {
-    return _user;
-  }
-
-  set setUser(User? value) {
-    _user = value;
-    notifyListeners();
-  }
-}

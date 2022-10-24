@@ -3,7 +3,7 @@ import 'package:tmdt/models/address.dart';
 import 'package:tmdt/models/cart.dart';
 import 'package:tmdt/models/user.dart';
 
-class CheckoutDetails extends ChangeNotifier {
+class CheckoutManager extends ChangeNotifier {
   User? user;
   CartList? cartList;
   Address? address;
@@ -12,7 +12,7 @@ class CheckoutDetails extends ChangeNotifier {
   String? paymentStatus;
   String? orderStatus;
 
-  CheckoutDetails(
+  CheckoutManager(
       {this.user,
       this.address,
       this.cartList,
@@ -48,9 +48,11 @@ class CheckoutDetails extends ChangeNotifier {
 
   set setPaymentStatus(String paymentStatus) {
     this.paymentStatus = paymentStatus;
+    notifyListeners();
   }
 
   set setOrderStatus(String orderStatus) {
     this.orderStatus = orderStatus;
+    notifyListeners();
   }
 }

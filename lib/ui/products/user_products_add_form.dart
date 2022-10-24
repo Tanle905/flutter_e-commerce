@@ -4,8 +4,11 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 import 'package:tmdt/models/products.dart';
 import 'package:tmdt/services/products.dart';
+import 'package:tmdt/ui/products/products_manager.dart';
+import 'package:tmdt/ui/screens.dart';
 import 'package:tmdt/ui/shared/styles/input_styles.dart';
 import 'package:tmdt/ui/shared/ui/icons.dart';
 import 'package:tmdt/ui/shared/ui/scaffold_snackbar.dart';
@@ -54,6 +57,8 @@ class _UserProductAddFormState extends State<UserProductAddForm> {
 
   @override
   Widget build(BuildContext context) {
+    final ProductManager productManager =
+        Provider.of<ProductManager>(context, listen: false);
     return Form(
         key: _formKey,
         child: Column(
@@ -78,7 +83,7 @@ class _UserProductAddFormState extends State<UserProductAddForm> {
                     onPressed: isLoading
                         ? null
                         : () {
-                            handleSubmitForm(context);
+                            handleSubmitForm(context, productManager);
                           },
                     child: isLoading
                         ? loadingIcon(text: 'Loading')
@@ -131,7 +136,8 @@ class _UserProductAddFormState extends State<UserProductAddForm> {
     }
   }
 
-  Future handleSubmitForm(BuildContext context) async {
+  Future handleSubmitForm(
+      BuildContext context, ProductManager productManager) async {
     if ((_formKey.currentState?.validate() ?? false) && isImageValid) {
       setState(() {
         isLoading = true;
@@ -156,6 +162,9 @@ class _UserProductAddFormState extends State<UserProductAddForm> {
             isImageValid = false;
           });
         }
+        productManager.updateProduct(widget.initalData as Product);
+        Navigator.of(context)
+            .pushReplacementNamed(UserProductsScreen.routeName);
         showSnackbar(
             context: context, message: "Product added/edited successfully!");
       } catch (error, stackTrace) {

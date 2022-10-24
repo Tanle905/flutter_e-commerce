@@ -14,6 +14,7 @@ import 'package:tmdt/ui/drawer/drawer.dart';
 import 'package:tmdt/ui/shared/styles/input_styles.dart';
 import 'package:tmdt/ui/shared/ui/icons.dart';
 import 'package:tmdt/ui/shared/ui/scaffold_snackbar.dart';
+import 'package:tmdt/ui/user/user_manager.dart';
 import 'package:tmdt/utils/validator.util.dart';
 
 class UserSettingsScreen extends StatefulWidget {

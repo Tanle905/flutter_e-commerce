@@ -4,7 +4,6 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:provider/provider.dart';
 import 'package:tmdt/models/cart.dart';
 import 'package:tmdt/models/products.dart';
-import 'package:tmdt/services/cart.dart';
 import 'package:tmdt/services/products.dart';
 import 'package:tmdt/ui/drawer/drawer.dart';
 import 'package:tmdt/ui/products/products_grid.dart';
@@ -14,7 +13,6 @@ import 'package:tmdt/ui/shared/ui/icons.dart';
 import 'package:tmdt/ui/shared/utils/debouncer.util.dart';
 import 'package:tmdt/utils/infinity_scroll_fetcher.util.dart';
 import 'package:tmdt/utils/responseMapping.util.dart';
-import 'package:tmdt/utils/storage.util.dart';
 
 class OverviewScreen extends StatefulWidget {
   static String routeName = '/';
@@ -37,23 +35,22 @@ class _OverviewScreenState extends State<OverviewScreen> {
 
   @override
   void initState() {
-    _pagingController.addPageRequestListener((pageKey) {
-      fetchProductPage(
+    final ProductManager productManager =
+        Provider.of<ProductManager>(context, listen: false);
+    productManager.setProductsList = List.empty();
+    _pagingController.addPageRequestListener((pageKey) async {
+      await fetchProductPage(
           page: pageKey,
           pageSize: _pageSize,
           pagingController: _pagingController,
           sortBy: sortBy,
           isAsc: true);
     });
+    _pagingController.addListener(() {
+      productManager.setInitialProductsList =
+          _pagingController.itemList ?? List.empty();
+    });
     _searchFocusNode.addListener(handleChangeFocus);
-    getAccessToken().then((token) => {
-          if (token != null)
-            {
-              fetchCart().then((itemsList) =>
-                  Provider.of<CartList>(context, listen: false).setCartList =
-                      itemsList)
-            }
-        });
     super.initState();
   }
 
@@ -126,9 +123,16 @@ class _OverviewScreenState extends State<OverviewScreen> {
                     ],
                   ),
                 ),
-                Expanded(
-                    child: ProductsGrid(
-                  pagingController: _pagingController,
+                Expanded(child: Consumer<ProductManager>(
+                  builder: (context, productManager, child) {
+                    if (productManager.productsList.isNotEmpty) {
+                      _pagingController.itemList = productManager.productsList;
+                    }
+
+                    return ProductsGrid(
+                      pagingController: _pagingController,
+                    );
+                  },
                 ))
               ])),
       drawer: const NavigationDrawer(),
@@ -156,7 +160,7 @@ class _OverviewScreenState extends State<OverviewScreen> {
         setState(() {
           sortBy = value;
         });
-        _pagingController.refresh();
+        Future.sync(() => _pagingController.refresh());
       },
       icon: const Icon(FluentIcons.more_horizontal_48_regular),
     );

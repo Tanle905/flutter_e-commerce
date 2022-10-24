@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tmdt/models/cart.dart';
-import 'package:tmdt/models/checkout.dart';
+import 'package:tmdt/ui/checkout/checkout_manager.dart';
 import 'package:tmdt/models/order_item.dart';
 import 'package:tmdt/services/order.dart';
 
@@ -22,7 +22,7 @@ class OrderManager with ChangeNotifier {
     return [..._orders];
   }
 
-  void addOrder(CheckoutDetails checkoutDetails) async {
+  void addOrder(CheckoutManager checkoutDetails) async {
     if (checkoutDetails.cartList?.getCartList != null &&
         checkoutDetails.totalPrice != null) {
       await addUserOrder(checkoutDetails);

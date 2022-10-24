@@ -75,6 +75,8 @@ class _UserProductsScreenState extends State<UserProductsScreen> {
                       children: [
                         UserProductsListTile(
                           product: product,
+                          refreshProduct: () =>
+                              Future.sync(() => _pagingController.refresh()),
                         ),
                         const Padding(
                           padding: EdgeInsets.symmetric(horizontal: 5),

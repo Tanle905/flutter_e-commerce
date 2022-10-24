@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tmdt/models/address.dart';
 import 'package:tmdt/models/cart.dart';
-import 'package:tmdt/models/checkout.dart';
+import 'package:tmdt/ui/checkout/checkout_manager.dart';
 import 'package:tmdt/ui/address/user_address_card.dart';
 import 'package:tmdt/ui/cart/cart_manager.dart';
 
@@ -26,8 +26,8 @@ class _ReviewStepState extends State<ReviewStep> {
 
   @override
   Widget build(BuildContext context) {
-    final CheckoutDetails checkoutDetails =
-        Provider.of<CheckoutDetails>(context);
+    final CheckoutManager checkoutDetails =
+        Provider.of<CheckoutManager>(context);
     final ThemeData themeData = Theme.of(context);
     final CartManager cartManager =
         CartManager(checkoutDetails.cartList as CartList);

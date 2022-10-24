@@ -2,10 +2,10 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:tmdt/constants/endpoints.dart';
-import 'package:tmdt/models/checkout.dart';
+import 'package:tmdt/ui/checkout/checkout_manager.dart';
 import 'package:tmdt/utils/storage.util.dart';
 
-Future<dynamic> addUserOrder(CheckoutDetails checkoutDetails) async {
+Future<dynamic> addUserOrder(CheckoutManager checkoutDetails) async {
   final order = jsonEncode({
     'order': {
       'orderStatus': checkoutDetails.orderStatus,

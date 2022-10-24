@@ -6,6 +6,7 @@ import 'package:tmdt/models/user.dart';
 import 'package:tmdt/services/auth.dart';
 import 'package:tmdt/ui/screens.dart';
 import 'package:tmdt/ui/shared/ui/scaffold_snackbar.dart';
+import 'package:tmdt/ui/user/user_manager.dart';
 import 'package:tmdt/utils/error_handling.util.dart';
 
 Future<void> handleLogin(

@@ -2,23 +2,47 @@ import 'package:flutter/material.dart';
 import 'package:tmdt/models/products.dart';
 
 class ProductManager extends ChangeNotifier {
-  final List<Product> _items;
+  List<Product> _productsList = List.empty();
 
-  ProductManager(this._items);
-
-  int get itemCount {
-    return _items.length;
+  set setProductsList(List<Product> productsList) {
+    _productsList = productsList;
+    notifyListeners();
   }
 
-  List<Product> get items {
-    return [..._items];
+  set setInitialProductsList(List<Product> productsList) {
+    _productsList = productsList;
   }
 
-  List<Product> get favoriteItems {
-    return _items.where((item) => item.isFavorite).toList();
+  int get productsListCount {
+    return _productsList.length;
+  }
+
+  List<Product> get productsList {
+    return [..._productsList];
+  }
+
+  List<Product> get favoriteProducts {
+    return _productsList.where((item) => item.isFavorite).toList();
   }
 
   Product findById(String id) {
-    return _items.firstWhere((element) => element.productId == id);
+    return _productsList.firstWhere((element) => element.productId == id);
+  }
+
+  void addProduct(Product product) {
+    _productsList.insert(0, product);
+    notifyListeners();
+  }
+
+  void updateProduct(Product product) {
+    _productsList[_productsList
+        .indexWhere((item) => item.productId == product.productId)] = product;
+    notifyListeners();
+  }
+
+  void deleteProduct(Product product) {
+    _productsList.removeAt(_productsList
+        .indexWhere((item) => item.productId == product.productId));
+    notifyListeners();
   }
 }

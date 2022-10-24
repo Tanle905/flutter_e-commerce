@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tmdt/constants/constants.dart';
 import 'package:tmdt/models/address.dart';
-import 'package:tmdt/models/checkout.dart';
+import 'package:tmdt/ui/checkout/checkout_manager.dart';
 import 'package:tmdt/services/address.dart';
 import 'package:tmdt/ui/address/user_address_card.dart';
 import 'package:tmdt/ui/shared/ui/widget.dart';
@@ -95,7 +95,7 @@ class _ShippingStepState extends State<ShippingStep> {
                   child: ElevatedButton(
                       onPressed: selectedIndex >= 0
                           ? () {
-                              Provider.of<CheckoutDetails>(context,
+                              Provider.of<CheckoutManager>(context,
                                       listen: false)
                                   .setAddress = addressesList[selectedIndex];
                               widget.onStepContinue();

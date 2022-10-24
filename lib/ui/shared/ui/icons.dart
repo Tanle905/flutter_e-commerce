@@ -137,6 +137,9 @@ class AddToFavoriteIcon extends StatefulWidget {
 class _AddToFavoriteIconState extends State<AddToFavoriteIcon> {
   @override
   Widget build(BuildContext context) {
+    final ProductManager productManager =
+        Provider.of<ProductManager>(context, listen: false);
+
     return ElevatedButton(
       onPressed: (() async {
         getAccessToken().then((token) {
@@ -146,6 +149,7 @@ class _AddToFavoriteIconState extends State<AddToFavoriteIcon> {
               setState(() {
                 widget.product.isFavorite = !widget.product.isFavorite;
               });
+              productManager.updateProduct(widget.product);
             });
           } else {
             Navigator.of(context).pushNamed(UserLoginScreen.routeName);

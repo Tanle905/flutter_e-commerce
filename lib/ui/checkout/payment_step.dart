@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:provider/provider.dart';
 import 'package:tmdt/constants/constants.dart';
-import 'package:tmdt/models/checkout.dart';
+import 'package:tmdt/ui/checkout/checkout_manager.dart';
 import 'package:tmdt/services/checkout.dart';
 import 'package:tmdt/ui/checkout/checkout_completed.dart';
 import 'package:tmdt/ui/order/order_manager.dart';
@@ -37,10 +37,10 @@ class _PaymentStepState extends State<PaymentStep> {
 
   @override
   Widget build(BuildContext context) {
-    final CheckoutDetails checkoutDetails =
-        Provider.of<CheckoutDetails>(context);
-    final CheckoutDetails setCheckoutDetails =
-        Provider.of<CheckoutDetails>(context, listen: false);
+    final CheckoutManager checkoutDetails =
+        Provider.of<CheckoutManager>(context);
+    final CheckoutManager setCheckoutDetails =
+        Provider.of<CheckoutManager>(context, listen: false);
     final OrderManager orderManager =
         Provider.of<OrderManager>(context, listen: false);
 
@@ -83,8 +83,8 @@ class _PaymentStepState extends State<PaymentStep> {
   }
 
   Future<dynamic> handlePayment(
-      {required CheckoutDetails checkoutDetails,
-      required CheckoutDetails setCheckoutDetails,
+      {required CheckoutManager checkoutDetails,
+      required CheckoutManager setCheckoutDetails,
       required OrderManager orderManager}) async {
     setState(() {
       _isLoading = true;

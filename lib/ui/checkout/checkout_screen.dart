@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tmdt/models/cart.dart';
-import 'package:tmdt/models/checkout.dart';
-import 'package:tmdt/models/user.dart';
+import 'package:tmdt/ui/checkout/checkout_manager.dart';
 import 'package:tmdt/ui/cart/cart_manager.dart';
 import 'package:tmdt/ui/checkout/payment_step.dart';
 import 'package:tmdt/ui/checkout/review_step.dart';
 import 'package:tmdt/ui/checkout/shipping_step.dart';
 import 'package:tmdt/ui/shared/ui/icons.dart';
+import 'package:tmdt/ui/user/user_manager.dart';
 
 class CheckoutScreen extends StatefulWidget {
   static const String routeName = '/checkout-screen';
@@ -36,7 +36,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       ),
       backgroundColor: themeData.backgroundColor,
       body: ChangeNotifierProvider(
-        create: (context) => CheckoutDetails(
+        create: (context) => CheckoutManager(
             user: userModel.getUser,
             totalPrice: CartManager(cartList).totalAmount,
             cartList: cartList),

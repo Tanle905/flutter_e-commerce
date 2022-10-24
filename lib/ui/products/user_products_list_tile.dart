@@ -1,19 +1,25 @@
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:tmdt/models/products.dart';
 import 'package:tmdt/services/products.dart';
+import 'package:tmdt/ui/products/products_manager.dart';
 import 'package:tmdt/ui/products/user_products_add.dart';
 import 'package:tmdt/ui/shared/ui/scaffold_snackbar.dart';
 import 'package:tmdt/ui/shared/utils/dialog_util.dart';
 
 class UserProductsListTile extends StatelessWidget {
   final Product product;
+  final VoidCallback refreshProduct;
 
-  const UserProductsListTile({Key? key, required this.product})
+  const UserProductsListTile(
+      {Key? key, required this.product, required this.refreshProduct})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final ProductManager productManager =
+        Provider.of<ProductManager>(context, listen: false);
     final ThemeData themeData = Theme.of(context);
 
     return ListTile(
@@ -38,20 +44,22 @@ class UserProductsListTile extends StatelessWidget {
         width: 100,
         child: Row(children: <Widget>[
           buildEditButton(context),
-          buildDeleteButton(context, product.productId)
+          buildDeleteButton(context, product.productId, productManager)
         ]),
       ),
       onTap: () => handleEditProduct(context),
     );
   }
 
-  Widget buildDeleteButton(BuildContext context, String productId) {
+  Widget buildDeleteButton(
+      BuildContext context, String productId, ProductManager productManager) {
     return IconButton(
       onPressed: () => showConfirmDialog(
           context: context,
           message: "Do you want to delete this product?",
           onOk: () {
             deleteProduct(List.filled(1, productId)).then((value) {
+              refreshProduct();
               showSnackbar(
                   context: context, message: "Product removed successfully!");
             },
