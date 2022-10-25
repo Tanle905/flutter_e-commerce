@@ -76,3 +76,17 @@ Future deleteItemInCart({required String productId}) async {
     }
   }
 }
+
+Future<dynamic> clearCart(String? userId) async {
+  try {
+    await Dio().delete('$baseUrl$CART_ENDPOINT_BASE/$userId',
+        options: Options(headers: {
+          'Authorization': 'Bearer ${await getAccessToken()}',
+          'Content-Type': 'application/json'
+        }));
+  } on DioError catch (error) {
+    if (error.response != null) {
+      throw error.response?.data;
+    }
+  }
+}

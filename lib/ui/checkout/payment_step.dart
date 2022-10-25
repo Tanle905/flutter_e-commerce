@@ -2,12 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:provider/provider.dart';
 import 'package:tmdt/constants/constants.dart';
+import 'package:tmdt/models/cart.dart';
+import 'package:tmdt/models/user.dart';
+import 'package:tmdt/services/cart.dart';
 import 'package:tmdt/ui/checkout/checkout_manager.dart';
 import 'package:tmdt/services/checkout.dart';
 import 'package:tmdt/ui/checkout/checkout_completed.dart';
 import 'package:tmdt/ui/order/order_manager.dart';
 import 'package:tmdt/ui/shared/ui/icons.dart';
 import 'package:tmdt/ui/shared/ui/scaffold_snackbar.dart';
+import 'package:tmdt/ui/user/user_manager.dart';
 
 class PaymentStep extends StatefulWidget {
   final Future<dynamic> Function() onStepContinue;
@@ -37,6 +41,7 @@ class _PaymentStepState extends State<PaymentStep> {
 
   @override
   Widget build(BuildContext context) {
+    final UserManager userManager = Provider.of<UserManager>(context);
     final CheckoutManager checkoutDetails =
         Provider.of<CheckoutManager>(context);
     final CheckoutManager setCheckoutDetails =
@@ -72,7 +77,8 @@ class _PaymentStepState extends State<PaymentStep> {
                             : () => handlePayment(
                                 checkoutDetails: checkoutDetails,
                                 setCheckoutDetails: setCheckoutDetails,
-                                orderManager: orderManager)
+                                orderManager: orderManager,
+                                userManager: userManager)
                         : null,
                     child: _isLoading
                         ? loadingIcon(text: "Proceeding Payment...")
@@ -85,7 +91,8 @@ class _PaymentStepState extends State<PaymentStep> {
   Future<dynamic> handlePayment(
       {required CheckoutManager checkoutDetails,
       required CheckoutManager setCheckoutDetails,
-      required OrderManager orderManager}) async {
+      required OrderManager orderManager,
+      required UserManager userManager}) async {
     setState(() {
       _isLoading = true;
     });
@@ -115,6 +122,10 @@ class _PaymentStepState extends State<PaymentStep> {
         setCheckoutDetails.setCurrency = 'USD';
         orderManager.addOrder(checkoutDetails);
         showSnackbar(context: context, message: "Payment Succeeded!");
+        clearCart(userManager.getUser?.userId).then(
+          (value) => Provider.of<CartList>(context, listen: false).setCartList =
+              List.empty(),
+        );
         setState(() {
           _isPaymentCompleted = true;
         });
