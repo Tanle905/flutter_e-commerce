@@ -1,9 +1,12 @@
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:tmdt/models/address.dart';
 import 'package:tmdt/services/address.dart';
 import 'package:tmdt/ui/shared/styles/input_styles.dart';
 import 'package:tmdt/ui/shared/ui/icons.dart';
 import 'package:tmdt/ui/shared/ui/scaffold_snackbar.dart';
+import 'package:tmdt/ui/user/user_manager.dart';
 import 'package:tmdt/utils/validator.util.dart';
 
 class UserAddressAddScreen extends StatefulWidget {
@@ -19,7 +22,7 @@ class _UserAddressAddScreenState extends State<UserAddressAddScreen> {
   bool isLoading = false;
   late Future<List<dynamic>> futureCitiesList;
   final _formKey = GlobalKey<FormState>();
-  final Map addressFormData = {
+  final Map<String, dynamic> addressFormData = {
     'fullName': null,
     'phoneNumber': null,
     'address': null,
@@ -36,6 +39,8 @@ class _UserAddressAddScreenState extends State<UserAddressAddScreen> {
   @override
   Widget build(BuildContext context) {
     final ThemeData themeData = Theme.of(context);
+    final UserManager userManager =
+        Provider.of<UserManager>(context, listen: false);
 
     return Scaffold(
       appBar: AppBar(
@@ -59,7 +64,7 @@ class _UserAddressAddScreenState extends State<UserAddressAddScreen> {
                           ? null
                           : () {
                               if (_formKey.currentState!.validate()) {
-                                handleSubmitForm(context);
+                                handleSubmitForm(context, userManager);
                               }
                             },
                       child: isLoading
@@ -149,14 +154,17 @@ class _UserAddressAddScreenState extends State<UserAddressAddScreen> {
         .toList();
   }
 
-  void handleSubmitForm(BuildContext context) async {
+  void handleSubmitForm(BuildContext context, UserManager userManager) async {
     try {
       _formKey.currentState?.save();
-      await addUserAddress(addressFormData);
+      final response = await addUserAddress(addressFormData);
+      userManager.setUser = response;
+      Navigator.of(context).pop();
       showSnackbar(
           context: context, message: 'Shipping address added successfully!');
     } catch (error) {
-      showSnackbar(context: context, message: (error as dynamic)['message']);
+      rethrow;
+      // showSnackbar(context: context, message: (error as dynamic)['message']);
     }
   }
 }

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:tmdt/constants/endpoints.dart';
 import 'package:tmdt/models/address.dart';
+import 'package:tmdt/models/user.dart';
 import 'package:tmdt/utils/responseMapping.util.dart';
 import 'package:tmdt/utils/storage.util.dart';
 
@@ -52,7 +53,7 @@ Future<dynamic> addUserAddress(dynamic payload) async {
         data: jsonEncode({
           'address': [payload]
         }));
-    return response.data;
+    return User.fromJson(response.data);
   } on DioError catch (error) {
     if (error.response != null) {
       throw error.response!.data;

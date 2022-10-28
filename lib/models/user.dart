@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
 import 'package:tmdt/constants/constants.dart';
 import 'package:tmdt/models/address.dart';
 import 'package:tmdt/models/order_item.dart';
+import 'package:tmdt/utils/responseMapping.util.dart';
 
 class User {
   final String userId;
@@ -71,8 +71,10 @@ class User {
         roles: json['roles'] != null
             ? List.castFrom<dynamic, String>(json['roles'])
             : List.empty(),
-        address: json['address'] != null
-            ? List.castFrom<dynamic, Address>(json['address'])
+        address: json['address'] != null || (json['address'] as List).isNotEmpty
+            ? List.castFrom<dynamic, Address>((json['address'] as dynamic)
+                .map((address) => Address.fromJson(address))
+                .toList())
             : List.empty(),
         imageUrl: json['imageUrl'],
         payment: json['payment'],

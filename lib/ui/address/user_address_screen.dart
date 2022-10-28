@@ -1,8 +1,6 @@
-import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:tmdt/models/address.dart';
 import 'package:tmdt/services/address.dart';
-import 'package:tmdt/ui/address/user_address_add_screen.dart';
 import 'package:tmdt/ui/address/user_address_card.dart';
 import 'package:tmdt/ui/shared/ui/icons.dart';
 import 'package:tmdt/ui/shared/ui/widget.dart';
@@ -47,28 +45,31 @@ class _UserAddressScreenState extends State<UserAddressScreen> {
           }
 
           return snapshot.hasData
-              ? Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                  child: Column(
-                    children: [
-                      ...List.castFrom<dynamic, Widget>(addressesList
-                              .map(
-                                (address) => InkWell(
-                                    borderRadius: BorderRadius.circular(10),
-                                    onTap: (() {}),
-                                    child:
-                                        UserAddressCard(userAddress: address)),
-                              )
-                              .toList())
+              ? SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: Column(
+                      children: [
+                        ...List.castFrom<dynamic, Widget>(addressesList
+                                .map(
+                                  (address) => InkWell(
+                                      borderRadius: BorderRadius.circular(10),
+                                      onTap: (() {}),
+                                      child: UserAddressCard(
+                                          userAddress: address)),
+                                )
+                                .toList())
+                            .toList(),
+                        buildUserAddAddress(
+                            context: context, themeData: themeData),
+                      ]
+                          .map((widget) => Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 5),
+                                child: widget,
+                              ))
                           .toList(),
-                      buildUserAddAddress(
-                          context: context, themeData: themeData),
-                    ]
-                        .map((widget) => Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 5),
-                              child: widget,
-                            ))
-                        .toList(),
+                    ),
                   ),
                 )
               : const Center(
