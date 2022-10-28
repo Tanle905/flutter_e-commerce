@@ -37,7 +37,7 @@ class _OverviewScreenState extends State<OverviewScreen> {
   void initState() {
     final ProductManager productManager =
         Provider.of<ProductManager>(context, listen: false);
-    productManager.setProductsList = List.empty();
+    productManager.setInitialProductsList = List.empty();
     _pagingController.addPageRequestListener((pageKey) async {
       await fetchProductPage(
           page: pageKey,

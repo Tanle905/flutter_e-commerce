@@ -65,8 +65,6 @@ class _MyAppState extends State<MyApp> {
               fetchUserProfile().then((value) {
                 userManager.setUser = value;
                 orderManager.setOrder = userManager.getUser?.order;
-              }, onError: (error) {
-                restApiErrorHandling(error, context);
               }),
               fetchCart().then((itemsList) => cartList.setCartList = itemsList)
             }

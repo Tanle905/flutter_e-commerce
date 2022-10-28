@@ -5,6 +5,7 @@ class CartItem {
   final String title;
   final String description;
   final String imageUrl;
+  final int productQuantity;
   int quantity;
   final double price;
   final bool isFavorite;
@@ -16,6 +17,7 @@ class CartItem {
       required this.imageUrl,
       required this.title,
       required this.description,
+      required this.productQuantity,
       required this.isFavorite});
 
   CartItem copyWith(
@@ -25,6 +27,7 @@ class CartItem {
       double? price,
       String? imageUrl,
       String? description,
+      int? productQuantity,
       bool? isFavorite}) {
     return CartItem(
         productId: productId ?? this.productId,
@@ -33,6 +36,7 @@ class CartItem {
         title: title ?? this.title,
         imageUrl: imageUrl ?? this.imageUrl,
         description: description ?? this.description,
+        productQuantity: productQuantity ?? this.productQuantity,
         isFavorite: isFavorite ?? false);
   }
 
@@ -45,6 +49,7 @@ class CartItem {
         price:
             json['price'] == null ? 0 : double.parse(json['price'].toString()),
         description: json['description'] ?? 'No Data',
+        productQuantity: json['productQuantity'] ?? 0,
         isFavorite: json['isFavorite'] ?? false);
   }
 
@@ -52,6 +57,7 @@ class CartItem {
         'productId': productId,
         'title': title,
         'quantity': quantity,
+        'productQuantity': productQuantity,
         'imageUrl': imageUrl,
         'price': price,
         'description': description,

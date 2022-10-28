@@ -115,53 +115,66 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               width: MediaQuery.of(context).size.width,
               height: 100,
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 15),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Column(
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                  child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Text(
-                          "Price",
-                          style: themeData.textTheme.titleMedium,
+                        widget.product.productQuantity == _itemCount
+                            ? const Text(
+                                'Items exceeds product quantity!',
+                                style: TextStyle(color: Colors.red),
+                              )
+                            : const SizedBox.shrink(),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "Price",
+                                  style: themeData.textTheme.titleMedium,
+                                ),
+                                Text(
+                                  '\$${widget.product.price * _itemCount}',
+                                  style: themeData.textTheme.titleLarge,
+                                ),
+                              ]
+                                  .map((widget) => Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 5),
+                                        child: widget,
+                                      ))
+                                  .toList(),
+                            ),
+                            buildQuantityInputIcon(
+                                value: _itemCount,
+                                onSubtract: () => _itemCount > 1
+                                    ? setState(() => _itemCount--)
+                                    : null,
+                                onAdd: () => setState(() =>
+                                    widget.product.productQuantity > _itemCount
+                                        ? _itemCount++
+                                        : null)),
+                            SizedBox(
+                              width: 150,
+                              height: 50,
+                              child: ElevatedButton(
+                                onPressed: () => handleAddToCart(
+                                    product: widget.product,
+                                    context: context,
+                                    quantity: _itemCount),
+                                style: themeData.elevatedButtonTheme.style,
+                                child: const Text(
+                                  "Add to cart",
+                                ),
+                              ),
+                            )
+                          ],
                         ),
-                        Text(
-                          '\$${widget.product.price * _itemCount}',
-                          style: themeData.textTheme.titleLarge,
-                        ),
-                      ]
-                          .map((widget) => Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 5),
-                                child: widget,
-                              ))
-                          .toList(),
-                    ),
-                    buildQuantityInputIcon(
-                        value: _itemCount,
-                        onSubtract: () => _itemCount > 1
-                            ? setState(() => _itemCount--)
-                            : null,
-                        onAdd: () => setState(() => _itemCount++)),
-                    SizedBox(
-                      width: 150,
-                      height: 50,
-                      child: ElevatedButton(
-                        onPressed: () => handleAddToCart(
-                            product: widget.product,
-                            context: context,
-                            quantity: _itemCount),
-                        style: themeData.elevatedButtonTheme.style,
-                        child: const Text(
-                          "Add to cart",
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-              ),
+                      ])),
             ),
           ),
         ]),

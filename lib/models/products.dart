@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:tmdt/constants/endpoints.dart';
 import 'package:tmdt/models/cart.dart';
 
@@ -8,6 +7,7 @@ class Product {
   final String description;
   final double price;
   final String imageUrl;
+  final int productQuantity;
   bool isFavorite;
   Product(
       {required this.productId,
@@ -15,6 +15,7 @@ class Product {
       required this.description,
       required this.price,
       required this.imageUrl,
+      required this.productQuantity,
       this.isFavorite = false});
   Product copyWith(
       {String? productId,
@@ -22,6 +23,7 @@ class Product {
       String? description,
       double? price,
       String? imageUrl,
+      int? productQuantity,
       bool? isFavorite}) {
     return Product(
         productId: productId ?? this.productId,
@@ -29,17 +31,19 @@ class Product {
         description: description ?? this.description,
         price: price ?? this.price,
         imageUrl: imageUrl ?? this.imageUrl,
+        productQuantity: productQuantity ?? this.productQuantity,
         isFavorite: isFavorite ?? this.isFavorite);
   }
 
   factory Product.fromJson(Map<String, dynamic> json) {
     return Product(
         productId: json['_id'] ?? '',
-        title: json['title'] ?? 'No Data',
+        title: json['title'] ?? 'Product Not Existed',
         description: json['description'] ?? 'No Data',
         imageUrl: json['imageUrl'] ?? placeholderImage,
         price:
             json['price'] == null ? 0 : double.parse(json['price'].toString()),
+        productQuantity: json['productQuantity'] ?? 0,
         isFavorite: json['isFavorite'] ?? false);
   }
 
@@ -50,6 +54,7 @@ class Product {
         description: cartItem.description,
         imageUrl: cartItem.imageUrl,
         price: cartItem.price,
+        productQuantity: cartItem.productQuantity,
         isFavorite: cartItem.isFavorite);
   }
 
@@ -57,6 +62,7 @@ class Product {
         'title': title,
         'description': description,
         'price': price,
-        'imageUrl': imageUrl
+        'imageUrl': imageUrl,
+        'productQuantity': productQuantity
       };
 }

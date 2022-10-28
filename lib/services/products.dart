@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:tmdt/constants/endpoints.dart';
+import 'package:tmdt/models/products.dart';
+import 'package:tmdt/utils/responseMapping.util.dart';
 import 'package:tmdt/utils/storage.util.dart';
 
 Future<Map> fetchProducts(
@@ -72,6 +74,22 @@ Future<dynamic> deleteProduct(List<String> idArray) async {
       throw error.response!.data;
     }
   }
+}
+
+Future<List<Product>> fetchFavorites() async {
+  List<Product> data = List.empty();
+  try {
+    final accessToken = await getAccessToken();
+    final products = await Dio().get(baseUrl + FAVORITE_ENDPOINT,
+        options: Options(headers: {'Authorization': 'Bearer $accessToken'}));
+    data = productResponseMapping(products.data);
+  } on DioError catch (error) {
+    if (error.response != null) {
+      throw error.response!.data;
+    }
+  }
+
+  return data;
 }
 
 Future<dynamic> handleProductFavortie(dynamic payload) async {

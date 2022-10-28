@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tmdt/models/address.dart';
 import 'package:tmdt/models/user.dart';
 
 class UserManager extends ChangeNotifier {
@@ -10,6 +11,11 @@ class UserManager extends ChangeNotifier {
 
   set setUser(User? value) {
     _user = value;
+    notifyListeners();
+  }
+
+  void addAddress(Address address) {
+    _user?.address.add(address);
     notifyListeners();
   }
 }

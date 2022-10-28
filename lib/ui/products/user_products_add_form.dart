@@ -7,7 +7,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:tmdt/models/products.dart';
 import 'package:tmdt/services/products.dart';
-import 'package:tmdt/ui/products/products_manager.dart';
 import 'package:tmdt/ui/screens.dart';
 import 'package:tmdt/ui/shared/styles/input_styles.dart';
 import 'package:tmdt/ui/shared/ui/icons.dart';
@@ -28,7 +27,8 @@ class _UserProductAddFormState extends State<UserProductAddForm> {
     'title': null,
     'description': null,
     'price': null,
-    'imageUrl': null
+    'imageUrl': null,
+    'productQuantity': null
   };
   File imagefile = File('');
   late Image productImage;
@@ -45,6 +45,7 @@ class _UserProductAddFormState extends State<UserProductAddForm> {
         'title': widget.initalData?.title,
         'description': widget.initalData?.description,
         'price': widget.initalData?.price,
+        'productQuantity': widget.initalData?.productQuantity,
         'imageUrl': widget.initalData?.imageUrl
       };
       if (widget.initalData?.imageUrl != null) {
@@ -110,6 +111,14 @@ class _UserProductAddFormState extends State<UserProductAddForm> {
         maxLines: 7,
       ),
       TextFormField(
+        initialValue: formData['productQuantity']?.toString(),
+        onSaved: (newValue) => formData['productQuantity'] = newValue,
+        validator: requiredValidator,
+        decoration: inputStyle(context: context, label: 'Quantity *'),
+        keyboardType: TextInputType.number,
+        inputFormatters: <TextInputFormatter>[numberFormatter],
+      ),
+      TextFormField(
         initialValue: formData['price']?.toString(),
         onSaved: (newValue) => formData['price'] = newValue,
         validator: requiredValidator,
@@ -126,11 +135,13 @@ class _UserProductAddFormState extends State<UserProductAddForm> {
     final XFile? image = await imagePicker.pickImage(
         source: ImageSource.gallery, imageQuality: 10);
     try {
-      setState(() {
-        imagefile = File(image!.path);
-        productImage = Image.file(imagefile);
-        isImageValid = true;
-      });
+      if (image?.path != null) {
+        setState(() {
+          imagefile = File(image?.path as String);
+          productImage = Image.file(imagefile);
+          isImageValid = true;
+        });
+      }
     } catch (error) {
       rethrow;
     }

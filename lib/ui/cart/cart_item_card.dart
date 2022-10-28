@@ -127,11 +127,13 @@ class _CartItemCardState extends State<CartItemCard> {
                       })
                     : null,
                 onAdd: () {
-                  setState(() {
-                    itemCount.value++;
-                    widget.cartItem.quantity = itemCount.value;
-                    cartList.updateCartList(widget.cartItem);
-                  });
+                  widget.cartItem.productQuantity > itemCount.value
+                      ? setState(() {
+                          itemCount.value++;
+                          widget.cartItem.quantity = itemCount.value;
+                          cartList.updateCartList(widget.cartItem);
+                        })
+                      : null;
                 }),
           ),
         ),

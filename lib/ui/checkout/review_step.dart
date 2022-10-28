@@ -85,7 +85,9 @@ class _ReviewStepState extends State<ReviewStep> {
             ),
           ),
         ),
-        UserAddressCard(userAddress: checkoutDetails.address as Address),
+        checkoutDetails.address != null
+            ? UserAddressCard(userAddress: checkoutDetails.address as Address)
+            : const SizedBox.shrink(),
         const Padding(padding: EdgeInsets.only(top: 10)),
         SizedBox(
           width: double.infinity,
@@ -102,7 +104,10 @@ class _ReviewStepState extends State<ReviewStep> {
     return ListTile(
       leading: ClipRRect(
         borderRadius: BorderRadius.circular(10),
-        child: Image.network(cartItem.imageUrl, fit: BoxFit.contain),
+        child: SizedBox(
+          width: 100,
+          child: Image.network(cartItem.imageUrl, fit: BoxFit.cover),
+        ),
       ),
       title: Text(cartItem.title),
       subtitle: Text('x${cartItem.quantity.toString()}'),
