@@ -1,31 +1,142 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:tmdt/ui/appbar/Appbar.dart';
-import 'package:tmdt/ui/products/products_detail_screen.dart';
-import 'package:tmdt/ui/products/products_manager.dart';
-import 'package:tmdt/ui/products/products_overview_screen.dart';
-import 'package:tmdt/ui/products/user_products_screen.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'ui/screen.dart';
+import 'package:provider/provider.dart';
 
-void main() {
-  runApp(MyApp());
+Future<void> main() async {
+  await dotenv.load();
+  runApp(const MyApp());
 }
 
-class MyApp extends StatefulWidget {
-  @override
-  State<StatefulWidget> createState() {
-    return _MyAppState();
-  }
-}
+class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
 
-class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        title: 'My Shop',
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
+    return MultiProvider(
+      providers: [
+        // ChangeNotifierProvider(
+        //   create: (ctx) => ProductsManager(),
+        // ),
+        ChangeNotifierProvider(
+          create: (ctx) => CartManager(),
+        ),
+        ChangeNotifierProvider(
+          create: (ctx) => OrdersManager(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => AuthManager(),
+        ),
+        ChangeNotifierProxyProvider<AuthManager, ProductsManager>(
+          create: (ctx) => ProductsManager(),
+          update: (ctx, authManager, productsManager) {
+            productsManager!.authToken = authManager.authToken;
+            return productsManager;
+          },
+        )
+      ],
+      // child: MaterialApp(
+      //   title: 'My Shop',
+      //   debugShowCheckedModeBanner: false,
+      //   theme: ThemeData(
+      //     fontFamily: 'Lato',
+      //     colorScheme: ColorScheme.fromSwatch(
+      //       primarySwatch: Colors.blue,
+      //     ).copyWith(
+      //       secondary: Colors.yellow,
+      //     ),
+      //   ),
+      //   home: const ProductsOverviewScreen(),
+      //   routes: {
+      //     CartScreen.routeName: (context) => const CartScreen(),
+      //     OrdersScreen.routeName: (context) => const OrdersScreen(),
+      //     UserProductsScreen.routeName: (context) => const UserProductsScreen(),
+      //   },
+      //   onGenerateRoute: (settings) {
+      //     if (settings.name == ProductDetailScreen.routeName) {
+      //       final productId = settings.arguments as String;
+      //       return MaterialPageRoute(
+      //         builder: (ctx) {
+      //           return ProductDetailScreen(
+      //             ctx.read<ProductsManager>().findById(productId),
+      //           );
+      //         },
+      //       );
+      //     }
+
+      //     if (settings.name == EditProductScreen.routeName) {
+      //       final productId = settings.arguments as String?;
+      //       return MaterialPageRoute(
+      //         builder: (ctx) {
+      //           return EditProductScreen(
+      //             productId != null
+      //                 ? ctx.read<ProductsManager>().findById(productId)
+      //                 : null,
+      //           );
+      //         },
+      //       );
+      //     }
+      //     return null;
+      //   },
+      // ),
+
+      child: Consumer<AuthManager>(builder: (ctx, authManager, child) {
+        return MaterialApp(
+          title: 'My Shop',
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(
             fontFamily: 'Lato',
-            colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.blue)
-                .copyWith(secondary: Colors.deepOrange)),
-        home: const SafeArea(child: ProductsOverviewScreen()));
+            colorScheme: ColorScheme.fromSwatch(
+              primarySwatch: Colors.blue,
+            ).copyWith(
+              secondary: Colors.yellow,
+            ),
+          ),
+          home: authManager.isAuth
+              ? const ProductsOverviewScreen()
+              : FutureBuilder(
+                  future: authManager.tryAutoLogin(),
+                  builder: (ctx, snapshot) {
+                    return snapshot.connectionState == ConnectionState.waiting
+                        ? const SplashScreen()
+                        : const AuthScreen();
+                  },
+                ),
+          routes: {
+            CartScreen.routeName: (context) => const CartScreen(),
+            OrdersScreen.routeName: (context) => const OrdersScreen(),
+            UserProductsScreen.routeName: (context) =>
+                const UserProductsScreen(),
+          },
+          onGenerateRoute: (settings) {
+            if (settings.name == ProductDetailScreen.routeName) {
+              final productId = settings.arguments as String;
+              return MaterialPageRoute(
+                builder: (ctx) {
+                  return ProductDetailScreen(
+                    ctx.read<ProductsManager>().findById(productId),
+                  );
+                },
+              );
+            }
+
+            if (settings.name == EditProductScreen.routeName) {
+              final productId = settings.arguments as String?;
+              return MaterialPageRoute(
+                builder: (ctx) {
+                  return EditProductScreen(
+                    productId != null
+                        ? ctx.read<ProductsManager>().findById(productId)
+                        : null,
+                  );
+                },
+              );
+            }
+            return null;
+          },
+        );
+      }),
+    );
   }
 }

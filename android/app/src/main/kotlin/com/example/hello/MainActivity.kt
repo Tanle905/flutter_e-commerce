@@ -1,4 +1,4 @@
-package com.example.tmdt
+package com.example.hello
 
 import io.flutter.embedding.android.FlutterActivity
 
