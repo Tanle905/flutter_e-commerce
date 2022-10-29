@@ -71,7 +71,7 @@ class User {
         roles: json['roles'] != null
             ? List.castFrom<dynamic, String>(json['roles'])
             : List.empty(),
-        address: json['address'] != null || (json['address'] as List).isNotEmpty
+        address: json['address'] != null && (json['address'] as List).isNotEmpty
             ? List.castFrom<dynamic, Address>((json['address'] as dynamic)
                 .map((address) => Address.fromJson(address))
                 .toList())
