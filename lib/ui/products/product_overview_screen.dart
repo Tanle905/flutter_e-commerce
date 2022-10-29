@@ -65,7 +65,7 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
     return Consumer<CartManager>(
       builder: (ctx, cartManager, child) {
         return TopRightBadge(
-          data: CartManager().productCount,
+          data: cartManager.productCount,
           child: IconButton(
             icon: const Icon(
               Icons.shopping_cart,

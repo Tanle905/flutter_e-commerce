@@ -38,17 +38,17 @@ class ProductGridTile extends StatelessWidget {
 
   Widget buildGridFooterBar(BuildContext context) {
     return GridTileBar(
-      backgroundColor: Colors.black87,
+      backgroundColor: Colors.grey.withOpacity(0.7),
       leading: ValueListenableBuilder<bool>(
         valueListenable: product.isFavoriteListenable,
         builder: (ctx, isFavorite, child) {
           return IconButton(
             icon: Icon(
               product.isFavorite ? Icons.favorite : Icons.favorite_border,
+              color: product.isFavorite ? Colors.red : null,
             ),
             color: Theme.of(context).colorScheme.secondary,
             onPressed: () {
-              // product.isFavorite = !isFavorite;
               ctx.read<ProductsManager>().toggleFavoriteStatus(product);
             },
           );

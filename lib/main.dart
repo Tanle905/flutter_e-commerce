@@ -88,9 +88,9 @@ class MyApp extends StatelessWidget {
           theme: ThemeData(
             fontFamily: 'Lato',
             colorScheme: ColorScheme.fromSwatch(
-              primarySwatch: Colors.blue,
+              primarySwatch: Colors.green,
             ).copyWith(
-              secondary: Colors.yellow,
+              secondary: Colors.grey.shade900,
             ),
           ),
           home: authManager.isAuth

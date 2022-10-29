@@ -32,10 +32,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
   var _isLoading = false;
 
   bool _isValidImageUrl(String value) {
-    return (value.startsWith('http') || value.startsWith('https')) &&
-        (value.endsWith('.png') ||
-            value.endsWith('jpg') ||
-            value.endsWith('jpeg'));
+    return (value.startsWith('http') || value.startsWith('https'));
   }
 
   @override
