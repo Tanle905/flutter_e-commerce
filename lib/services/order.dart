@@ -10,9 +10,9 @@ Future<dynamic> addUserOrder(CheckoutManager checkoutDetails) async {
     'order': {
       'orderStatus': checkoutDetails.orderStatus,
       'currency': checkoutDetails.currency,
-      'items': checkoutDetails.cartList?.getCartList
-          .map((item) => item.toJson())
-          .toList(),
+      'items': checkoutDetails.cartList?.getCartList.map((item) {
+        return {...item.toJson(), "quantity": item.quantity};
+      }).toList(),
       'address': checkoutDetails.address?.toJson(),
       "paymentStatus": checkoutDetails.paymentStatus,
       'totalPrice': checkoutDetails.totalPrice

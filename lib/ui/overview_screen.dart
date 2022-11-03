@@ -248,7 +248,8 @@ class _OverviewScreenState extends State<OverviewScreen> {
                             maxLines: 2,
                           )
                         ],
-                      ))
+                      )),
+                      AddToFavoriteIcon(product: product)
                     ],
                   ),
                 ),
