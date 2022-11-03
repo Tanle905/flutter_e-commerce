@@ -3,9 +3,11 @@ import 'package:provider/provider.dart';
 import 'package:tmdt/constants/constants.dart';
 import 'package:tmdt/models/cart.dart';
 import 'package:tmdt/models/products.dart';
+import 'package:tmdt/models/user.dart';
 import 'package:tmdt/ui/products/utils/product.utils.dart';
 import 'package:tmdt/ui/shared/ui/expandable_text.dart';
 import 'package:tmdt/ui/shared/ui/icons.dart';
+import 'package:tmdt/ui/user/user_manager.dart';
 
 class ProductDetailScreen extends StatefulWidget {
   const ProductDetailScreen(this.product, {super.key});
@@ -20,6 +22,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   @override
   Widget build(BuildContext context) {
     final ThemeData themeData = Theme.of(context);
+    final User? user = Provider.of<UserManager>(context).getUser;
 
     return Scaffold(
       backgroundColor: themeData.backgroundColor,
@@ -120,12 +123,17 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        widget.product.productQuantity == _itemCount
+                        widget.product.productQuantity == 0
                             ? const Text(
-                                'Items exceeds product quantity!',
+                                'Out of Stock!',
                                 style: TextStyle(color: Colors.red),
                               )
-                            : const SizedBox.shrink(),
+                            : widget.product.productQuantity == _itemCount
+                                ? const Text(
+                                    'Items exceeds product quantity!',
+                                    style: TextStyle(color: Colors.red),
+                                  )
+                                : const SizedBox.shrink(),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -162,10 +170,13 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                               width: 150,
                               height: 50,
                               child: ElevatedButton(
-                                onPressed: () => handleAddToCart(
-                                    product: widget.product,
-                                    context: context,
-                                    quantity: _itemCount),
+                                onPressed: widget.product.productQuantity == 0
+                                    ? null
+                                    : () => handleAddToCart(
+                                        product: widget.product,
+                                        context: context,
+                                        quantity: _itemCount,
+                                        user: user),
                                 style: themeData.elevatedButtonTheme.style,
                                 child: const Text(
                                   "Add to cart",

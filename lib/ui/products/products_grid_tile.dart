@@ -2,10 +2,13 @@ import 'dart:ui';
 
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:tmdt/models/products.dart';
+import 'package:tmdt/models/user.dart';
 import 'package:tmdt/ui/products/utils/product.utils.dart';
 import 'package:tmdt/ui/screens.dart';
 import 'package:tmdt/ui/shared/ui/icons.dart';
+import 'package:tmdt/ui/user/user_manager.dart';
 
 class ProductGridTile extends StatelessWidget {
   const ProductGridTile(this.product, {super.key});
@@ -50,6 +53,7 @@ class ProductGridTile extends StatelessWidget {
   Widget buildGridFooterBar(BuildContext context) {
     final Color primaryColor = Theme.of(context).primaryColor;
     final TextTheme textTheme = Theme.of(context).textTheme;
+    final User? user = Provider.of<UserManager>(context).getUser;
 
     return ClipRRect(
       child: Container(
@@ -97,8 +101,8 @@ class ProductGridTile extends StatelessWidget {
                               fontWeight: textTheme.titleLarge?.fontWeight,
                               overflow: TextOverflow.ellipsis))),
                   ElevatedButton(
-                    onPressed: (() =>
-                        handleAddToCart(product: product, context: context)),
+                    onPressed: (() => handleAddToCart(
+                        product: product, context: context, user: user)),
                     style: ElevatedButton.styleFrom(
                       shape: const CircleBorder(),
                     ),

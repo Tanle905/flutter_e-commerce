@@ -4,10 +4,12 @@ import 'package:provider/provider.dart';
 import 'package:tmdt/constants/constants.dart';
 import 'package:tmdt/models/cart.dart';
 import 'package:tmdt/models/products.dart';
+import 'package:tmdt/models/user.dart';
 import 'package:tmdt/services/products.dart';
 import 'package:tmdt/ui/screens.dart';
 import 'package:tmdt/ui/shared/ui/badges.dart';
 import 'package:tmdt/ui/shared/ui/scaffold_snackbar.dart';
+import 'package:tmdt/ui/user/user_manager.dart';
 import 'package:tmdt/utils/storage.util.dart';
 
 Widget buildBackIcon(BuildContext context) {
@@ -61,14 +63,15 @@ Widget buildShoppingCartIcon(
     required CartList cartList,
     required BuildContext context}) {
   final int cartQuantities = CartManager(cartList).productCount;
+  final User? user = Provider.of<UserManager>(context).getUser;
 
   return TopRightBadge(
     data: cartQuantities,
     child: IconButton(
-      onPressed: () => getAccessToken().then((token) {
+      onPressed: () => {
         Navigator.of(context).pushNamed(
-            token != null ? CartScreen.routeName : UserLoginScreen.routeName);
-      }),
+            user != null ? CartScreen.routeName : UserLoginScreen.routeName)
+      },
       icon: Icon(
         FluentIcons.cart_16_regular,
         color: iconThemeData.color,
@@ -139,22 +142,21 @@ class _AddToFavoriteIconState extends State<AddToFavoriteIcon> {
   Widget build(BuildContext context) {
     final ProductManager productManager =
         Provider.of<ProductManager>(context, listen: false);
+    final User? user = Provider.of<UserManager>(context).getUser;
 
     return ElevatedButton(
-      onPressed: (() async {
-        getAccessToken().then((token) {
-          if (token != null) {
-            handleProductFavortie(widget.product.productId).then((response) {
-              showSnackbar(context: context, message: response['message']);
-              setState(() {
-                widget.product.isFavorite = !widget.product.isFavorite;
-              });
-              productManager.updateProduct(widget.product);
+      onPressed: (() {
+        if (user != null) {
+          handleProductFavortie(widget.product.productId).then((response) {
+            showSnackbar(context: context, message: response['message']);
+            setState(() {
+              widget.product.isFavorite = !widget.product.isFavorite;
             });
-          } else {
-            Navigator.of(context).pushNamed(UserLoginScreen.routeName);
-          }
-        });
+            productManager.updateProduct(widget.product);
+          });
+        } else {
+          Navigator.of(context).pushNamed(UserLoginScreen.routeName);
+        }
       }),
       style: ElevatedButton.styleFrom(shape: const CircleBorder()),
       child: Icon(

@@ -5,8 +5,8 @@ import 'package:tmdt/models/cart.dart';
 import 'package:tmdt/services/cart.dart';
 import 'package:tmdt/ui/cart/cart_item_card.dart';
 import 'package:tmdt/ui/cart/cart_manager.dart';
+import 'package:tmdt/ui/cart/cart_no_product_screen.dart';
 import 'package:tmdt/ui/checkout/checkout_screen.dart';
-import 'package:tmdt/ui/order/orders_screen.dart';
 import 'package:tmdt/ui/products/user_favorite_products_list.dart';
 import 'package:tmdt/ui/shared/ui/icons.dart';
 import 'package:tmdt/ui/shared/ui/scaffold_snackbar.dart';
@@ -59,17 +59,21 @@ class _CartScreenState extends State<CartScreen> {
             actions: [buildFavoritesListIcon()],
           ),
           body: snapshot.hasData
-              ? Column(
-                  children: <Widget>[
-                    Expanded(
-                      child: buildCartDetails(CartManager(CartList(itemsList))),
-                    ),
-                    Consumer<CartList>(
-                      builder: (context, cartList, child) => buildCartSummary(
-                          textTheme, CartManager(cartList), context),
-                    ),
-                  ],
-                )
+              ? itemsList.isNotEmpty
+                  ? Column(
+                      children: <Widget>[
+                        Expanded(
+                          child: buildCartDetails(
+                              CartManager(CartList(itemsList))),
+                        ),
+                        Consumer<CartList>(
+                          builder: (context, cartList, child) =>
+                              buildCartSummary(
+                                  textTheme, CartManager(cartList), context),
+                        ),
+                      ],
+                    )
+                  : const CartNoProductScreen()
               : const Center(
                   child: CircularProgressIndicator(),
                 ),
