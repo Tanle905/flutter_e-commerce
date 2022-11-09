@@ -32,6 +32,7 @@ const ROLE_ADMIN = 'ROLE_ADMIN';
 //assets
 const IMAGE_PLACEHOLDER = AssetImage('assets/images/placeholder-image.jpg');
 const IMAGE_NOTFOUND = AssetImage('assets/images/404.png');
+const IMAGE_CART_NO_PRODUCT = AssetImage("assets/images/cart-no-product.png");
 const IMAGE_CHECKOUT_COMPLETE =
     AssetImage('assets/images/checkout-complete.png');
 const STRIPE_PUBLIC_KEY =
