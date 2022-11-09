@@ -6,6 +6,7 @@ import 'package:tmdt/models/cart.dart';
 import 'package:tmdt/models/products.dart';
 import 'package:tmdt/models/user.dart';
 import 'package:tmdt/services/products.dart';
+import 'package:tmdt/ui/products/utils/product.utils.dart';
 import 'package:tmdt/ui/screens.dart';
 import 'package:tmdt/ui/shared/ui/badges.dart';
 import 'package:tmdt/ui/shared/ui/scaffold_snackbar.dart';
@@ -127,6 +128,27 @@ Widget buildQuantityInputIcon(
               onPressed: onAdd))
     ],
   );
+}
+
+class AddToCartIcon extends StatelessWidget {
+  final Product product;
+  final User? user;
+  const AddToCartIcon({super.key, required this.product, required this.user});
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+      onPressed: (() =>
+          handleAddToCart(product: product, context: context, user: user)),
+      style: ElevatedButton.styleFrom(
+        shape: const CircleBorder(),
+      ),
+      child: const Icon(
+        FluentIcons.cart_24_regular,
+        color: Colors.white,
+      ),
+    );
+  }
 }
 
 class AddToFavoriteIcon extends StatefulWidget {

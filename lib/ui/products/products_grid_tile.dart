@@ -100,17 +100,7 @@ class ProductGridTile extends StatelessWidget {
                               color: textTheme.titleLarge?.color,
                               fontWeight: textTheme.titleLarge?.fontWeight,
                               overflow: TextOverflow.ellipsis))),
-                  ElevatedButton(
-                    onPressed: (() => handleAddToCart(
-                        product: product, context: context, user: user)),
-                    style: ElevatedButton.styleFrom(
-                      shape: const CircleBorder(),
-                    ),
-                    child: const Icon(
-                      FluentIcons.cart_24_regular,
-                      color: Colors.white,
-                    ),
-                  ),
+                  AddToCartIcon(product: product, user: user),
                 ],
               )
             ],

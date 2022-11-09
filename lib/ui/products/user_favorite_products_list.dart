@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:tmdt/models/products.dart';
+import 'package:tmdt/models/user.dart';
 import 'package:tmdt/services/products.dart';
 import 'package:tmdt/ui/products/products_detail_screen.dart';
 import 'package:tmdt/ui/shared/ui/icons.dart';
+import 'package:tmdt/ui/user/user_manager.dart';
 
 class UserFavoriteProductsScreen extends StatefulWidget {
   static const routeName = 'user-favorite-products-list';
@@ -26,6 +29,7 @@ class _UserFavoriteProductsScreenState
   @override
   Widget build(BuildContext context) {
     final ThemeData themeData = Theme.of(context);
+    final User? user = Provider.of<UserManager>(context).getUser;
 
     return Scaffold(
       appBar: AppBar(
@@ -62,6 +66,8 @@ class _UserFavoriteProductsScreenState
                           snapshot.data?[index].description as String,
                           overflow: TextOverflow.ellipsis,
                         ),
+                        trailing: AddToCartIcon(
+                            product: snapshot.data![index], user: user),
                       ),
                     ))
             : const Center(
