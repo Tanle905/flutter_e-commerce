@@ -17,7 +17,9 @@ class ProductDetailScreen extends StatefulWidget {
 }
 
 class _ProductDetailScreenState extends State<ProductDetailScreen> {
+  final _viewTransformationController = TransformationController();
   int _itemCount = 1;
+  double _imageHeight = 200;
 
   @override
   Widget build(BuildContext context) {
@@ -50,13 +52,29 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 children: <Widget>[
                   ClipRRect(
                     borderRadius: BorderRadius.circular(10),
-                    child: SizedBox(
+                    child: AnimatedContainer(
+                      duration: const Duration(milliseconds: 200),
                       width: double.infinity,
-                      height: 200,
-                      child: Image.network(
-                        widget.product.imageUrl,
-                        fit: BoxFit.cover,
-                      ),
+                      height: _imageHeight,
+                      curve: Curves.fastOutSlowIn,
+                      child: InteractiveViewer(
+                          minScale: 1,
+                          transformationController:
+                              _viewTransformationController,
+                          onInteractionStart: (details) {
+                            setState(() {
+                              _imageHeight = 400;
+                            });
+                          },
+                          onInteractionEnd: (details) => setState(() {
+                                _imageHeight = 200;
+                                _viewTransformationController.value =
+                                    Matrix4.identity();
+                              }),
+                          child: Image.network(
+                            widget.product.imageUrl,
+                            fit: BoxFit.cover,
+                          )),
                     ),
                   ),
                   Row(

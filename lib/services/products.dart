@@ -9,8 +9,11 @@ import 'package:tmdt/utils/storage.util.dart';
 Future<Map> fetchProducts(
     {String? initalQuery, int? page, int? pageSize}) async {
   String query = initalQuery != null ? '?$initalQuery' : '?';
-  if (page != null && pageSize != null) {
-    query = '$query&page=$page&pageSize=$pageSize';
+  if (page != null) {
+    query = '$query&page=$page';
+  }
+  if (pageSize != null) {
+    query = '$query&pageSize=$pageSize';
   }
   Map productsData = {};
   try {

@@ -7,7 +7,7 @@ Future<void> fetchProductPage(
     required int pageSize,
     required pagingController,
     String? sortBy,
-    bool? isAsc}) async {
+    int? isAsc}) async {
   try {
     String initalQuery = '';
     if (sortBy != null && isAsc != null) {

@@ -53,6 +53,8 @@ dependencies:
   crypto: ^3.0.2
   flutter_stripe: ^5.1.0
   country_picker: ^2.0.16
+  carousel_slider: ^4.1.1
+  zoom_widget: ^2.0.0
 
 dev_dependencies:
   flutter_test:

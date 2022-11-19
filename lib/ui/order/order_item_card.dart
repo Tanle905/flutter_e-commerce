@@ -19,16 +19,17 @@ class _OrderItemCardState extends State<OrderItemCard> {
 
   @override
   Widget build(BuildContext context) {
+    final TextTheme textTheme = Theme.of(context).textTheme;
     return Card(
       margin: const EdgeInsets.all(10),
       child: Column(children: <Widget>[
-        buildOrderSummary(),
-        if (_expanded) buildOrderDetails()
+        buildOrderSummary(textTheme: textTheme),
+        if (_expanded) buildOrderDetails(textTheme: textTheme)
       ]),
     );
   }
 
-  Widget buildOrderDetails() {
+  Widget buildOrderDetails({required TextTheme textTheme}) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 4),
       height: min(widget.order.productCount * 20.0 + 10, 100),
@@ -39,13 +40,11 @@ class _OrderItemCardState extends State<OrderItemCard> {
                     children: <Widget>[
                       Text(
                         e.title,
-                        style: const TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
+                        style: textTheme.titleMedium,
                       ),
                       Text(
                         '${e.quantity}x \$${e.price}',
-                        style:
-                            const TextStyle(fontSize: 18, color: Colors.grey),
+                        style: textTheme.titleSmall,
                       )
                     ],
                   ))
@@ -53,11 +52,24 @@ class _OrderItemCardState extends State<OrderItemCard> {
     );
   }
 
-  Widget buildOrderSummary() {
+  Widget buildOrderSummary({required TextTheme textTheme}) {
     return ListTile(
-      title: Text('\$${widget.order.totalPrice}'),
-      subtitle:
-          Text(DateFormat('dd/MM/yyyy hh:mm').format(widget.order.dateTime)),
+      title: Text('Total: \$${widget.order.totalPrice}'),
+      subtitle: Padding(
+        padding: const EdgeInsets.only(top: 5),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(DateFormat('dd/MM/yyyy hh:mm').format(widget.order.dateTime)),
+            Text('Status: ${widget.order.orderStatus}')
+          ]
+              .map((e) => Padding(
+                    padding: const EdgeInsets.only(top: 1),
+                    child: e,
+                  ))
+              .toList(),
+        ),
+      ),
       trailing: IconButton(
         icon: Icon(_expanded
             ? FluentIcons.panel_left_16_regular

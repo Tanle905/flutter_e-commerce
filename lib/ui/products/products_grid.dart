@@ -11,8 +11,6 @@ class ProductsGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData themeData = Theme.of(context);
-
     return PagedGridView<int, Product>(
       pagingController: pagingController,
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(

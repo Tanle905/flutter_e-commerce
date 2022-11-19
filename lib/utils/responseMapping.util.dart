@@ -3,6 +3,7 @@ import 'package:tmdt/models/products.dart';
 import 'package:tmdt/models/user.dart';
 
 List<Product> productResponseMapping(dynamic response) {
+  if (response['data'] == null) return List.empty();
   return List.castFrom<dynamic, Product>((response as dynamic)['data']
       .map((product) => Product.fromJson(product))
       .toList());

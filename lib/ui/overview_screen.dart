@@ -6,6 +6,7 @@ import 'package:tmdt/models/cart.dart';
 import 'package:tmdt/models/products.dart';
 import 'package:tmdt/services/products.dart';
 import 'package:tmdt/ui/drawer/drawer.dart';
+import 'package:tmdt/ui/products/product_carousel.dart';
 import 'package:tmdt/ui/products/products_grid.dart';
 import 'package:tmdt/ui/screens.dart';
 import 'package:tmdt/ui/shared/ui/404.dart';
@@ -28,7 +29,8 @@ class _OverviewScreenState extends State<OverviewScreen> {
       PagingController(firstPageKey: 1, invisibleItemsThreshold: 1);
   late Future<dynamic> futureSearchResponse = Future.value();
   final FocusNode _searchFocusNode = FocusNode();
-  String sortBy = '';
+  String sortBy = 'createdAt';
+  bool isAscSorting = false;
   bool isSearching = false;
   Debouncer handleSeachDebounce =
       Debouncer(delay: const Duration(milliseconds: 300));
@@ -44,7 +46,7 @@ class _OverviewScreenState extends State<OverviewScreen> {
           pageSize: _pageSize,
           pagingController: _pagingController,
           sortBy: sortBy,
-          isAsc: true);
+          isAsc: isAscSorting ? 1 : -1);
     });
     _pagingController.addListener(() {
       productManager.setInitialProductsList =
@@ -110,8 +112,19 @@ class _OverviewScreenState extends State<OverviewScreen> {
               onRefresh: () => Future.sync(() => _pagingController.refresh()),
               child: Column(children: [
                 Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 1),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 10, vertical: 10),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        'Top Sellers',
+                        style: themeData.textTheme.titleLarge,
+                      ),
+                    )),
+                ProductCarousel(themeData: themeData),
+                Padding(
+                  padding: const EdgeInsets.only(
+                      left: 10, right: 10, top: 20, bottom: 20),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -119,7 +132,18 @@ class _OverviewScreenState extends State<OverviewScreen> {
                         'All Products',
                         style: themeData.textTheme.titleLarge,
                       ),
-                      buildProductFilterMenu()
+                      Row(
+                        children: [
+                          buildProductSortMenu(themeData: themeData),
+                          buildSortOrderIcon(themeData: themeData)
+                        ]
+                            .map((e) => Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(horizontal: 5),
+                                  child: e,
+                                ))
+                            .toList(),
+                      ),
                     ],
                   ),
                 ),
@@ -140,8 +164,12 @@ class _OverviewScreenState extends State<OverviewScreen> {
     );
   }
 
-  Widget buildProductFilterMenu() {
+  Widget buildProductSortMenu({required ThemeData themeData}) {
     return PopupMenuButton(
+      child: Text(
+        'Sort by: $sortBy',
+        style: themeData.textTheme.titleMedium,
+      ),
       itemBuilder: (ctx) => [
         const PopupMenuItem(
           value: 'title',
@@ -162,8 +190,28 @@ class _OverviewScreenState extends State<OverviewScreen> {
         });
         Future.sync(() => _pagingController.refresh());
       },
-      icon: const Icon(FluentIcons.more_horizontal_48_regular),
     );
+  }
+
+  Widget buildSortOrderIcon({required ThemeData themeData}) {
+    return InkWell(
+        onTap: () {
+          setState(() {
+            isAscSorting = !isAscSorting;
+          });
+          Future.sync(() => _pagingController.refresh());
+        },
+        child: Row(
+          children: [
+            Text(
+              isAscSorting ? "Asc" : "Desc",
+              style: themeData.textTheme.titleMedium,
+            ),
+            Icon(isAscSorting
+                ? FluentIcons.arrow_down_48_regular
+                : FluentIcons.arrow_up_48_regular),
+          ],
+        ));
   }
 
   Widget buildSearchBar(

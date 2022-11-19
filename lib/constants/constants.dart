@@ -37,3 +37,7 @@ const IMAGE_CHECKOUT_COMPLETE =
     AssetImage('assets/images/checkout-complete.png');
 const STRIPE_PUBLIC_KEY =
     'pk_test_51LuWYoBzWbtrC0jKcI405s0ib02YqgU44xskc8c5wrC4Z4e5TXSjmfmlxN2W8jPGh6iSY9Q90RLrIu2d3VzEB9GR00Of0Fe5Vt';
+//order status
+const PENDING = 'pending';
+const AWAITING_PAYMENT = 'awaiting_payment';
+const DONE = 'done';
