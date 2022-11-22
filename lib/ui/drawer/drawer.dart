@@ -89,16 +89,18 @@ class NavigationDrawer extends StatelessWidget {
                     .pushReplacementNamed(OverviewScreen.routeName);
               },
             ),
-            ListTile(
-              leading: const Icon(
-                FluentIcons.payment_16_regular,
-              ),
-              title: const Text('Orders'),
-              onTap: () {
-                Navigator.of(context)
-                    .pushReplacementNamed(OrdersScreen.routeName);
-              },
-            ),
+            isLoggedIn
+                ? ListTile(
+                    leading: const Icon(
+                      FluentIcons.payment_16_regular,
+                    ),
+                    title: const Text('Orders'),
+                    onTap: () {
+                      Navigator.of(context)
+                          .pushReplacementNamed(OrdersScreen.routeName);
+                    },
+                  )
+                : const SizedBox.shrink(),
             isLoggedIn
                 ? ListTile(
                     leading: const Icon(FluentIcons.settings_16_regular),

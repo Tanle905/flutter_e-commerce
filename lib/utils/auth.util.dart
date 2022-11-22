@@ -25,6 +25,7 @@ Future<void> handleLogin(
           .write(key: KEY_ACCESS_TOKEN, value: accessToken)
           .then((value) async {
         Provider.of<UserManager>(context, listen: false).setUser = user;
+        Provider.of<OrderManager>(context, listen: false).setOrder = user.order;
         await fetchCart().then((itemsList) {
           Provider.of<CartList>(context, listen: false).setCartList = itemsList;
           showSnackbar(
