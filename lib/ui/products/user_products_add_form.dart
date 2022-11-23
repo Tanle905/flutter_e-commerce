@@ -174,8 +174,6 @@ class _UserProductAddFormState extends State<UserProductAddForm> {
           });
         }
         productManager.updateProduct(widget.initalData as Product);
-        Navigator.of(context)
-            .pushReplacementNamed(UserProductsScreen.routeName);
         showSnackbar(
             context: context, message: "Product added/edited successfully!");
       } catch (error, stackTrace) {
