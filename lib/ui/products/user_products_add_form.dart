@@ -35,6 +35,7 @@ class _UserProductAddFormState extends State<UserProductAddForm> {
   bool isLoading = false;
   bool isImageValid = false;
   bool isEditingProduct = false;
+  bool isImageDirty = false;
 
   @override
   void initState() {
@@ -84,7 +85,8 @@ class _UserProductAddFormState extends State<UserProductAddForm> {
                     onPressed: isLoading
                         ? null
                         : () {
-                            handleSubmitForm(context, productManager);
+                            handleSubmitForm(context, productManager)
+                                .then((value) => Navigator.of(context).pop());
                           },
                     child: isLoading
                         ? loadingIcon(text: 'Loading')
@@ -142,6 +144,9 @@ class _UserProductAddFormState extends State<UserProductAddForm> {
           isImageValid = true;
         });
       }
+      setState(() {
+        isImageDirty = true;
+      });
     } catch (error) {
       rethrow;
     }
@@ -154,7 +159,7 @@ class _UserProductAddFormState extends State<UserProductAddForm> {
         isLoading = true;
       });
       try {
-        if (!isEditingProduct) {
+        if (isImageDirty) {
           final imageRef = storageRef.child(
               'images/product/${imagefile.path.substring(imagefile.path.lastIndexOf('/'), imagefile.path.length - 1)}');
           await imageRef.putFile(imagefile);

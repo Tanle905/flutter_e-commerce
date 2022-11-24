@@ -110,44 +110,50 @@ class _OverviewScreenState extends State<OverviewScreen> {
             )
           : RefreshIndicator(
               onRefresh: () => Future.sync(() => _pagingController.refresh()),
-              child: Column(children: [
-                Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 10, vertical: 10),
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        'Top Sellers',
-                        style: themeData.textTheme.titleLarge,
+              child: NestedScrollView(
+                headerSliverBuilder: (context, innerBoxIsScrolled) => [
+                  SliverToBoxAdapter(
+                    child: Column(children: [
+                      Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 10, vertical: 10),
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              'Top Sellers',
+                              style: themeData.textTheme.titleLarge,
+                            ),
+                          )),
+                      ProductCarousel(themeData: themeData),
+                      Padding(
+                        padding: const EdgeInsets.only(
+                            left: 10, right: 10, top: 20, bottom: 20),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'All Products',
+                              style: themeData.textTheme.titleLarge,
+                            ),
+                            Row(
+                              children: [
+                                buildProductSortMenu(themeData: themeData),
+                                buildSortOrderIcon(themeData: themeData)
+                              ]
+                                  .map((e) => Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 5),
+                                        child: e,
+                                      ))
+                                  .toList(),
+                            ),
+                          ],
+                        ),
                       ),
-                    )),
-                ProductCarousel(themeData: themeData),
-                Padding(
-                  padding: const EdgeInsets.only(
-                      left: 10, right: 10, top: 20, bottom: 20),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'All Products',
-                        style: themeData.textTheme.titleLarge,
-                      ),
-                      Row(
-                        children: [
-                          buildProductSortMenu(themeData: themeData),
-                          buildSortOrderIcon(themeData: themeData)
-                        ]
-                            .map((e) => Padding(
-                                  padding:
-                                      const EdgeInsets.symmetric(horizontal: 5),
-                                  child: e,
-                                ))
-                            .toList(),
-                      ),
-                    ],
-                  ),
-                ),
-                Expanded(child: Consumer<ProductManager>(
+                    ]),
+                  )
+                ],
+                body: Consumer<ProductManager>(
                   builder: (context, productManager, child) {
                     if (productManager.productsList.isNotEmpty) {
                       _pagingController.itemList = productManager.productsList;
@@ -157,8 +163,9 @@ class _OverviewScreenState extends State<OverviewScreen> {
                       pagingController: _pagingController,
                     );
                   },
-                ))
-              ])),
+                ),
+              ),
+            ),
       drawer: const NavigationDrawer(),
       backgroundColor: themeData.backgroundColor,
     );
