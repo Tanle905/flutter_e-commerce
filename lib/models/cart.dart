@@ -1,44 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:tmdt/models/products.dart';
+import 'package:tmdt/models/review.dart';
 
-class CartItem {
-  final String productId;
-  final String title;
-  final String description;
-  final String imageUrl;
-  final int productQuantity;
+class CartItem extends Product {
   int quantity;
-  final double price;
-  final bool isFavorite;
 
   CartItem(
-      {required this.productId,
-      required this.price,
+      {required String productId,
+      required String title,
       required this.quantity,
-      required this.imageUrl,
-      required this.title,
-      required this.description,
-      required this.productQuantity,
-      required this.isFavorite});
-
-  CartItem copyWith(
-      {String? productId,
-      String? title,
-      int? quantity,
-      double? price,
-      String? imageUrl,
-      String? description,
-      int? productQuantity,
-      bool? isFavorite}) {
-    return CartItem(
-        productId: productId ?? this.productId,
-        price: price ?? this.price,
-        quantity: quantity ?? this.quantity,
-        title: title ?? this.title,
-        imageUrl: imageUrl ?? this.imageUrl,
-        description: description ?? this.description,
-        productQuantity: productQuantity ?? this.productQuantity,
-        isFavorite: isFavorite ?? false);
-  }
+      required String description,
+      required String imageUrl,
+      required int productQuantity,
+      required double price,
+      required bool isFavorite,
+      List<ReviewDetails> reviews = const []})
+      : super(
+            description: description,
+            imageUrl: imageUrl,
+            price: price,
+            productId: productId,
+            productQuantity: productQuantity,
+            title: title,
+            isFavorite: isFavorite,
+            reviews: reviews);
 
   factory CartItem.fromJson(Map<String, dynamic> json) {
     return CartItem(
@@ -53,6 +38,7 @@ class CartItem {
         isFavorite: json['isFavorite'] ?? false);
   }
 
+  @override
   Map<String, dynamic> toJson() => {
         'productId': productId,
         'title': title,

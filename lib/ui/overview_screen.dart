@@ -32,6 +32,7 @@ class _OverviewScreenState extends State<OverviewScreen> {
   String sortBy = 'createdAt';
   bool isAscSorting = false;
   bool isSearching = false;
+  final ValueNotifier<bool> refreshNotifier = ValueNotifier<bool>(false);
   Debouncer handleSeachDebounce =
       Debouncer(delay: const Duration(milliseconds: 300));
 
@@ -109,9 +110,12 @@ class _OverviewScreenState extends State<OverviewScreen> {
               },
             )
           : RefreshIndicator(
-              onRefresh: () => Future.sync(() => _pagingController.refresh()),
-              child: NestedScrollView(
-                headerSliverBuilder: (context, innerBoxIsScrolled) => [
+              onRefresh: () async {
+                Future.sync(() => _pagingController.refresh());
+                refreshNotifier.value = !refreshNotifier.value;
+              },
+              child: CustomScrollView(
+                slivers: [
                   SliverToBoxAdapter(
                     child: Column(children: [
                       Padding(
@@ -124,7 +128,7 @@ class _OverviewScreenState extends State<OverviewScreen> {
                               style: themeData.textTheme.titleLarge,
                             ),
                           )),
-                      ProductCarousel(themeData: themeData),
+                      ProductCarousel(refreshNotifier: refreshNotifier),
                       Padding(
                         padding: const EdgeInsets.only(
                             left: 10, right: 10, top: 20, bottom: 20),
@@ -151,19 +155,20 @@ class _OverviewScreenState extends State<OverviewScreen> {
                         ),
                       ),
                     ]),
-                  )
-                ],
-                body: Consumer<ProductManager>(
-                  builder: (context, productManager, child) {
-                    if (productManager.productsList.isNotEmpty) {
-                      _pagingController.itemList = productManager.productsList;
-                    }
+                  ),
+                  Consumer<ProductManager>(
+                    builder: (context, productManager, child) {
+                      if (productManager.productsList.isNotEmpty) {
+                        _pagingController.itemList =
+                            productManager.productsList;
+                      }
 
-                    return ProductsGrid(
-                      pagingController: _pagingController,
-                    );
-                  },
-                ),
+                      return ProductsGrid(
+                        pagingController: _pagingController,
+                      );
+                    },
+                  ),
+                ],
               ),
             ),
       drawer: const NavigationDrawer(),

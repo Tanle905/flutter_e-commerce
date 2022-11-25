@@ -80,6 +80,7 @@ flutter:
     - assets/images/404.png
     - assets/images/checkout-complete.png
     - assets/images/cart-no-product.png
+    - assets/images/empty-review-star.png
   fonts:
     - family: Lato
       fonts:

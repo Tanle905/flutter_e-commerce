@@ -5,6 +5,7 @@ import 'package:tmdt/models/cart.dart';
 import 'package:tmdt/models/products.dart';
 import 'package:tmdt/models/user.dart';
 import 'package:tmdt/ui/products/utils/product.utils.dart';
+import 'package:tmdt/ui/products/widgets/product_review.dart';
 import 'package:tmdt/ui/shared/ui/expandable_text.dart';
 import 'package:tmdt/ui/shared/ui/icons.dart';
 import 'package:tmdt/ui/user/user_manager.dart';
@@ -106,11 +107,18 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       ),
                     ),
                   ),
-                  ExpandableText(
-                    text: widget.product.description,
-                    trimLines: 4,
-                    textStyle: themeData.textTheme.bodyMedium,
+                  Container(
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(color: Colors.grey.shade300)),
+                    child: ExpandableText(
+                      text: widget.product.description,
+                      trimLines: 7,
+                      textStyle: themeData.textTheme.bodyMedium,
+                    ),
                   ),
+                  ProductReview(reviews: widget.product.reviews),
                   const Padding(padding: EdgeInsets.only(bottom: 100))
                 ]
                     .map((widget) => Padding(

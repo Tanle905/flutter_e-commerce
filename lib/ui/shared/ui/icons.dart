@@ -192,3 +192,44 @@ class _AddToFavoriteIconState extends State<AddToFavoriteIcon> {
     );
   }
 }
+
+class StarRating extends StatelessWidget {
+  final double rating;
+  final Function(double rating)? onRatingChanged;
+
+  const StarRating({
+    super.key,
+    required this.rating,
+    this.onRatingChanged,
+  });
+
+  Widget buildStar(BuildContext context, int index) {
+    Icon icon;
+    if (index >= rating) {
+      icon = const Icon(
+        FluentIcons.star_16_filled,
+        color: Colors.grey,
+      );
+    } else if (index > rating - 1 && index < rating) {
+      icon = Icon(
+        FluentIcons.star_half_16_filled,
+        color: Colors.yellow.shade600,
+      );
+    } else {
+      icon = Icon(
+        FluentIcons.star_16_filled,
+        color: Colors.yellow.shade600,
+      );
+    }
+    return InkResponse(
+      onTap: onRatingChanged != null ? () => onRatingChanged!(rating) : null,
+      child: icon,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+        children: List.generate(5, (index) => buildStar(context, index)));
+  }
+}

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tmdt/models/products.dart';
 import 'package:tmdt/services/products.dart';
-import 'package:tmdt/ui/products/products_manager.dart';
 import 'package:tmdt/ui/products/user_products_add.dart';
 import 'package:tmdt/ui/shared/ui/scaffold_snackbar.dart';
 import 'package:tmdt/ui/shared/utils/dialog_util.dart';

@@ -11,20 +11,22 @@ class ProductsGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return PagedGridView<int, Product>(
-      pagingController: pagingController,
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          childAspectRatio: 2 / 3,
-          crossAxisSpacing: 20,
-          mainAxisSpacing: 20),
-      builderDelegate: PagedChildBuilderDelegate(
-        itemBuilder: (ctx, product, index) {
-          return ProductGridTile(product);
-        },
-        noItemsFoundIndicatorBuilder: (context) => const NotFoundPage(),
-      ),
+    return SliverPadding(
       padding: const EdgeInsets.all(10),
+      sliver: PagedSliverGrid<int, Product>(
+        pagingController: pagingController,
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            childAspectRatio: 2 / 3,
+            crossAxisSpacing: 20,
+            mainAxisSpacing: 20),
+        builderDelegate: PagedChildBuilderDelegate(
+          itemBuilder: (ctx, product, index) {
+            return ProductGridTile(product);
+          },
+          noItemsFoundIndicatorBuilder: (context) => const NotFoundPage(),
+        ),
+      ),
     );
   }
 }

@@ -1,5 +1,7 @@
+import 'package:flutter/material.dart';
 import 'package:tmdt/constants/endpoints.dart';
 import 'package:tmdt/models/cart.dart';
+import 'package:tmdt/models/review.dart';
 
 class Product {
   final String productId;
@@ -9,6 +11,8 @@ class Product {
   final String imageUrl;
   final int productQuantity;
   bool isFavorite;
+  List<ReviewDetails> reviews;
+
   Product(
       {required this.productId,
       required this.title,
@@ -16,7 +20,9 @@ class Product {
       required this.price,
       required this.imageUrl,
       required this.productQuantity,
-      this.isFavorite = false});
+      this.isFavorite = false,
+      this.reviews = const []});
+
   Product copyWith(
       {String? productId,
       String? title,
@@ -24,7 +30,8 @@ class Product {
       double? price,
       String? imageUrl,
       int? productQuantity,
-      bool? isFavorite}) {
+      bool? isFavorite,
+      List<ReviewDetails>? reviews}) {
     return Product(
         productId: productId ?? this.productId,
         title: title ?? this.title,
@@ -32,7 +39,8 @@ class Product {
         price: price ?? this.price,
         imageUrl: imageUrl ?? this.imageUrl,
         productQuantity: productQuantity ?? this.productQuantity,
-        isFavorite: isFavorite ?? this.isFavorite);
+        isFavorite: isFavorite ?? this.isFavorite,
+        reviews: reviews ?? this.reviews);
   }
 
   factory Product.fromJson(Map<String, dynamic> json) {
@@ -44,10 +52,15 @@ class Product {
         price:
             json['price'] == null ? 0 : double.parse(json['price'].toString()),
         productQuantity: json['productQuantity'] ?? 0,
-        isFavorite: json['isFavorite'] ?? false);
+        isFavorite: json['isFavorite'] ?? false,
+        reviews: json['review'] != null
+            ? List.castFrom<dynamic, ReviewDetails>(json['review']
+                .map((review) => ReviewDetails.fromJson(review))
+                .toList())
+            : List.empty());
   }
 
-  factory Product.fromCartitem(CartItem cartItem) {
+  factory Product.fromCartItem(CartItem cartItem) {
     return Product(
         productId: cartItem.productId,
         title: cartItem.title,
@@ -55,7 +68,8 @@ class Product {
         imageUrl: cartItem.imageUrl,
         price: cartItem.price,
         productQuantity: cartItem.productQuantity,
-        isFavorite: cartItem.isFavorite);
+        isFavorite: cartItem.isFavorite,
+        reviews: cartItem.reviews);
   }
 
   Map<String, dynamic> toJson() => {
@@ -65,4 +79,50 @@ class Product {
         'imageUrl': imageUrl,
         'productQuantity': productQuantity
       };
+}
+
+class ProductManager extends ChangeNotifier {
+  List<Product> _productsList = List.empty();
+
+  set setProductsList(List<Product> productsList) {
+    _productsList = productsList;
+    notifyListeners();
+  }
+
+  set setInitialProductsList(List<Product> productsList) {
+    _productsList = productsList;
+  }
+
+  int get productsListCount {
+    return _productsList.length;
+  }
+
+  List<Product> get productsList {
+    return [..._productsList];
+  }
+
+  List<Product> get favoriteProducts {
+    return _productsList.where((item) => item.isFavorite).toList();
+  }
+
+  Product findById(String id) {
+    return _productsList.firstWhere((element) => element.productId == id);
+  }
+
+  void addProduct(Product product) {
+    _productsList.insert(0, product);
+    notifyListeners();
+  }
+
+  void updateProduct(Product product) {
+    _productsList[_productsList
+        .indexWhere((item) => item.productId == product.productId)] = product;
+    notifyListeners();
+  }
+
+  void deleteProduct(Product product) {
+    _productsList.removeAt(_productsList
+        .indexWhere((item) => item.productId == product.productId));
+    notifyListeners();
+  }
 }

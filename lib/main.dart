@@ -5,6 +5,7 @@ import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:provider/provider.dart';
 import 'package:tmdt/constants/constants.dart';
 import 'package:tmdt/models/cart.dart';
+import 'package:tmdt/models/products.dart';
 import 'package:tmdt/services/cart.dart';
 import 'package:tmdt/services/user.dart';
 import 'package:tmdt/ui/address/user_address_add_screen.dart';

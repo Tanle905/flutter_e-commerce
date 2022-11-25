@@ -35,6 +35,8 @@ const IMAGE_NOTFOUND = AssetImage('assets/images/404.png');
 const IMAGE_CART_NO_PRODUCT = AssetImage("assets/images/cart-no-product.png");
 const IMAGE_CHECKOUT_COMPLETE =
     AssetImage('assets/images/checkout-complete.png');
+const IMAGE_EMPTY_REVIEW_STAR =
+    AssetImage('assets/images/empty-review-star.png');
 const STRIPE_PUBLIC_KEY =
     'pk_test_51LuWYoBzWbtrC0jKcI405s0ib02YqgU44xskc8c5wrC4Z4e5TXSjmfmlxN2W8jPGh6iSY9Q90RLrIu2d3VzEB9GR00Of0Fe5Vt';
 //order status

@@ -29,7 +29,7 @@ class _CartItemCardState extends State<CartItemCard> {
     itemCount.value = widget.cartItem.quantity;
     itemCount.addListener(() {
       debouncer(() => updateItemInCart(
-          product: Product.fromCartitem(widget.cartItem),
+          product: Product.fromCartItem(widget.cartItem),
           quantity: itemCount.value));
     });
     super.initState();
@@ -82,7 +82,7 @@ class _CartItemCardState extends State<CartItemCard> {
         onTap: () => Navigator.of(context).push(
               MaterialPageRoute(
                   builder: (context) => ProductDetailScreen(
-                        Product.fromCartitem(widget.cartItem),
+                        Product.fromCartItem(widget.cartItem),
                       )),
             ));
   }

@@ -12,3 +12,6 @@ const USER_PROFILE_ENDPOINT = '/profile';
 const USER_ADDRESS_ENDPOINT = '/profile/address';
 const USER_MANAGEMENT_ENDPOINT = '/user-management';
 const CHECKOUT_STRIPE_PAYMENT_INTENTS = '/checkout/stripe/payment_intents';
+const REVIEW_ENDPOINT = "/review";
+const USER_REVIEW_ENDPOINT = "/review/user";
+const PRODUCT_REVIEW_ENDPOINT = "/review/product";

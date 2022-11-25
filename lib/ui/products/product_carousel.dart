@@ -6,18 +6,39 @@ import 'package:tmdt/ui/products/products_detail_screen.dart';
 import 'package:tmdt/utils/responseMapping.util.dart';
 
 class ProductCarousel extends StatefulWidget {
-  final ThemeData themeData;
-  const ProductCarousel({super.key, required this.themeData});
+  final ValueNotifier refreshNotifier;
+  const ProductCarousel({super.key, required this.refreshNotifier});
   @override
   State<ProductCarousel> createState() => _ProductCarouselState();
 }
 
 class _ProductCarouselState extends State<ProductCarousel> {
-  int current = 0;
+  Future futureMostSaleProduct =
+      fetchProducts(initalQuery: 'sortBy=numberSold&isAsc=-1', pageSize: 6);
   final CarouselController _carouselController = CarouselController();
+  int current = 0;
+
+  @override
+  void initState() {
+    widget.refreshNotifier.addListener(() {
+      setState(() {
+        futureMostSaleProduct = fetchProducts(
+            initalQuery: 'sortBy=numberSold&isAsc=-1', pageSize: 6);
+      });
+    });
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    widget.refreshNotifier.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
+    final ThemeData themeData = Theme.of(context);
+
     return SizedBox(
       child: FutureBuilder(
           builder: (context, snapshot) {
@@ -26,7 +47,7 @@ class _ProductCarouselState extends State<ProductCarousel> {
               productsList = productResponseMapping(snapshot.data);
             }
 
-            return snapshot.hasData
+            return snapshot.connectionState == ConnectionState.done
                 ? Column(children: [
                     CarouselSlider(
                         carouselController: _carouselController,
@@ -65,8 +86,8 @@ class _ProductCarouselState extends State<ProductCarousel> {
                                           children: [
                                             Text(
                                               productsList[i].title,
-                                              style: widget.themeData.textTheme
-                                                  .titleSmall,
+                                              style: themeData
+                                                  .textTheme.titleSmall,
                                             ),
                                             Text(
                                               productsList[i].price.toString(),
@@ -124,7 +145,7 @@ class _ProductCarouselState extends State<ProductCarousel> {
                                                 children: [
                                                   Text(
                                                     productsList[i + 1].title,
-                                                    style: widget.themeData
+                                                    style: themeData
                                                         .textTheme.titleSmall,
                                                   ),
                                                   Text(
@@ -191,8 +212,7 @@ class _ProductCarouselState extends State<ProductCarousel> {
                     ),
                   );
           },
-          future: fetchProducts(
-              initalQuery: 'sortBy=numberSold&isAsc=-1', pageSize: 6)),
+          future: futureMostSaleProduct),
     );
   }
 }
