@@ -45,12 +45,9 @@ class _UserFavoriteProductsScreenState
             ? ListView.builder(
                 itemCount: snapshot.data?.length,
                 itemBuilder: (context, index) => InkWell(
-                      onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => ProductDetailScreen(
-                                snapshot.data?[index] as Product),
-                          )),
+                      onTap: () => Navigator.of(context).pushNamed(
+                          ProductDetailScreen.routename,
+                          arguments: snapshot.data?[index] as Product),
                       child: ListTile(
                         leading: ClipRRect(
                           borderRadius: BorderRadius.circular(10),

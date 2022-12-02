@@ -11,6 +11,7 @@ import 'package:tmdt/services/user.dart';
 import 'package:tmdt/ui/address/user_address_add_screen.dart';
 import 'package:tmdt/ui/address/user_address_screen.dart';
 import 'package:tmdt/ui/checkout/checkout_screen.dart';
+import 'package:tmdt/ui/products/product_details_reviews_details_screen.dart';
 import 'package:tmdt/ui/products/user_favorite_products_list.dart';
 import 'package:tmdt/ui/screens.dart';
 import 'package:tmdt/ui/theme_manager.dart';
@@ -104,7 +105,11 @@ class _MyAppState extends State<MyApp> {
           UserAddressAddScreen.routeName: (context) =>
               const UserAddressAddScreen(),
           UserFavoriteProductsScreen.routeName: (context) =>
-              const UserFavoriteProductsScreen()
+              const UserFavoriteProductsScreen(),
+          ProductDetailsReviewsDetailsScreen.routename: (context) =>
+              const ProductDetailsReviewsDetailsScreen(),
+          ProductDetailScreen.routename: (context) =>
+              const ProductDetailScreen()
         },
       ),
     );

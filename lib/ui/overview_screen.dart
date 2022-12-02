@@ -264,9 +264,9 @@ class _OverviewScreenState extends State<OverviewScreen> {
                 child: OutlinedButton(
                   style: OutlinedButton.styleFrom(side: BorderSide.none),
                   onPressed: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => ProductDetailScreen(product),
-                    ));
+                    Navigator.of(context).pushNamed(
+                        ProductDetailScreen.routename,
+                        arguments: product);
                   },
                   child: Row(
                     children: [

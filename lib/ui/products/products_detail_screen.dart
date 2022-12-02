@@ -11,8 +11,8 @@ import 'package:tmdt/ui/shared/ui/icons.dart';
 import 'package:tmdt/ui/user/user_manager.dart';
 
 class ProductDetailScreen extends StatefulWidget {
-  const ProductDetailScreen(this.product, {super.key});
-  final Product product;
+  static const routename = '/product-details-screen';
+  const ProductDetailScreen({super.key});
   @override
   State<ProductDetailScreen> createState() => _ProductDetailScreenState();
 }
@@ -24,6 +24,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final Product product =
+        ModalRoute.of(context)?.settings.arguments as Product;
     final ThemeData themeData = Theme.of(context);
     final User? user = Provider.of<UserManager>(context).getUser;
 
@@ -73,7 +75,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                     Matrix4.identity();
                               }),
                           child: Image.network(
-                            widget.product.imageUrl,
+                            product.imageUrl,
                             fit: BoxFit.cover,
                           )),
                     ),
@@ -94,7 +96,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         ),
                       ),
                       SizedBox(
-                        child: AddToFavoriteIcon(product: widget.product),
+                        child: AddToFavoriteIcon(product: product),
                       )
                     ],
                   ),
@@ -102,7 +104,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                     alignment: Alignment.centerLeft,
                     child: SizedBox(
                       child: Text(
-                        widget.product.title,
+                        product.title,
                         style: themeData.textTheme.headlineSmall,
                       ),
                     ),
@@ -113,12 +115,15 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         borderRadius: BorderRadius.circular(10),
                         border: Border.all(color: Colors.grey.shade300)),
                     child: ExpandableText(
-                      text: widget.product.description,
+                      text: product.description,
                       trimLines: 7,
                       textStyle: themeData.textTheme.bodyMedium,
                     ),
                   ),
-                  ProductReview(reviews: widget.product.reviews),
+                  ProductReview(
+                    reviews: product.reviews,
+                    productId: product.productId,
+                  ),
                   const Padding(padding: EdgeInsets.only(bottom: 100))
                 ]
                     .map((widget) => Padding(
@@ -149,12 +154,12 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        widget.product.productQuantity == 0
+                        product.productQuantity == 0
                             ? const Text(
                                 'Out of Stock!',
                                 style: TextStyle(color: Colors.red),
                               )
-                            : widget.product.productQuantity == _itemCount
+                            : product.productQuantity == _itemCount
                                 ? const Text(
                                     'Items exceeds product quantity!',
                                     style: TextStyle(color: Colors.red),
@@ -172,7 +177,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                   style: themeData.textTheme.titleMedium,
                                 ),
                                 Text(
-                                  '\$${widget.product.price * _itemCount}',
+                                  '\$${product.price * _itemCount}',
                                   style: themeData.textTheme.titleLarge,
                                 ),
                               ]
@@ -189,17 +194,17 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                     ? setState(() => _itemCount--)
                                     : null,
                                 onAdd: () => setState(() =>
-                                    widget.product.productQuantity > _itemCount
+                                    product.productQuantity > _itemCount
                                         ? _itemCount++
                                         : null)),
                             SizedBox(
                               width: 150,
                               height: 50,
                               child: ElevatedButton(
-                                onPressed: widget.product.productQuantity == 0
+                                onPressed: product.productQuantity == 0
                                     ? null
                                     : () => handleAddToCart(
-                                        product: widget.product,
+                                        product: product,
                                         context: context,
                                         quantity: _itemCount,
                                         user: user),

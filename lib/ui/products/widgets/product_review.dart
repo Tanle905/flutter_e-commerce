@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:tmdt/constants/constants.dart';
+import 'package:tmdt/models/product_details_reviews_details_screen_arguments.dart';
 import 'package:tmdt/models/review.dart';
+import 'package:tmdt/ui/products/product_details_reviews_details_screen.dart';
 import 'package:tmdt/ui/shared/ui/icons.dart';
 
 class ProductReview extends StatefulWidget {
   final List<ReviewDetails> reviews;
-  const ProductReview({super.key, required this.reviews});
+  final String productId;
+  const ProductReview(
+      {super.key, required this.reviews, required this.productId});
 
   @override
   State<ProductReview> createState() => _ProductReviewState();
@@ -32,53 +36,24 @@ class _ProductReviewState extends State<ProductReview> {
                       "User Reviews",
                       style: themeData.textTheme.titleLarge,
                     ),
-                    Text(
-                      "View all",
-                      style: themeData.textTheme.titleSmall,
-                    )
+                    TextButton(
+                        onPressed: () => Navigator.of(context).pushNamed(
+                            ProductDetailsReviewsDetailsScreen.routename,
+                            arguments:
+                                ProductDetailsReviewsDetailsScreenArguments(
+                                    widget.productId)),
+                        child: Text(
+                          "View all",
+                          style: themeData.textTheme.titleSmall,
+                        ))
                   ],
                 ),
                 const Padding(padding: EdgeInsets.symmetric(vertical: 5)),
                 ...widget.reviews
-                    .map((review) => Column(
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  review.username,
-                                  style: themeData.textTheme.titleMedium,
-                                ),
-                                StarRating(rating: review.stars)
-                              ],
-                            ),
-                            const Padding(padding: EdgeInsets.only(top: 10)),
-                            Align(
-                              alignment: Alignment.centerLeft,
-                              child: Text(
-                                review.description,
-                                textAlign: TextAlign.start,
-                              ),
-                            ),
-                            Row(
-                              children: review.imageUrl
-                                  .map((e) => Padding(
-                                        padding:
-                                            const EdgeInsets.only(right: 5),
-                                        child: ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          child: SizedBox(
-                                            width: 70,
-                                            height: 70,
-                                            child: Image.network(e),
-                                          ),
-                                        ),
-                                      ))
-                                  .toList(),
-                            ),
-                            const Divider()
-                          ],
+                    .map((review) => ReviewDetailsWidget(
+                          themeData: themeData,
+                          review: review,
+                          border: true,
                         ))
                     .toList()
               ],
@@ -101,6 +76,61 @@ class _ProductReviewState extends State<ProductReview> {
                 )
               ],
             ),
+    );
+  }
+}
+
+class ReviewDetailsWidget extends StatelessWidget {
+  final ReviewDetails review;
+  final bool border;
+  const ReviewDetailsWidget(
+      {Key? key,
+      required this.themeData,
+      required this.review,
+      required this.border})
+      : super(key: key);
+
+  final ThemeData themeData;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              review.username,
+              style: themeData.textTheme.titleMedium,
+            ),
+            StarRating(rating: review.stars)
+          ],
+        ),
+        const Padding(padding: EdgeInsets.only(top: 10)),
+        Align(
+          alignment: Alignment.centerLeft,
+          child: Text(
+            review.description,
+            textAlign: TextAlign.start,
+          ),
+        ),
+        Row(
+          children: review.imageUrl
+              .map((e) => Padding(
+                    padding: const EdgeInsets.only(right: 5),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: SizedBox(
+                        width: 70,
+                        height: 70,
+                        child: Image.network(e),
+                      ),
+                    ),
+                  ))
+              .toList(),
+        ),
+        border ? const Divider() : const SizedBox.shrink()
+      ],
     );
   }
 }

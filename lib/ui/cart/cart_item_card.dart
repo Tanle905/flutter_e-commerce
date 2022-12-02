@@ -79,12 +79,9 @@ class _CartItemCardState extends State<CartItemCard> {
                   });
             },
             child: buildItemCard(context: context, cartList: cartList)),
-        onTap: () => Navigator.of(context).push(
-              MaterialPageRoute(
-                  builder: (context) => ProductDetailScreen(
-                        Product.fromCartItem(widget.cartItem),
-                      )),
-            ));
+        onTap: () => Navigator.of(context).pushNamed(
+            ProductDetailScreen.routename,
+            arguments: Product.fromCartItem(widget.cartItem)));
   }
 
   Widget buildItemCard(

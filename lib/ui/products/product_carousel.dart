@@ -58,11 +58,9 @@ class _ProductCarouselState extends State<ProductCarousel> {
                                 Expanded(
                                     child: InkWell(
                                   onTap: (() {
-                                    Navigator.of(context)
-                                        .push(MaterialPageRoute(
-                                      builder: (context) =>
-                                          ProductDetailScreen(productsList[i]),
-                                    ));
+                                    Navigator.of(context).pushNamed(
+                                        ProductDetailScreen.routename,
+                                        arguments: productsList[i]);
                                   }),
                                   child: Container(
                                     height: double.infinity,
@@ -114,12 +112,9 @@ class _ProductCarouselState extends State<ProductCarousel> {
                                     ? Expanded(
                                         child: InkWell(
                                         onTap: (() {
-                                          Navigator.of(context)
-                                              .push(MaterialPageRoute(
-                                            builder: (context) =>
-                                                ProductDetailScreen(
-                                                    productsList[i + 1]),
-                                          ));
+                                          Navigator.of(context).pushNamed(
+                                              ProductDetailScreen.routename,
+                                              arguments: productsList[i + 1]);
                                         }),
                                         child: Container(
                                           height: double.infinity,
