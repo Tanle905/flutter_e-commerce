@@ -78,6 +78,9 @@ class _ProductCarouselState extends State<ProductCarousel> {
                                                 fit: BoxFit.cover),
                                           ),
                                         ),
+                                        const Padding(
+                                            padding: EdgeInsets.symmetric(
+                                                vertical: 2)),
                                         Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceBetween,
@@ -92,19 +95,16 @@ class _ProductCarouselState extends State<ProductCarousel> {
                                             )
                                           ],
                                         ),
-                                        Text(
+                                        const Padding(
+                                            padding: EdgeInsets.symmetric(
+                                                vertical: 2)),
+                                        Expanded(
+                                            child: Text(
                                           productsList[i].description,
                                           overflow: TextOverflow.ellipsis,
                                           maxLines: 3,
-                                        )
-                                      ]
-                                          .map((widget) => Padding(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                        vertical: 2),
-                                                child: widget,
-                                              ))
-                                          .toList(),
+                                        ))
+                                      ],
                                     ),
                                   ),
                                 )),
@@ -120,50 +120,48 @@ class _ProductCarouselState extends State<ProductCarousel> {
                                           height: double.infinity,
                                           padding: const EdgeInsets.symmetric(
                                               horizontal: 7),
-                                          child: Column(
-                                            children: [
-                                              ClipRRect(
-                                                borderRadius:
-                                                    BorderRadius.circular(10),
-                                                child: AspectRatio(
-                                                  aspectRatio: 1,
-                                                  child: Image.network(
-                                                      productsList[i + 1]
-                                                          .imageUrl,
-                                                      fit: BoxFit.cover),
-                                                ),
-                                              ),
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  Text(
-                                                    productsList[i + 1].title,
-                                                    style: themeData
-                                                        .textTheme.titleSmall,
-                                                  ),
-                                                  Text(
+                                          child: Column(children: [
+                                            ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                              child: AspectRatio(
+                                                aspectRatio: 1,
+                                                child: Image.network(
                                                     productsList[i + 1]
-                                                        .price
-                                                        .toString(),
-                                                  )
-                                                ],
+                                                        .imageUrl,
+                                                    fit: BoxFit.cover),
                                               ),
-                                              Text(
-                                                productsList[i + 1].description,
-                                                overflow: TextOverflow.ellipsis,
-                                                maxLines: 3,
-                                              )
-                                            ]
-                                                .map((widget) => Padding(
-                                                      padding: const EdgeInsets
-                                                              .symmetric(
-                                                          vertical: 2),
-                                                      child: widget,
-                                                    ))
-                                                .toList(),
-                                          ),
+                                            ),
+                                            const Padding(
+                                                padding: EdgeInsets.symmetric(
+                                                    vertical: 2)),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Text(
+                                                  productsList[i + 1].title,
+                                                  style: themeData
+                                                      .textTheme.titleSmall,
+                                                ),
+                                                Text(
+                                                  productsList[i + 1]
+                                                      .price
+                                                      .toString(),
+                                                )
+                                              ],
+                                            ),
+                                            const Padding(
+                                                padding: EdgeInsets.symmetric(
+                                                    vertical: 2)),
+                                            Expanded(
+                                                child: Text(
+                                              productsList[i + 1].description,
+                                              overflow: TextOverflow.ellipsis,
+                                              maxLines: 3,
+                                            ))
+                                          ]),
                                         ),
                                       ))
                                     : const Spacer()
