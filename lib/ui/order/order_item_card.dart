@@ -4,6 +4,7 @@ import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:tmdt/models/order_item.dart';
 import 'package:intl/intl.dart';
+import 'package:tmdt/ui/order/order_details_screen.dart';
 
 class OrderItemCard extends StatefulWidget {
   final OrderItem order;
@@ -61,7 +62,30 @@ class _OrderItemCardState extends State<OrderItemCard> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(DateFormat('dd/MM/yyyy hh:mm').format(widget.order.dateTime)),
-            Text('Status: ${widget.order.orderStatus}')
+            Text('Status: ${widget.order.orderStatus}'),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Flexible(
+                    flex: 1,
+                    child: ElevatedButton(
+                      onPressed: () => Navigator.of(context).pushNamed(
+                          OrderDetailsScreen.routename,
+                          arguments: widget.order),
+                      child: const Text(
+                        'View Details',
+                      ),
+                    )),
+                Expanded(
+                    flex: 1,
+                    child: ElevatedButton(
+                      onPressed: () {},
+                      child: const Text(
+                        'Repurchase',
+                      ),
+                    ))
+              ],
+            ),
           ]
               .map((e) => Padding(
                     padding: const EdgeInsets.only(top: 1),

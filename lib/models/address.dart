@@ -17,11 +17,13 @@ class Address {
   factory Address.fromJson(Map<String, dynamic> json) {
     return Address(
         addressId: json['_id'],
-        country: json['country'],
-        city: json['city'],
+        country: json['country'] ?? '',
+        city: json['city'] ?? '',
         fullName: json['fullName'] ?? '',
         address: json['address'] ?? '',
-        phoneNumber: json['phoneNumber'] ?? '');
+        phoneNumber: json['phoneNumber'] != null
+            ? int.parse(json['phoneNumber'].toString())
+            : 0);
   }
 
   Map<String, dynamic> toJson() => {

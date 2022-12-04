@@ -114,20 +114,23 @@ class ReviewDetailsWidget extends StatelessWidget {
             textAlign: TextAlign.start,
           ),
         ),
-        Row(
-          children: review.imageUrl
-              .map((e) => Padding(
-                    padding: const EdgeInsets.only(right: 5),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
-                      child: SizedBox(
-                        width: 70,
-                        height: 70,
-                        child: Image.network(e),
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children: review.imageUrl
+                .map((e) => Padding(
+                      padding: const EdgeInsets.only(right: 5),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: SizedBox(
+                          width: 70,
+                          height: 70,
+                          child: Image.network(e),
+                        ),
                       ),
-                    ),
-                  ))
-              .toList(),
+                    ))
+                .toList(),
+          ),
         ),
         border ? const Divider() : const SizedBox.shrink()
       ],

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tmdt/constants/constants.dart';
+import 'package:tmdt/models/address.dart';
 import 'package:tmdt/models/cart.dart';
 import 'package:tmdt/ui/checkout/checkout_manager.dart';
 import 'package:tmdt/models/order_item.dart';
@@ -32,6 +33,7 @@ class OrderManager with ChangeNotifier {
           OrderItem(
               totalPrice: checkoutDetails.totalPrice as double,
               orderStatus: PENDING,
+              address: checkoutDetails.address as Address,
               items: checkoutDetails.cartList?.getCartList as List<CartItem>,
               dateTime: DateTime.now(),
               id: 'o${DateTime.now().toIso8601String()}'));

@@ -43,3 +43,5 @@ const STRIPE_PUBLIC_KEY =
 const PENDING = 'pending';
 const AWAITING_PAYMENT = 'awaiting_payment';
 const DONE = 'done';
+//constraints
+const IMAGE_UPLOAD_LIMIT = 5;

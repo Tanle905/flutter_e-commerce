@@ -27,7 +27,7 @@ class ReviewDetails {
         productId: json['productId'],
         username: json['username'],
         imageUrl: List.castFrom<dynamic, String>(json['imageUrl']),
-        description: json['description'],
+        description: json['description'] ?? '',
         stars: double.parse(json['stars'].toString()),
         createdAt: DateTime.parse(json['createdAt']),
         updatedAt: DateTime.parse(json['updatedAt']));

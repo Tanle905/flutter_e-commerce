@@ -92,7 +92,8 @@ ThemeData darkTheme() {
       shadowColor: COLOR_SHADOW_DARK,
       elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
-              primary: COLOR_BUTTON_AND_LINK_TEXT_DARK)));
+              primary: COLOR_BUTTON_AND_LINK_TEXT_DARK,
+              disabledBackgroundColor: Colors.grey)));
 }
 
 ThemeMode themeMode() {

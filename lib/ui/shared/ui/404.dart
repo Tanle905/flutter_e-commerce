@@ -9,6 +9,7 @@ class NotFoundPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
+      physics: const NeverScrollableScrollPhysics(),
       child: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
