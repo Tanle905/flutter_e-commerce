@@ -7,7 +7,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:tmdt/constants/constants.dart';
 import 'package:tmdt/models/cart.dart';
-import 'package:tmdt/models/review.dart';
 import 'package:tmdt/models/user.dart';
 import 'package:tmdt/services/review.dart';
 import 'package:tmdt/ui/shared/styles/input_styles.dart';
@@ -94,7 +93,7 @@ class _ProductReviewAddScreenState extends State<ProductReviewAddScreen> {
                                               onPressed: () => deleteImage(
                                                   image, image['path']),
                                               icon: Icon(
-                                                FluentIcons.delete_48_filled,
+                                                Icons.close,
                                                 color: COLOR_BACKGROUND,
                                                 size: 20,
                                               ),

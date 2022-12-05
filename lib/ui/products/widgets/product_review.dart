@@ -4,6 +4,7 @@ import 'package:tmdt/models/product_details_reviews_details_screen_arguments.dar
 import 'package:tmdt/models/review.dart';
 import 'package:tmdt/ui/products/product_details_reviews_details_screen.dart';
 import 'package:tmdt/ui/shared/ui/icons.dart';
+import 'package:tmdt/ui/shared/ui/image_hero.dart';
 
 class ProductReview extends StatefulWidget {
   final List<ReviewDetails> reviews;
@@ -95,6 +96,7 @@ class ReviewDetailsWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -107,27 +109,34 @@ class ReviewDetailsWidget extends StatelessWidget {
           ],
         ),
         const Padding(padding: EdgeInsets.only(top: 10)),
-        Align(
-          alignment: Alignment.centerLeft,
-          child: Text(
-            review.description,
-            textAlign: TextAlign.start,
-          ),
+        Text(
+          review.description,
+          textAlign: TextAlign.start,
         ),
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
             children: review.imageUrl
-                .map((e) => Padding(
-                      padding: const EdgeInsets.only(right: 5),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(10),
-                        child: SizedBox(
-                          width: 70,
-                          height: 70,
-                          child: Image.network(e),
-                        ),
-                      ),
+                .map((e) => GestureDetector(
+                      onTap: () => Navigator.of(context)
+                          .pushNamed(ImageHero.routename, arguments: e),
+                      child: Hero(
+                          tag: 'imageHero',
+                          child: Padding(
+                            padding: const EdgeInsets.only(right: 5),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(10),
+                              child: SizedBox(
+                                width: 70,
+                                height: 70,
+                                child: Image.network(
+                                  e,
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ),
+                          )),
                     ))
                 .toList(),
           ),
