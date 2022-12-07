@@ -1,4 +1,5 @@
 import 'package:tmdt/models/address.dart';
+import 'package:tmdt/models/order_item.dart';
 import 'package:tmdt/models/products.dart';
 import 'package:tmdt/models/review.dart';
 import 'package:tmdt/models/user.dart';
@@ -19,6 +20,12 @@ List<User> userResponseMapping(dynamic response) {
 List<Address> addressResponseMapping(dynamic response) {
   return List.castFrom<dynamic, Address>((response as dynamic)['data']
       .map((address) => Address.fromJson(address))
+      .toList());
+}
+
+List<OrderItem> orderResponseMapping(dynamic response) {
+  return List.castFrom<dynamic, OrderItem>((response as dynamic)['data']
+      .map((address) => OrderItem.fromJson(address))
       .toList());
 }
 

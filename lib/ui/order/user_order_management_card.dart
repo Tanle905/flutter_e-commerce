@@ -4,18 +4,19 @@ import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:tmdt/models/order_item.dart';
 import 'package:intl/intl.dart';
-import 'package:tmdt/ui/order/order_details_screen.dart';
 
-class OrderItemCard extends StatefulWidget {
+class UserOrderManagementCard extends StatefulWidget {
   final OrderItem order;
 
-  const OrderItemCard(this.order, {Key? key}) : super(key: key);
+  const UserOrderManagementCard({Key? key, required this.order})
+      : super(key: key);
 
   @override
-  State<OrderItemCard> createState() => _OrderItemCardState();
+  State<UserOrderManagementCard> createState() =>
+      _UserOrderManagementCardState();
 }
 
-class _OrderItemCardState extends State<OrderItemCard> {
+class _UserOrderManagementCardState extends State<UserOrderManagementCard> {
   var _expanded = false;
 
   @override
@@ -33,29 +34,34 @@ class _OrderItemCardState extends State<OrderItemCard> {
   Widget buildOrderDetails({required TextTheme textTheme}) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 4),
-      height: min(widget.order.productCount * 20.0 + 10, 100),
-      child: ListView(
-          children: widget.order.items
-              .map((e) => Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Text(
-                        e.title,
-                        style: textTheme.titleMedium,
-                      ),
-                      Text(
-                        '${e.quantity}x \$${e.price}',
-                        style: textTheme.titleSmall,
-                      )
-                    ],
-                  ))
-              .toList()),
+      height: min(widget.order.productCount * 30.0 + 30, 100),
+      child: ListView(children: [
+        Text(
+          "Items",
+          style: textTheme.titleLarge,
+        ),
+        ...widget.order.items
+            .map((e) => Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Text(
+                      e.title,
+                      style: textTheme.titleMedium,
+                    ),
+                    Text(
+                      '${e.quantity}x \$${e.price}',
+                      style: textTheme.titleSmall,
+                    )
+                  ],
+                ))
+            .toList()
+      ]),
     );
   }
 
   Widget buildOrderSummary({required TextTheme textTheme}) {
     return ListTile(
-      title: Text('Total: \$${widget.order.totalPrice}'),
+      title: Text('Owner: ${widget.order.address.fullName}'),
       subtitle: Padding(
         padding: const EdgeInsets.only(top: 5),
         child: Column(
@@ -63,21 +69,8 @@ class _OrderItemCardState extends State<OrderItemCard> {
           children: [
             Text(DateFormat('dd/MM/yyyy hh:mm').format(widget.order.dateTime)),
             Text('Status: ${widget.order.orderStatus}'),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Flexible(
-                    flex: 1,
-                    child: ElevatedButton(
-                      onPressed: () => Navigator.of(context).pushNamed(
-                          OrderDetailsScreen.routename,
-                          arguments: widget.order),
-                      child: const Text(
-                        'View Details',
-                      ),
-                    )),
-              ],
-            ),
+            Text(
+                "Address : ${widget.order.address.address}, ${widget.order.address.city}, ${widget.order.address.country}")
           ]
               .map((e) => Padding(
                     padding: const EdgeInsets.only(top: 1),

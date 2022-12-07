@@ -117,7 +117,7 @@ class _PaymentStepState extends State<PaymentStep> {
           currency: "USD",
           checkoutDetails: checkoutDetails);
       if (intentsResponse['status'] == 'succeeded') {
-        setCheckoutDetails.setOrderStatus = 'pending';
+        setCheckoutDetails.setOrderStatus = DONE;
         setCheckoutDetails.setPaymentStatus = 'paid';
         setCheckoutDetails.setCurrency = 'USD';
         orderManager.addOrder(checkoutDetails);

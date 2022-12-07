@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:tmdt/constants/constants.dart';
 import 'package:tmdt/models/cart.dart';
 import 'package:tmdt/models/user.dart';
+import 'package:tmdt/ui/order/user_order_management_screen.dart';
 import 'package:tmdt/ui/screens.dart';
 import 'package:tmdt/ui/shared/ui/scaffold_snackbar.dart';
 import 'package:tmdt/ui/user/user_manager.dart';
@@ -108,6 +109,16 @@ class NavigationDrawer extends StatelessWidget {
                     onTap: () {
                       Navigator.of(context)
                           .pushReplacementNamed(UserSettingsScreen.routeName);
+                    },
+                  )
+                : const SizedBox.shrink(),
+            isAdmin
+                ? ListTile(
+                    leading: const Icon(FluentIcons.clipboard_edit_20_regular),
+                    title: const Text('Manage Orders'),
+                    onTap: () {
+                      Navigator.of(context).pushReplacementNamed(
+                          UserOrderManagementScreen.routename);
                     },
                   )
                 : const SizedBox.shrink(),

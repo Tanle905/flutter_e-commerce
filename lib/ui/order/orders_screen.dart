@@ -24,6 +24,7 @@ class OrdersScreen extends StatelessWidget {
             'Your orders',
             style: textTheme.titleLarge,
           ),
+          centerTitle: true,
         ),
         body: ListView.builder(
           itemBuilder: ((context, index) =>
