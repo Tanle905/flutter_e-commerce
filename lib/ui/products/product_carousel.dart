@@ -31,7 +31,6 @@ class _ProductCarouselState extends State<ProductCarousel> {
 
   @override
   void dispose() {
-    widget.refreshNotifier.dispose();
     super.dispose();
   }
 

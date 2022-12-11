@@ -59,6 +59,7 @@ class _OverviewScreenState extends State<OverviewScreen> {
 
   @override
   void dispose() {
+    refreshNotifier.dispose();
     _searchFocusNode.removeListener(handleChangeFocus);
     _pagingController.dispose();
     super.dispose();

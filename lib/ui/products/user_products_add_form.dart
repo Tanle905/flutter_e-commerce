@@ -178,7 +178,9 @@ class _UserProductAddFormState extends State<UserProductAddForm> {
             isImageValid = false;
           });
         }
-        productManager.updateProduct(widget.initalData as Product);
+        if (isEditingProduct) {
+          productManager.updateProduct(widget.initalData as Product);
+        }
         showSnackbar(
             context: context, message: "Product added/edited successfully!");
       } catch (error, stackTrace) {

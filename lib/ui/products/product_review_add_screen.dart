@@ -228,10 +228,9 @@ class _ProductReviewAddScreenState extends State<ProductReviewAddScreen> {
           isLoading = false;
         });
 
-        showSnackbar(
-            context: context, message: "Product added/edited successfully!");
+        showSnackbar(context: context, message: "Review added successfully!");
       } catch (error, stackTrace) {
-        showSnackbar(context: context, message: "Error adding/editing product");
+        showSnackbar(context: context, message: "Error adding review");
         throw ('$error\n$stackTrace');
       } finally {
         setState(() {
